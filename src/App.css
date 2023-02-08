@@ -1,81 +1,48 @@
-.title {
-  background-color: #00ff74;
-  line-height: 30px;
+.App {
   text-align: center;
-  height: 30px;
-  font-weight: bold;
-  margin-bottom: 30px;
-  border-bottom: 2px solid black;
-  border-top: 2px solid black;
 }
 
-table {
-  width: 100%;
-
-  margin: 25px;
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
 }
 
-table,
-th,
-td {
-  border: 1px solid black;
-  border-collapse: collapse;
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
 }
 
-th {
-  background-color: #009bff;
-  color: white;
-}
-
-table.no-border,
-th.no-border,
-td.no-border {
-  border: none;
-}
-
-.add-new-site-bt-container {
-  /* display: flex;
-  justify-content: flex-end; */
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  margin-top: 30px;
-}
-
-.add-new-site-bt {
-  background-color: #4caf50;
-  border: none;
+  font-size: calc(10px + 2vmin);
   color: white;
-  padding: 15px 32px;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width:100%;
+  height: 50px;
+  background-color: black;
   text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 8px;
-}
-
-.add-new-site-bt:hover {
-  background-color: #3e8e41;
-}
-
-.add-new-site-bt:active {
-  background-color: #3e8e41;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
-}
-.site-input {
-  /* margin: 25px; */
-  margin-top: 3px;
-  width: 80%;
-  height: 20px;
-}
-
-.site-input-container {
-  margin-top: 25px;
-  /* width: 80%; */
-}
-.form {
-  /* border: 2px solid black; */
-  /* width: 30px; */
-  margin-left: 25px;
+  color: white;
 }
