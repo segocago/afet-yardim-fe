@@ -12,7 +12,7 @@ class Map extends Component {
     render() {
         const {sites, center} = this.props;
         return (
-            <MapContainer center={center} zoom={12} scrollWheelZoom={true}>
+            <MapContainer center={center} zoom={12} maxZoom={15} scrollWheelZoom={true}>
                 <ChangeView center={center}/>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

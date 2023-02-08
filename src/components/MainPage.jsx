@@ -33,23 +33,18 @@ class MainPage extends Component {
     render() {
         return (
             <div>
-                <div style={{zIndex: 9999}}>
-                    <Select
-                        labelId="city-select-label"
-                        id="city-simple-select"
-                        value={this.state.selectedCity}
-                        label="Şehir"
-                        onChange={this.handleSelectCity}
-                    >
-                        {
-                            CITIES.map(city => <MenuItem value={city}>{city.text}</MenuItem>)
-                        }
-                    </Select>
-                </div>
-                <div style={{width: "100vw", height: "100vh"}}>
-                    <Map sites={this.state.sites} center={this.state.centerLocation}></Map>
-                </div>
-                <br></br>
+                <Select
+                    labelId="city-select-label"
+                    id="city-simple-select"
+                    value={this.state.selectedCity}
+                    label="Şehir"
+                    onChange={this.handleSelectCity}
+                >
+                    {
+                        CITIES.map(city => <MenuItem value={city}>{city.text}</MenuItem>)
+                    }
+                </Select>
+                <Map sites={this.state.sites} center={this.state.centerLocation}></Map>
             </div>
         )
     }
