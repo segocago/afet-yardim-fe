@@ -10,7 +10,7 @@ function App() {
         <div>
             <Router>
                 <HeaderComponent/>
-                <div className="container">
+                <div>
                     <MainPage></MainPage>
                 </div>
                 <FooterComponent/>

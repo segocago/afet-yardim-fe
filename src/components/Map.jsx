@@ -15,7 +15,7 @@ class Map extends Component {
                 />
                 <Marker position={[39.909442, 32.810491]}>
                     <Popup>
-                        A pretty CSS3 popup. <br /> Easily customizable.
+                        A pretty CSS3 popup. <br/> Easily customizable.
                     </Popup>
                 </Marker>
             </MapContainer>

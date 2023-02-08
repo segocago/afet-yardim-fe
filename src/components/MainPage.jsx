@@ -40,7 +40,9 @@ class MainPage extends Component {
                         }
                     </Select>
                 </div>
-                <Map></Map>
+                <div style={{width: "100vw", height: "100vh"}}>
+                    <Map></Map>
+                </div>
                 <br></br>
             </div>
         )
