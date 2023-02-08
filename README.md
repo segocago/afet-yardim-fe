@@ -1,6 +1,6 @@
 # afet-yardim-fe
 
-Bu repo afet-yardım projesinin fe React uygulamasından oluşuyor. Uygulamanın amacı şu anda whatsapp,
+Bu repo afet-yardım projesinin FE React uygulamasından oluşuyor. Uygulamanın amacı şu anda whatsapp,
 instagram, google drive vb. yollardan organize edilmeye çalışılan Ankara, İstanbul, İzmir vb. illerimizdeki deprem
 yardım
 merkezlerini tek bir yerde toplamak ve insanların kendilerine en yakın merkezleri görmelerini sağlamak.
