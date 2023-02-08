@@ -1,12 +1,27 @@
 import React, {Component} from 'react'
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from "@mui/material";
+import {
+    Autocomplete,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    TextField
+} from "@mui/material";
 import siteService from "../services/SiteService";
+import {CITIES} from "../constants/constants";
 
 class CreateSiteDialog extends Component {
     constructor(props) {
         super(props)
 
         this.state = {formValues: {}}
+    }
+
+    handleCityInputChange = (event, newValue) => {
+        const {formValues} = this.state;
+        this.setState({formValues : {...formValues,city: newValue.label}})
     }
 
 
@@ -79,9 +94,6 @@ class CreateSiteDialog extends Component {
             <Dialog open={this.props.open} onClose={this.props.handleClose}>
                 <DialogTitle>Yeni Yardım Noktası Yarat</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        Enlem boylam değerleri olmayan yardım noktalarını harita üstünde göstermiyoruz. Google maps üstünden koordinatları haritaya sağ tıklayarak alabilirsini.
-                    </DialogContentText>
                     <TextField
                         autoFocus
                         margin="dense"
@@ -127,17 +139,13 @@ class CreateSiteDialog extends Component {
                         variant="standard"
                         onChange={handleInputChange}
                     />
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="city"
-                        name="city"
-                        label="Şehir"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        onChange={handleInputChange}
-                        required
+                    <Autocomplete
+                        style={{marginTop: 15}}
+                        disablePortal
+                        options={CITIES}
+                        renderInput={(params) => <TextField {...params} label="Şehir" />}
+                        onChange={this.handleCityInputChange}
+                        value={this.state.formValues.city}
                     />
                     <TextField
                         autoFocus
