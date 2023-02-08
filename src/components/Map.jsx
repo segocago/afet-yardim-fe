@@ -4,13 +4,9 @@ import {ChangeView} from "./CenterView";
 
 const MAX_TOOLTIP_SIZE = 20;
 
-class Map extends Component {
-    constructor(props) {
-        super(props)
-    }
+const Map =(props) => {
+    const {sites, center} = props;
 
-    render() {
-        const {sites, center} = this.props;
         return (
             <MapContainer center={center} zoom={25} scrollWheelZoom={true}>
                 <ChangeView center={center}/>
@@ -35,7 +31,7 @@ class Map extends Component {
                 }
             </MapContainer>
         )
-    }
+
 }
 
 export default Map
