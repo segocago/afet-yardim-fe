@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import {MapContainer, Marker, Popup, TileLayer, Tooltip} from "react-leaflet";
 
+const MAX_TOOLTIP_SIZE = 20;
+
 class Map extends Component {
     constructor(props) {
         super(props)
@@ -20,7 +22,7 @@ class Map extends Component {
                             return (
                                 <Marker position={[site.location.latitude, site.location.longitude]}>
                                     <Tooltip permanent>
-                                        <span>{site.name}</span>
+                                        <span>{site.name.slice(0, MAX_TOOLTIP_SIZE).concat(site.name.length > MAX_TOOLTIP_SIZE ? "..." : "")}</span>
                                     </Tooltip>
                                     <Popup>
                                         {site.name}
