@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import Map from "./Map";
 import {MenuItem, Select} from "@mui/material";
 import SiteService from "../services/SiteService";
+import {CITIES} from "../constants/constants";
 
 class MainPage extends Component {
     constructor(props) {
@@ -34,9 +35,9 @@ class MainPage extends Component {
                         label="Şehir"
                         onChange={this.handleSelectCity}
                     >
-                        <MenuItem value={"Ankara"}>Ankara</MenuItem>
-                        <MenuItem value={"İstanbul"}>İstanbul</MenuItem>
-                        <MenuItem value={"İzmir"}>İzmir</MenuItem>
+                        {
+                            CITIES.map(city => <MenuItem value={city.text}>{city.text}</MenuItem>)
+                        }
                     </Select>
                 </div>
                 <Map></Map>
