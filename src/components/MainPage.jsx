@@ -8,21 +8,17 @@ class MainPage extends Component {
         super(props)
 
         this.state = {
-            selectedCity: [],
+            selectedCity: "Ankara",
             sites: []
         }
     }
 
-    handleSelectCity = city => {
-        this.setState({selectedCity: city});
-    }
-
-    viewSite(siteId) {
-        this.props.history.push(`/view-site/${siteId}`);
+    handleSelectCity = prop => {
+        this.setState({selectedCity: prop.target.value});
     }
 
     componentDidMount() {
-        SiteService.getSites().then((res) => {
+        SiteService.getSiteById(this.state.selectedCity).then((res) => {
             this.setState({sites: res.data});
         });
     }
@@ -30,14 +26,12 @@ class MainPage extends Component {
     render() {
         return (
             <div>
-                <Map></Map>
-                <br></br>
                 <div>
                     <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
+                        labelId="city-select-label"
+                        id="city-simple-select"
                         value={this.state.selectedCity}
-                        label="City"
+                        label="Şehir"
                         onChange={this.handleSelectCity}
                     >
                         <MenuItem value={"Ankara"}>Ankara</MenuItem>
@@ -45,6 +39,8 @@ class MainPage extends Component {
                         <MenuItem value={"İzmir"}>İzmir</MenuItem>
                     </Select>
                 </div>
+                <Map></Map>
+                <br></br>
             </div>
         )
     }
