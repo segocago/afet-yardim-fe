@@ -12,7 +12,6 @@ class FooterComponent extends Component {
       <div>
         <footer className="footer">
           <span className="text-muted">Made by Bro's Jr with ❤️</span>
-          {/* <div className="text-muted">Contribute</div> */}
           <div>
             <span> Help us on</span>
             <a
@@ -22,7 +21,7 @@ class FooterComponent extends Component {
             >
               {" FE "}
             </a>
-            <span> or on </span>
+            <span> or </span>
             <a
               href="https://github.com/segocago/afet-yardim-be"
               rel="noreferrer"
