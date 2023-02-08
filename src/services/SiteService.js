@@ -4,8 +4,8 @@ const SITES_API_BASE_URL = "http://localhost:8080/sites";
 
 class SiteService {
 
-    getSites() {
-        return axios.get(SITES_API_BASE_URL);
+    getSites(cityName) {
+        return axios.get(SITES_API_BASE_URL + "?cityFilter=" + cityName);
     }
 
     createSite(site) {

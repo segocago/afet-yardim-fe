@@ -16,10 +16,13 @@ class MainPage extends Component {
 
     handleSelectCity = prop => {
         this.setState({selectedCity: prop.target.value});
+        SiteService.getSites(prop.target.value).then((res) => {
+            this.setState({sites: res.data});
+        });
     }
 
     componentDidMount() {
-        SiteService.getSiteById(this.state.selectedCity).then((res) => {
+        SiteService.getSites(this.state.selectedCity).then((res) => {
             this.setState({sites: res.data});
         });
     }
