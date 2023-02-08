@@ -9,20 +9,23 @@ class MainPage extends Component {
         super(props)
 
         this.state = {
-            selectedCity: "Ankara",
-            sites: []
+            selectedCity: CITIES.find(city => city.text === "Ankara"),
+            sites: [],
+            centerLocation: [39.909442, 32.810491]
         }
     }
 
     handleSelectCity = prop => {
-        this.setState({selectedCity: prop.target.value});
+        const lat = parseFloat(prop.target.value.latitude);
+        const lon = parseFloat(prop.target.value.longitude);
+        this.setState({selectedCity: prop.target.value, centerLocation: [lat, lon]});
         SiteService.getSites(prop.target.value).then((res) => {
             this.setState({sites: res.data});
         });
     }
 
     componentDidMount() {
-        SiteService.getSites(this.state.selectedCity).then((res) => {
+        SiteService.getSites(this.state.selectedCity.text).then((res) => {
             this.setState({sites: res.data});
         });
     }
@@ -39,12 +42,12 @@ class MainPage extends Component {
                         onChange={this.handleSelectCity}
                     >
                         {
-                            CITIES.map(city => <MenuItem value={city.text}>{city.text}</MenuItem>)
+                            CITIES.map(city => <MenuItem value={city}>{city.text}</MenuItem>)
                         }
                     </Select>
                 </div>
                 <div style={{width: "100vw", height: "100vh"}}>
-                    <Map sites={this.state.sites}></Map>
+                    <Map sites={this.state.sites} center={this.state.centerLocation}></Map>
                 </div>
                 <br></br>
             </div>

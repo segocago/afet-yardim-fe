@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {MapContainer, Marker, Popup, TileLayer, Tooltip} from "react-leaflet";
+import {ChangeView} from "./CenterView";
 
 const MAX_TOOLTIP_SIZE = 20;
 
@@ -9,9 +10,10 @@ class Map extends Component {
     }
 
     render() {
-        const {sites} = this.props;
+        const {sites, center} = this.props;
         return (
-            <MapContainer center={[39.909442, 32.810491]} zoom={25} scrollWheelZoom={true}>
+            <MapContainer center={center} zoom={25} scrollWheelZoom={true}>
+                <ChangeView center={center}/>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
