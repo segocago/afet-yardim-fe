@@ -30,7 +30,7 @@ class MainPage extends Component {
     render() {
         return (
             <div>
-                <div>
+                <div style={{zIndex: 9999}}>
                     <Select
                         labelId="city-select-label"
                         id="city-simple-select"
