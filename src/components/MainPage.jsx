@@ -8,7 +8,7 @@ class MainPage extends Component {
         super(props)
 
         this.state = {
-            selectedCity: [],
+            selectedCity: "Ankara",
             sites: []
         }
     }
