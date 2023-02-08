@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {MapContainer, Marker, Popup, TileLayer} from "react-leaflet";
+import {MapContainer, Marker, Popup, TileLayer, Tooltip} from "react-leaflet";
 
 class Map extends Component {
     constructor(props) {
@@ -19,6 +19,9 @@ class Map extends Component {
                         .map(site => {
                             return (
                                 <Marker position={[site.location.latitude, site.location.longitude]}>
+                                    <Tooltip permanent>
+                                        <span>{site.name}</span>
+                                    </Tooltip>
                                     <Popup>
                                         {site.name}
                                     </Popup>
