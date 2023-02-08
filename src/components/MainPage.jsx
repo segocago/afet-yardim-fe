@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import Map from "./Map";
-import {MenuItem, Select} from "@mui/material";
+import {Button, MenuItem, Select} from "@mui/material";
 import SiteService from "../services/SiteService";
 import {CITIES} from "../constants/constants";
+import CreateSiteDialog from "./CreateSiteDialog";
 
 class MainPage extends Component {
     constructor(props) {
@@ -11,7 +12,8 @@ class MainPage extends Component {
         this.state = {
             selectedCity: CITIES.find(city => city.text === "Ankara"),
             sites: [],
-            centerLocation: [39.909442, 32.810491]
+            centerLocation: [39.909442, 32.810491],
+            createSiteDialogOpen: false
         }
     }
 
@@ -30,6 +32,15 @@ class MainPage extends Component {
         });
     }
 
+    handleCreateSiteDialogOpen = () => {
+        this.setState({createSiteDialogOpen : true})
+    }
+
+    handleCreateSiteDialogClose = (formValues) => {
+        console.log(formValues);
+        this.setState({createSiteDialogOpen : false})
+    }
+
     render() {
         return (
             <div>
@@ -45,11 +56,15 @@ class MainPage extends Component {
                             CITIES.map(city => <MenuItem value={city}>{city.text}</MenuItem>)
                         }
                     </Select>
+                    <div>
+                        <Button onClick={this.handleCreateSiteDialogOpen}>Yeni Yardım Noktası</Button>
+                    </div>
                 </div>
                 <div style={{width: "100vw", height: "100vh"}}>
                     <Map sites={this.state.sites} center={this.state.centerLocation}></Map>
                 </div>
                 <br></br>
+                <CreateSiteDialog open={this.state.createSiteDialogOpen} handleClose={this.handleCreateSiteDialogClose}></CreateSiteDialog>
             </div>
         )
     }
