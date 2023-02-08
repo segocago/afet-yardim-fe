@@ -1,14 +1,23 @@
 import React from 'react'
-import {MapContainer, Marker, Popup, TileLayer, Tooltip} from "react-leaflet";
+import {MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent, useMapEvents} from "react-leaflet";
 import {Button, Comment, Form, Header} from 'semantic-ui-react'
 
 import {ChangeView} from "./CenterView";
 
 const MAX_TOOLTIP_SIZE = 20;
 
-const Map = (props) => {
+const Map = ({handleCreateSiteDialogOpen,sites,center,addCommentToSite}) => {
 
-    const {sites, center} = props;
+    function MyComponent() {
+        const map = useMapEvent('contextmenu', (e) => {
+            const { lat, lng } = e.latlng;
+            console.log(lat,lng)
+            handleCreateSiteDialogOpen(lat,lng);
+        })
+        return null
+    }
+
+
     return (
         <MapContainer center={center} zoom={12} maxZoom={15} scrollWheelZoom={true}>
             <ChangeView center={center}/>
@@ -50,7 +59,7 @@ const Map = (props) => {
                                             }
                                         </Comment.Group>
 
-                                        <form onSubmit={(event) => props.addCommentToSite(event, site.id)}>
+                                        <form onSubmit={(event) => addCommentToSite(event, site.id)}>
                                             <Form.TextArea/>
                                             <Button content='Güncelleme Ekle' labelPosition='left' icon='edit'
                                                     primary/>
@@ -61,6 +70,7 @@ const Map = (props) => {
                         )
                     })
             }
+            <MyComponent></MyComponent>
         </MapContainer>
     )
 }

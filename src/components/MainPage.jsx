@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Map from "./Map";
-import {Button, Autocomplete, TextField} from "@mui/material";
+import { Autocomplete, TextField} from "@mui/material";
 import SiteService from "../services/SiteService";
 import {CITIES} from "../constants/constants";
 import CreateSiteDialog from "./CreateSiteDialog";
@@ -13,7 +13,9 @@ class MainPage extends Component {
             selectedCity: CITIES.find(city => city.label === "Ankara"),
             sites: [],
             centerLocation: [39.909442, 32.810491],
-            createSiteDialogOpen: false
+            createSiteDialogOpen: false,
+            lastClickedLatitude: null,
+            lastClickedLongitude: null
         }
     }
 
@@ -33,13 +35,17 @@ class MainPage extends Component {
         });
     }
 
-    handleCreateSiteDialogOpen = () => {
-        this.setState({createSiteDialogOpen : true})
+    handleCreateSiteDialogOpen = (lat,long) => {
+        this.setState({createSiteDialogOpen : true, lastClickedLatitude: lat, lastClickedLongitude: long})
     }
 
     handleCreateSiteDialogClose = (formValues) => {
         console.log(formValues);
         this.setState({createSiteDialogOpen : false})
+    }
+
+    onNewSiteCreated = (newSite) => {
+        this.setState({sites: [...this.state.sites,newSite]})
     }
 
     addCommentToSite = (event, siteId) => {
@@ -51,7 +57,13 @@ class MainPage extends Component {
             .then((res) => {
                 let updatedSites = sites.map(site => {
                     if (site.id == siteId) {
-                        site.updates.push(res.data)
+
+                        if(site.updates){
+                            site.updates.push(res.data)
+                        }else {
+                            site.updates = [res.data]
+                        }
+
                     }
                     return site;
                 });
@@ -70,11 +82,10 @@ class MainPage extends Component {
                     onChange={this.handleSelectCity}
                     value={this.state.selectedCity}
                 />
-                <div>
-                    <Button onClick={this.handleCreateSiteDialogOpen}>Yeni Yardım Noktası</Button>
-                </div>
-                <Map sites={this.state.sites} center={this.state.centerLocation} addCommentToSite={this.addCommentToSite}></Map>
-                <CreateSiteDialog open={this.state.createSiteDialogOpen} handleClose={this.handleCreateSiteDialogClose}></CreateSiteDialog>
+                <Map sites={this.state.sites} center={this.state.centerLocation} addCommentToSite={this.addCommentToSite}
+                     handleCreateSiteDialogOpen={this.handleCreateSiteDialogOpen}></Map>
+                <CreateSiteDialog open={this.state.createSiteDialogOpen} handleClose={this.handleCreateSiteDialogClose}
+                latitude={this.state.lastClickedLatitude} longitude={this.state.lastClickedLongitude} onNewSiteCreated={this.onNewSiteCreated}></CreateSiteDialog>
             </div>
         )
     }

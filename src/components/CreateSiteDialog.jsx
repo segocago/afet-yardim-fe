@@ -16,9 +16,9 @@ class CreateSiteDialog extends Component {
         this.setState({formValues : {...formValues,[name]: value}})
     };
 
-    handleConfirmSiteCreation = () => {
+    handleConfirmSiteCreation = async () => {
 
-        const{handleClose} = this.props.handleClose;
+        const{handleClose,onNewSiteCreated} = this.props;
         const {formValues} = this.state;
         const {constructCreateSitePayload} = this;
 
@@ -29,7 +29,8 @@ class CreateSiteDialog extends Component {
             return;
         }
 
-        siteService.createSite(constructCreateSitePayload(formValues));
+        const response = await siteService.createSite(constructCreateSitePayload(formValues));
+        onNewSiteCreated(response.data);
         handleClose()
     }
 
@@ -42,8 +43,8 @@ class CreateSiteDialog extends Component {
                 city: formValues.city,
                 district: formValues.district,
                 additionalAddress: formValues.additionalAddress,
-                latitude: parseFloat(formValues.latitude),
-                longitude: parseFloat(formValues.longitude)
+                latitude: parseFloat(this.props.latitude),
+                longitude: parseFloat(this.props.longitude)
             },
             description: formValues.description,
             contactInformation: formValues.contactInformation
@@ -69,13 +70,6 @@ class CreateSiteDialog extends Component {
             invalidValues.push("Adres");
         }
 
-        if(formValues.latitude == undefined){
-            invalidValues.push("Enlem");
-        }
-
-        if(formValues.longitude == undefined){
-            invalidValues.push("Boylam");
-        }
         return invalidValues;
     }
 
@@ -178,8 +172,9 @@ class CreateSiteDialog extends Component {
                         type="number"
                         fullWidth
                         variant="standard"
-                        onChange={handleInputChange}
+                        value={this.props.latitude}
                         required
+                        disabled
                     />
                     <TextField
                         autoFocus
@@ -190,8 +185,9 @@ class CreateSiteDialog extends Component {
                         type="number"
                         fullWidth
                         variant="standard"
-                        onChange={handleInputChange}
+                        value={this.props.longitude}
                         required
+                        disabled
                     />
                 </DialogContent>
                 <DialogActions>
