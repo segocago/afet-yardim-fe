@@ -42,6 +42,23 @@ class MainPage extends Component {
         this.setState({createSiteDialogOpen : false})
     }
 
+    addCommentToSite = (event, siteId) => {
+        event.preventDefault();
+        let comment = {}
+        comment.update = event.target[0].value;
+        const {sites} = this.state;
+        SiteService.addCommentToSite(siteId, comment)
+            .then((res) => {
+                let updatedSites = sites.map(site => {
+                    if (site.id == siteId) {
+                        site.updates.push(res.data)
+                    }
+                    return site;
+                });
+                this.setState({sites: updatedSites});
+            });
+    }
+
     render() {
         return (
             <div>
@@ -56,7 +73,8 @@ class MainPage extends Component {
                 <div>
                     <Button onClick={this.handleCreateSiteDialogOpen}>Yeni Yardım Noktası</Button>
                 </div>
-                <Map sites={this.state.sites} center={this.state.centerLocation}></Map>
+                <Map sites={this.state.sites} center={this.state.centerLocation} addCommentToSite={this.addCommentToSite}></Map>
+                <CreateSiteDialog open={this.state.createSiteDialogOpen} handleClose={this.handleCreateSiteDialogClose}></CreateSiteDialog>
             </div>
         )
     }

@@ -1,93 +1,68 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {MapContainer, Marker, Popup, TileLayer, Tooltip} from "react-leaflet";
 import {Button, Comment, Form, Header} from 'semantic-ui-react'
-import SiteService from "../services/SiteService";
+
 import {ChangeView} from "./CenterView";
 
 const MAX_TOOLTIP_SIZE = 20;
 
-class Map extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            sites: props.sites
-        }
-    }
+const Map = (props) => {
 
-    handleSubmit = (event, siteId) => {
-        event.preventDefault();
-        let comment = {}
-        comment.update = event.target[0].value;
-        const {sites} = this.props;
-        SiteService.addCommentToSite(siteId, comment)
-            .then((res) => {
-                let updatedSites = sites.map(site => {
-                    if (site.id == siteId) {
-                        site.updates.push(res.data)
-                    }
-                    return site;
-                });
-                this.setState({sites: updatedSites});
-            });
-    }
+    const {sites, center} = props;
+    return (
+        <MapContainer center={center} zoom={12} maxZoom={15} scrollWheelZoom={true}>
+            <ChangeView center={center}/>
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {
+                sites.filter(site => site.location && site.location.latitude && site.location.longitude)
+                    .map(site => {
+                        return (
+                            <Marker position={[site.location.latitude, site.location.longitude]}>
+                                <Tooltip permanent>
+                                    <span>{site.name.slice(0, MAX_TOOLTIP_SIZE).concat(site.name.length > MAX_TOOLTIP_SIZE ? "..." : "")}</span>
+                                </Tooltip>
+                                <Popup>
+                                    <div>
+                                        <p>Mekan: {site.name}</p>
+                                        <p>Şehir: {site.location.city}</p>
+                                        <p>Adres: {site.location.additionalAddress}</p>
+                                        <p>Organizasyon: {site.organizer}</p>
+                                        <p>İletişim: {site.contactInformation == "" ? "Bilinmiyor" : site.contactInformation}</p>
 
-    render() {
-        const {sites, center} = this.props;
-        return (
-            <MapContainer center={center} zoom={12} maxZoom={15} scrollWheelZoom={true}>
-                <ChangeView center={center}/>
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                {
-                    sites.filter(site => site.location && site.location.latitude && site.location.longitude)
-                        .map(site => {
-                            return (
-                                <Marker position={[site.location.latitude, site.location.longitude]}>
-                                    <Tooltip permanent>
-                                        <span>{site.name.slice(0, MAX_TOOLTIP_SIZE).concat(site.name.length > MAX_TOOLTIP_SIZE ? "..." : "")}</span>
-                                    </Tooltip>
-                                    <Popup>
-                                        <div>
-                                            <p>Mekan: {site.name}</p>
-                                            <p>Şehir: {site.location.city}</p>
-                                            <p>Adres: {site.location.additionalAddress}</p>
-                                            <p>Organizasyon: {site.organizer}</p>
-                                            <p>İletişim: {site.contactInformation == "" ? "Bilinmiyor" : site.contactInformation}</p>
+                                        <Comment.Group>
+                                            <Header as='h5' dividing>
+                                                Güncellemeler
+                                            </Header>
+                                            {site.updates && site.updates.map(update => {
+                                                return (
+                                                    <Comment>
+                                                        <Comment.Content>
+                                                            <Comment.Metadata>
+                                                                <div>{update.createDateTime}</div>
+                                                            </Comment.Metadata>
+                                                            <Comment.Text>{update.update}</Comment.Text>
+                                                        </Comment.Content>
+                                                    </Comment>);
+                                            })
+                                            }
+                                        </Comment.Group>
 
-                                            <Comment.Group>
-                                                <Header as='h5' dividing>
-                                                    Güncellemeler
-                                                </Header>
-                                                {site.updates && site.updates.map(update => {
-                                                    return (
-                                                        <Comment>
-                                                            <Comment.Content>
-                                                                <Comment.Metadata>
-                                                                    <div>{update.createDateTime}</div>
-                                                                </Comment.Metadata>
-                                                                <Comment.Text>{update.update}</Comment.Text>
-                                                            </Comment.Content>
-                                                        </Comment>);
-                                                })
-                                                }
-                                            </Comment.Group>
-
-                                            <form onSubmit={(event) => this.handleSubmit(event, site.id)}>
-                                                <Form.TextArea/>
-                                                <Button content='Güncelleme Ekle' labelPosition='left' icon='edit'
-                                                        primary/>
-                                            </form>
-                                        </div>
-                                    </Popup>
-                                </Marker>
-                            )
-                        })
-                }
-            </MapContainer>
-        )
-    }
+                                        <form onSubmit={(event) => props.addCommentToSite(event, site.id)}>
+                                            <Form.TextArea/>
+                                            <Button content='Güncelleme Ekle' labelPosition='left' icon='edit'
+                                                    primary/>
+                                        </form>
+                                    </div>
+                                </Popup>
+                            </Marker>
+                        )
+                    })
+            }
+        </MapContainer>
+    )
 }
 
 export default Map
