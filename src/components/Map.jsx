@@ -7,17 +7,22 @@ class Map extends Component {
     }
 
     render() {
+        const {sites} = this.props;
         return (
             <MapContainer center={[39.909442, 32.810491]} zoom={25} scrollWheelZoom={true}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={[39.909442, 32.810491]}>
-                    <Popup>
-                        A pretty CSS3 popup. <br/> Easily customizable.
-                    </Popup>
-                </Marker>
+                {sites.map(site => {
+                    return (
+                        <Marker position={[site.location.latitude, site.location.longitude]}>
+                            <Popup>
+                                {site.name}
+                            </Popup>
+                        </Marker>)
+                    }
+                )}
             </MapContainer>
         )
     }

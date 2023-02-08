@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const SITES_API_BASE_URL = "http://localhost:8080/sites";
+const SITES_API_BASE_URL = "http://afetyardim-env.eba-vh65vafd.eu-central-1.elasticbeanstalk.com/sites";
 
 class SiteService {
 
