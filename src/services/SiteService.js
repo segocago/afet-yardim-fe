@@ -17,7 +17,7 @@ class SiteService {
     }
 
     addCommentToSite(siteId, comment) {
-        return axios.post(SITES_API_BASE_URL + '/' + siteId, comment);
+        return axios.post(SITES_API_BASE_URL + '/' + siteId + "/updates", comment);
     }
 }
 
