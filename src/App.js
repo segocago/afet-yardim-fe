@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import {BrowserRouter as Router} from 'react-router-dom'
 import HeaderComponent from './components/HeaderComponent';
 import FooterComponent from './components/FooterComponent';
 import MainPage from "./components/MainPage";
@@ -8,13 +7,9 @@ import MainPage from "./components/MainPage";
 function App() {
     return (
         <div>
-            <Router>
-                <HeaderComponent/>
-                <div>
-                    <MainPage></MainPage>
-                </div>
-                <FooterComponent/>
-            </Router>
+            <HeaderComponent/>
+            <MainPage/>
+            <FooterComponent/>
         </div>
 
     );

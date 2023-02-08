@@ -1,7 +1,7 @@
 export const CITIES = [
     {
         "key": 1,
-        "text": "Adana",
+        "label": "Adana",
         "latitude": "37.0000",
         "longitude": "35.3213",
         "population": 2183167,
@@ -9,7 +9,7 @@ export const CITIES = [
     },
     {
         "key": 2,
-        "text": "Adıyaman",
+        "label": "Adıyaman",
         "latitude": "37.7648",
         "longitude": "38.2786",
         "population": 602774,
@@ -17,7 +17,7 @@ export const CITIES = [
     },
     {
         "key": 3,
-        "text": "Afyonkarahisar",
+        "label": "Afyonkarahisar",
         "latitude": "38.7507",
         "longitude": "30.5567",
         "population": 709015,
@@ -25,7 +25,7 @@ export const CITIES = [
     },
     {
         "key": 4,
-        "text": "Ağrı",
+        "label": "Ağrı",
         "latitude": "39.7191",
         "longitude": "43.0503",
         "population": 547210,
@@ -33,7 +33,7 @@ export const CITIES = [
     },
     {
         "key": 5,
-        "text": "Amasya",
+        "label": "Amasya",
         "latitude": "40.6499",
         "longitude": "35.8353",
         "population": 322167,
@@ -41,7 +41,7 @@ export const CITIES = [
     },
     {
         "key": 6,
-        "text": "Ankara",
+        "label": "Ankara",
         "latitude": "39.9208",
         "longitude": "32.8541",
         "population": 5270575,
@@ -49,7 +49,7 @@ export const CITIES = [
     },
     {
         "key": 7,
-        "text": "Antalya",
+        "label": "Antalya",
         "latitude": "36.8841",
         "longitude": "30.7056",
         "population": 2288456,
@@ -57,7 +57,7 @@ export const CITIES = [
     },
     {
         "key": 8,
-        "text": "Artvin",
+        "label": "Artvin",
         "latitude": "41.1828",
         "longitude": "41.8183",
         "population": 168370,
@@ -65,7 +65,7 @@ export const CITIES = [
     },
     {
         "key": 9,
-        "text": "Aydın",
+        "label": "Aydın",
         "latitude": "37.8560",
         "longitude": "27.8416",
         "population": 1053506,
@@ -73,7 +73,7 @@ export const CITIES = [
     },
     {
         "key": 10,
-        "text": "Balıkesir",
+        "label": "Balıkesir",
         "latitude": "39.6484",
         "longitude": "27.8826",
         "population": 1186688,
@@ -81,7 +81,7 @@ export const CITIES = [
     },
     {
         "key": 11,
-        "text": "Bilecik",
+        "label": "Bilecik",
         "latitude": "40.0567",
         "longitude": "30.0665",
         "population": 212361,
@@ -89,7 +89,7 @@ export const CITIES = [
     },
     {
         "key": 12,
-        "text": "Bingöl",
+        "label": "Bingöl",
         "latitude": "39.0626",
         "longitude": "40.7696",
         "population": 267184,
@@ -97,7 +97,7 @@ export const CITIES = [
     },
     {
         "key": 13,
-        "text": "Bitlis",
+        "label": "Bitlis",
         "latitude": "38.3938",
         "longitude": "42.1232",
         "population": 267184,
@@ -105,7 +105,7 @@ export const CITIES = [
     },
     {
         "key": 14,
-        "text": "Bolu",
+        "label": "Bolu",
         "latitude": "40.5760",
         "longitude": "31.5788",
         "population": 291095,
@@ -113,7 +113,7 @@ export const CITIES = [
     },
     {
         "key": 15,
-        "text": "Burdur",
+        "label": "Burdur",
         "latitude": "37.4613",
         "longitude": "30.0665",
         "population": 258339,
@@ -121,7 +121,7 @@ export const CITIES = [
     },
     {
         "key": 16,
-        "text": "Bursa",
+        "label": "Bursa",
         "latitude": "40.2669",
         "longitude": "29.0634",
         "population": 2842547,
@@ -129,7 +129,7 @@ export const CITIES = [
     },
     {
         "key": 17,
-        "text": "Çanakkale",
+        "label": "Çanakkale",
         "latitude": "40.1553",
         "longitude": "26.4142",
         "population": 513341,
@@ -137,7 +137,7 @@ export const CITIES = [
     },
     {
         "key": 18,
-        "text": "Çankırı",
+        "label": "Çankırı",
         "latitude": "40.6013",
         "longitude": "33.6134",
         "population": 180945,
@@ -145,7 +145,7 @@ export const CITIES = [
     },
     {
         "key": 19,
-        "text": "Çorum",
+        "label": "Çorum",
         "latitude": "40.5506",
         "longitude": "34.9556",
         "population": 525180,
@@ -153,7 +153,7 @@ export const CITIES = [
     },
     {
         "key": 20,
-        "text": "Denizli",
+        "label": "Denizli",
         "latitude": "37.7765",
         "longitude": "29.0864",
         "population": 993442,
@@ -161,7 +161,7 @@ export const CITIES = [
     },
     {
         "key": 21,
-        "text": "Diyarbakır",
+        "label": "Diyarbakır",
         "latitude": "37.9144",
         "longitude": "40.2306",
         "population": 1654196,
@@ -169,7 +169,7 @@ export const CITIES = [
     },
     {
         "key": 22,
-        "text": "Edirne",
+        "label": "Edirne",
         "latitude": "41.6818",
         "longitude": "26.5623",
         "population": 402537,
@@ -177,7 +177,7 @@ export const CITIES = [
     },
     {
         "key": 23,
-        "text": "Elâzığ",
+        "label": "Elâzığ",
         "latitude": "38.6810",
         "longitude": "39.2264",
         "population": 574304,
@@ -185,7 +185,7 @@ export const CITIES = [
     },
     {
         "key": 24,
-        "text": "Erzincan",
+        "label": "Erzincan",
         "latitude": "39.7500",
         "longitude": "39.5000",
         "population": 222918,
@@ -193,7 +193,7 @@ export const CITIES = [
     },
     {
         "key": 25,
-        "text": "Erzurum",
+        "label": "Erzurum",
         "latitude": "39.9000",
         "longitude": "41.2700",
         "population": 762321,
@@ -201,7 +201,7 @@ export const CITIES = [
     },
     {
         "key": 26,
-        "text": "Eskişehir",
+        "label": "Eskişehir",
         "latitude": "39.7767",
         "longitude": "30.5206",
         "population": 826716,
@@ -209,7 +209,7 @@ export const CITIES = [
     },
     {
         "key": 27,
-        "text": "Gaziantep",
+        "label": "Gaziantep",
         "latitude": "37.0662",
         "longitude": "37.3833",
         "population": 1931836,
@@ -217,7 +217,7 @@ export const CITIES = [
     },
     {
         "key": 28,
-        "text": "Giresun",
+        "label": "Giresun",
         "latitude": "40.9128",
         "longitude": "38.3895",
         "population": 426686,
@@ -225,7 +225,7 @@ export const CITIES = [
     },
     {
         "key": 29,
-        "text": "Gümüşhane",
+        "label": "Gümüşhane",
         "latitude": "40.4386",
         "longitude": "39.5086",
         "population": 151449,
@@ -233,7 +233,7 @@ export const CITIES = [
     },
     {
         "key": 30,
-        "text": "Hakkâri",
+        "label": "Hakkâri",
         "latitude": "37.5833",
         "longitude": "43.7333",
         "population": 278775,
@@ -241,7 +241,7 @@ export const CITIES = [
     },
     {
         "key": 31,
-        "text": "Hatay",
+        "label": "Hatay",
         "latitude": "36.4018",
         "longitude": "36.3498",
         "population": 1533507,
@@ -249,7 +249,7 @@ export const CITIES = [
     },
     {
         "key": 32,
-        "text": "Isparta",
+        "label": "Isparta",
         "latitude": "37.7648",
         "longitude": "30.5566",
         "population": 421766,
@@ -257,7 +257,7 @@ export const CITIES = [
     },
     {
         "key": 33,
-        "text": "Mersin",
+        "label": "Mersin",
         "latitude": "36.8000",
         "longitude": "34.6333",
         "population": 1745221,
@@ -265,7 +265,7 @@ export const CITIES = [
     },
     {
         "key": 34,
-        "text": "İstanbul",
+        "label": "İstanbul",
         "latitude": "41.0053",
         "longitude": "28.9770",
         "population": 14657434,
@@ -273,7 +273,7 @@ export const CITIES = [
     },
     {
         "key": 35,
-        "text": "İzmir",
+        "label": "İzmir",
         "latitude": "38.4189",
         "longitude": "27.1287",
         "population": 4168415,
@@ -281,7 +281,7 @@ export const CITIES = [
     },
     {
         "key": 36,
-        "text": "Kars",
+        "label": "Kars",
         "latitude": "40.6167",
         "longitude": "43.1000",
         "population": 292660,
@@ -289,7 +289,7 @@ export const CITIES = [
     },
     {
         "key": 37,
-        "text": "Kastamonu",
+        "label": "Kastamonu",
         "latitude": "41.3887",
         "longitude": "33.7827",
         "population": 372633,
@@ -297,7 +297,7 @@ export const CITIES = [
     },
     {
         "key": 38,
-        "text": "Kayseri",
+        "label": "Kayseri",
         "latitude": "38.7312",
         "longitude": "35.4787",
         "population": 1341056,
@@ -305,7 +305,7 @@ export const CITIES = [
     },
     {
         "key": 39,
-        "text": "Kırklareli",
+        "label": "Kırklareli",
         "latitude": "41.7333",
         "longitude": "27.2167",
         "population": 346973,
@@ -313,7 +313,7 @@ export const CITIES = [
     },
     {
         "key": 40,
-        "text": "Kırşehir",
+        "label": "Kırşehir",
         "latitude": "39.1425",
         "longitude": "34.1709",
         "population": 225562,
@@ -321,7 +321,7 @@ export const CITIES = [
     },
     {
         "key": 41,
-        "text": "Kocaeli",
+        "label": "Kocaeli",
         "latitude": "40.8533",
         "longitude": "29.8815",
         "population": 1780055,
@@ -329,7 +329,7 @@ export const CITIES = [
     },
     {
         "key": 42,
-        "text": "Konya",
+        "label": "Konya",
         "latitude": "37.8667",
         "longitude": "32.4833",
         "population": 2130544,
@@ -337,7 +337,7 @@ export const CITIES = [
     },
     {
         "key": 43,
-        "text": "Kütahya",
+        "label": "Kütahya",
         "latitude": "39.4167",
         "longitude": "29.9833",
         "population": 571463,
@@ -345,7 +345,7 @@ export const CITIES = [
     },
     {
         "key": 44,
-        "text": "Malatya",
+        "label": "Malatya",
         "latitude": "38.3552",
         "longitude": "38.3095",
         "population": 772904,
@@ -353,7 +353,7 @@ export const CITIES = [
     },
     {
         "key": 45,
-        "text": "Manisa",
+        "label": "Manisa",
         "latitude": "38.6191",
         "longitude": "27.4289",
         "population": 1380366,
@@ -361,7 +361,7 @@ export const CITIES = [
     },
     {
         "key": 46,
-        "text": "Kahramanmaraş",
+        "label": "Kahramanmaraş",
         "latitude": "37.5858",
         "longitude": "36.9371",
         "population": 1096610,
@@ -369,7 +369,7 @@ export const CITIES = [
     },
     {
         "key": 47,
-        "text": "Mardin",
+        "label": "Mardin",
         "latitude": "37.3212",
         "longitude": "40.7245",
         "population": 796591,
@@ -377,7 +377,7 @@ export const CITIES = [
     },
     {
         "key": 48,
-        "text": "Muğla",
+        "label": "Muğla",
         "latitude": "37.2153",
         "longitude": "28.3636",
         "population": 908877,
@@ -385,7 +385,7 @@ export const CITIES = [
     },
     {
         "key": 49,
-        "text": "Muş",
+        "label": "Muş",
         "latitude": "38.9462",
         "longitude": "41.7539",
         "population": 408728,
@@ -393,7 +393,7 @@ export const CITIES = [
     },
     {
         "key": 50,
-        "text": "Nevşehir",
+        "label": "Nevşehir",
         "latitude": "38.6939",
         "longitude": "34.6857",
         "population": 286767,
@@ -401,7 +401,7 @@ export const CITIES = [
     },
     {
         "key": 51,
-        "text": "Niğde",
+        "label": "Niğde",
         "latitude": "37.9667",
         "longitude": "34.6833",
         "population": 346114,
@@ -409,7 +409,7 @@ export const CITIES = [
     },
     {
         "key": 52,
-        "text": "Ordu",
+        "label": "Ordu",
         "latitude": "40.9839",
         "longitude": "37.8764",
         "population": 728949,
@@ -417,7 +417,7 @@ export const CITIES = [
     },
     {
         "key": 53,
-        "text": "Rize",
+        "label": "Rize",
         "latitude": "41.0201",
         "longitude": "40.5234",
         "population": 328979,
@@ -425,7 +425,7 @@ export const CITIES = [
     },
     {
         "key": 54,
-        "text": "Sakarya",
+        "label": "Sakarya",
         "latitude": "40.6940",
         "longitude": "30.4358",
         "population": 953181,
@@ -433,7 +433,7 @@ export const CITIES = [
     },
     {
         "key": 55,
-        "text": "Samsun",
+        "label": "Samsun",
         "latitude": "41.2928",
         "longitude": "36.3313",
         "population": 1279884,
@@ -441,7 +441,7 @@ export const CITIES = [
     },
     {
         "key": 56,
-        "text": "Siirt",
+        "label": "Siirt",
         "latitude": "37.9333",
         "longitude": "41.9500",
         "population": 320351,
@@ -449,7 +449,7 @@ export const CITIES = [
     },
     {
         "key": 57,
-        "text": "Sinop",
+        "label": "Sinop",
         "latitude": "42.0231",
         "longitude": "35.1531",
         "population": 204133,
@@ -457,7 +457,7 @@ export const CITIES = [
     },
     {
         "key": 58,
-        "text": "Sivas",
+        "label": "Sivas",
         "latitude": "39.7477",
         "longitude": "37.0179",
         "population": 618617,
@@ -465,7 +465,7 @@ export const CITIES = [
     },
     {
         "key": 59,
-        "text": "Tekirdağ",
+        "label": "Tekirdağ",
         "latitude": "40.9833",
         "longitude": "27.5167",
         "population": 937910,
@@ -473,7 +473,7 @@ export const CITIES = [
     },
     {
         "key": 60,
-        "text": "Tokat",
+        "label": "Tokat",
         "latitude": "40.3167",
         "longitude": "36.5500",
         "population": 593990,
@@ -481,7 +481,7 @@ export const CITIES = [
     },
     {
         "key": 61,
-        "text": "Trabzon",
+        "label": "Trabzon",
         "latitude": "41.0015",
         "longitude": "39.7178",
         "population": 768417,
@@ -489,7 +489,7 @@ export const CITIES = [
     },
     {
         "key": 62,
-        "text": "Tunceli",
+        "label": "Tunceli",
         "latitude": "39.3074",
         "longitude": "39.4388",
         "population": 86076,
@@ -497,7 +497,7 @@ export const CITIES = [
     },
     {
         "key": 63,
-        "text": "Şanlıurfa",
+        "label": "Şanlıurfa",
         "latitude": "37.1591",
         "longitude": "38.7969",
         "population": 1892320,
@@ -505,7 +505,7 @@ export const CITIES = [
     },
     {
         "key": 64,
-        "text": "Uşak",
+        "label": "Uşak",
         "latitude": "38.6823",
         "longitude": "29.4082",
         "population": 353048,
@@ -513,7 +513,7 @@ export const CITIES = [
     },
     {
         "key": 65,
-        "text": "Van",
+        "label": "Van",
         "latitude": "38.4891",
         "longitude": "43.4089",
         "population": 1096397,
@@ -521,7 +521,7 @@ export const CITIES = [
     },
     {
         "key": 66,
-        "text": "Yozgat",
+        "label": "Yozgat",
         "latitude": "39.8181",
         "longitude": "34.8147",
         "population": 419440,
@@ -529,7 +529,7 @@ export const CITIES = [
     },
     {
         "key": 67,
-        "text": "Zonguldak",
+        "label": "Zonguldak",
         "latitude": "41.4564",
         "longitude": "31.7987",
         "population": 595907,
@@ -537,7 +537,7 @@ export const CITIES = [
     },
     {
         "key": 68,
-        "text": "Aksaray",
+        "label": "Aksaray",
         "latitude": "38.3687",
         "longitude": "34.0370",
         "population": 386514,
@@ -545,7 +545,7 @@ export const CITIES = [
     },
     {
         "key": 69,
-        "text": "Bayburt",
+        "label": "Bayburt",
         "latitude": "40.2552",
         "longitude": "40.2249",
         "population": 78550,
@@ -553,7 +553,7 @@ export const CITIES = [
     },
     {
         "key": 70,
-        "text": "Karaman",
+        "label": "Karaman",
         "latitude": "37.1759",
         "longitude": "33.2287",
         "population": 242196,
@@ -561,7 +561,7 @@ export const CITIES = [
     },
     {
         "key": 71,
-        "text": "Kırıkkale",
+        "label": "Kırıkkale",
         "latitude": "39.8468",
         "longitude": "33.5153",
         "population": 270271,
@@ -569,7 +569,7 @@ export const CITIES = [
     },
     {
         "key": 72,
-        "text": "Batman",
+        "label": "Batman",
         "latitude": "37.8812",
         "longitude": "41.1351",
         "population": 566633,
@@ -577,7 +577,7 @@ export const CITIES = [
     },
     {
         "key": 73,
-        "text": "Şırnak",
+        "label": "Şırnak",
         "latitude": "37.4187",
         "longitude": "42.4918",
         "population": 490184,
@@ -585,7 +585,7 @@ export const CITIES = [
     },
     {
         "key": 74,
-        "text": "Bartın",
+        "label": "Bartın",
         "latitude": "41.5811",
         "longitude": "32.4610",
         "population": 190708,
@@ -593,7 +593,7 @@ export const CITIES = [
     },
     {
         "key": 75,
-        "text": "Ardahan",
+        "label": "Ardahan",
         "latitude": "41.1105",
         "longitude": "42.7022",
         "population": 99265,
@@ -601,7 +601,7 @@ export const CITIES = [
     },
     {
         "key": 76,
-        "text": "Iğdır",
+        "label": "Iğdır",
         "latitude": "39.8880",
         "longitude": "44.0048",
         "population": 192435,
@@ -609,7 +609,7 @@ export const CITIES = [
     },
     {
         "key": 77,
-        "text": "Yalova",
+        "label": "Yalova",
         "latitude": "40.6500",
         "longitude": "29.2667",
         "population": 233009,
@@ -617,7 +617,7 @@ export const CITIES = [
     },
     {
         "key": 78,
-        "text": "Karabük",
+        "label": "Karabük",
         "latitude": "41.2061",
         "longitude": "32.6204",
         "population": 236978,
@@ -625,7 +625,7 @@ export const CITIES = [
     },
     {
         "key": 79,
-        "text": "Kilis",
+        "label": "Kilis",
         "latitude": "36.7184",
         "longitude": "37.1212",
         "population": 130655,
@@ -633,7 +633,7 @@ export const CITIES = [
     },
     {
         "key": 80,
-        "text": "Osmaniye",
+        "label": "Osmaniye",
         "latitude": "37.2130",
         "longitude": "36.1763",
         "population": 512873,
@@ -641,7 +641,7 @@ export const CITIES = [
     },
     {
         "key": 81,
-        "text": "Düzce",
+        "label": "Düzce",
         "latitude": "40.8438",
         "longitude": "31.1565",
         "population": 360388,
