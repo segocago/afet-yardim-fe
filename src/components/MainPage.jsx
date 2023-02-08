@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Map from "./Map";
-import {MenuItem, Select} from "@mui/material";
+import {Autocomplete, TextField} from "@mui/material";
 import SiteService from "../services/SiteService";
 import {CITIES} from "../constants/constants";
 
@@ -9,23 +9,24 @@ class MainPage extends Component {
         super(props)
 
         this.state = {
-            selectedCity: CITIES.find(city => city.text === "Ankara"),
+            selectedCity: CITIES.find(city => city.label === "Ankara"),
             sites: [],
             centerLocation: [39.909442, 32.810491]
         }
     }
 
-    handleSelectCity = prop => {
-        const lat = parseFloat(prop.target.value.latitude);
-        const lon = parseFloat(prop.target.value.longitude);
-        this.setState({selectedCity: prop.target.value, centerLocation: [lat, lon]});
-        SiteService.getSites(prop.target.value.text).then((res) => {
+
+    handleSelectCity = (event, newValue) => {
+        const lat = parseFloat(newValue.latitude);
+        const lon = parseFloat(newValue.longitude);
+        this.setState({selectedCity: newValue, centerLocation: [lat, lon]});
+        SiteService.getSites(newValue.label).then((res) => {
             this.setState({sites: res.data});
         });
     }
 
     componentDidMount() {
-        SiteService.getSites(this.state.selectedCity.text).then((res) => {
+        SiteService.getSites(this.state.selectedCity.label).then((res) => {
             this.setState({sites: res.data});
         });
     }
@@ -33,17 +34,14 @@ class MainPage extends Component {
     render() {
         return (
             <div>
-                <Select
-                    labelId="city-select-label"
-                    id="city-simple-select"
-                    value={this.state.selectedCity}
-                    label="Şehir"
+                <Autocomplete
+                    style={{marginTop: 15}}
+                    disablePortal
+                    options={CITIES}
+                    renderInput={(params) => <TextField {...params} label="Şehir" />}
                     onChange={this.handleSelectCity}
-                >
-                    {
-                        CITIES.map(city => <MenuItem value={city}>{city.text}</MenuItem>)
-                    }
-                </Select>
+                    value={this.state.selectedCity}
+                />
                 <Map sites={this.state.sites} center={this.state.centerLocation}></Map>
             </div>
         )
