@@ -19,7 +19,7 @@ class MainPage extends Component {
         const lat = parseFloat(prop.target.value.latitude);
         const lon = parseFloat(prop.target.value.longitude);
         this.setState({selectedCity: prop.target.value, centerLocation: [lat, lon]});
-        SiteService.getSites(prop.target.value).then((res) => {
+        SiteService.getSites(prop.target.value.text).then((res) => {
             this.setState({sites: res.data});
         });
     }
