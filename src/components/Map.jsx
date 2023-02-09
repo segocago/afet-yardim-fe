@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent} from "react-leaflet";
 import {Button, Comment, Form, Header} from 'semantic-ui-react'
 
@@ -10,6 +10,7 @@ const MAX_TOOLTIP_SIZE = 15;
 const TIME_DIFFERENCE_IN_MILLIS = 3 * 60 * 60 * 1000;
 
 const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
+  const [selectedSite, setSelectedSite] = useState();
 
   function MyComponent() {
     const map = useMapEvent('contextmenu', (e) => {
@@ -40,55 +41,61 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
         sites.filter(site => site.location && site.location.latitude && site.location.longitude)
           .map(site => {
             return (
-              <Marker position={[site.location.latitude, site.location.longitude]}>
+              <Marker
+                eventHandlers={{
+                  click: () => {
+                    setSelectedSite(site);
+                  },
+                }}
+                position={[site.location.latitude, site.location.longitude]}>
                 <Tooltip permanent>
                   <span>{site.name.slice(0, MAX_TOOLTIP_SIZE).trim().concat(site.name.length > MAX_TOOLTIP_SIZE ? "..." : "")}</span>
                 </Tooltip>
-                <Popup>
-                  <div>
-                    <p>Mekan: {site.name}</p>
-                    <p>Şehir: {site.location.city}</p>
-                    <p>Adres: {site.location.additionalAddress}</p>
-                    <p>Organizasyon: {site.organizer}</p>
-                    <p>İletişim: {site.contactInformation == "" ? "Bilinmiyor" : site.contactInformation}</p>
-                    <p><Button><a href={generateGoogleMapsLinkForSite(site)} target="_blank"> Bu alana yol tarifi al</a></Button>
-                    </p>
+                (selectedSite.id === site.id) && (<Popup>
+                <div>
+                  <p>Mekan: {site.name}</p>
+                  <p>Şehir: {site.location.city}</p>
+                  <p>Adres: {site.location.additionalAddress}</p>
+                  <p>Organizasyon: {site.organizer}</p>
+                  <p>İletişim: {site.contactInformation == "" ? "Bilinmiyor" : site.contactInformation}</p>
+                  <p><Button><a href={generateGoogleMapsLinkForSite(site)} target="_blank"> Bu alana yol tarifi
+                    al</a></Button>
+                  </p>
+                  <Comment.Group className={"site-comments"}>
+                    <Header as='h5' dividing>
+                      Güncellemeler
+                    </Header>
 
-                    <Comment.Group className={"site-comments"}>
-                      <Header as='h5' dividing>
-                        Güncellemeler
-                      </Header>
-
-                      {site.updates && site.updates.sort((site1, site2) => {
-                        return site1.createDateTime < site2.createDateTime ? 1 : -1;
-                      }).map(update => {
-                        return (
-                          <Comment>
-                            <Comment.Content>
-                              <Comment.Metadata>
-                                <div>{formatDate(update.createDateTime)}</div>
-                              </Comment.Metadata>
-                              <Comment.Text>{update.update}</Comment.Text>
-                            </Comment.Content>
-                          </Comment>);
-                      })
-                      }
-                      {
-                        (site.updates === undefined || site.updates === null || site.updates.length === 0) && <Comment>
+                    {site.updates && site.updates.sort((site1, site2) => {
+                      return site1.createDateTime < site2.createDateTime ? 1 : -1;
+                    }).map(update => {
+                      return (
+                        <Comment>
                           <Comment.Content>
-                            <Comment.Text>Son güncelleme bulunmuyor.</Comment.Text>
+                            <Comment.Metadata>
+                              <div>{formatDate(update.createDateTime)}</div>
+                            </Comment.Metadata>
+                            <Comment.Text>{update.update}</Comment.Text>
                           </Comment.Content>
-                        </Comment>
-                      }
-                    </Comment.Group>
+                        </Comment>);
+                    })
+                    }
+                    {
+                      (site.updates === undefined || site.updates === null || site.updates.length === 0) && <Comment>
+                        <Comment.Content>
+                          <Comment.Text>Son güncelleme bulunmuyor.</Comment.Text>
+                        </Comment.Content>
+                      </Comment>
+                    }
+                  </Comment.Group>
 
-                    <form onSubmit={(event) => addCommentToSite(event, site.id)}>
-                      <Form.TextArea/>
-                      <Button content='Güncelleme Ekle' labelPosition='left' icon='edit'
-                              primary/>
-                    </form>
-                  </div>
-                </Popup>
+                  <form onSubmit={(event) => addCommentToSite(event, site.id)}>
+                    <Form.TextArea/>
+                    <Button content='Güncelleme Ekle' labelPosition='left' icon='edit'
+                            primary/>
+                  </form>
+                </div>
+              </Popup>)
               </Marker>
             )
           })
