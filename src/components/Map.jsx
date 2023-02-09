@@ -26,7 +26,7 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
     // https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=<latitude>,<longitude>
     // https://www.google.es/maps/dir/'52.51758801683297,13.397978515625027'/'52.49083837044266,13.369826049804715'/data=!4m2!4m1!3e2
     const generateGoogleMapsLinkForSite = (site) => {
-        return "https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=" +site.location.latitude +","+ site.location.longitude;
+        return "https://www.google.com/maps/dir/?api=1&destination=" +site.location.latitude +","+ site.location.longitude;
     }
 
   return (
