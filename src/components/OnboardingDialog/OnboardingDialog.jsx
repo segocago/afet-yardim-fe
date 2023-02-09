@@ -23,6 +23,10 @@ class OnboardingDialog extends Component {
           </div>
           <br />
           <div className="desc-text">
+            İl seçimi sol üstteki menüden yapılmaktadır.
+          </div>
+          <br />
+          <div className="desc-text">
             Haritada işaretli olan pin noktalarına tıklayarak son yardım noktası
             hakkında bilgi alabilir, güncel durumu hakkında yeni not
             girebilirsiniz.
