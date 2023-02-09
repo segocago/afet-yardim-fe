@@ -1,5 +1,5 @@
 import React from 'react'
-import {MapContainer, Marker, Popup, TileLayer, Tooltip, useMap, useMapEvent} from "react-leaflet";
+import {MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent} from "react-leaflet";
 import {Button, Comment, Form, Header} from 'semantic-ui-react'
 
 import {ChangeView} from "./CenterView";
@@ -9,7 +9,7 @@ const MAX_TOOLTIP_SIZE = 15;
 //Times are kept in UTC timezone in DB so add 3 hours to it
 const TIME_DIFFERENCE_IN_MILLIS = 3 * 60 * 60 * 1000;
 
-const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
+const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMapReady}) => {
 
   function MyComponent() {
     const map = useMapEvent('contextmenu', (e) => {
@@ -29,8 +29,10 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
         return "https://www.google.com/maps/dir/?api=1&destination=" +site.location.latitude +","+ site.location.longitude;
     }
 
+
+
   return (
-    <MapContainer center={center} zoom={12} maxZoom={15} scrollWheelZoom={true}>
+    <MapContainer center={center} zoom={12} maxZoom={15} scrollWheelZoom={true} whenReady={whenMapReady}>
       <ChangeView center={center}/>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -40,8 +42,8 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
         sites.filter(site => site.location && site.location.latitude && site.location.longitude)
           .map(site => {
             return (
-              <Marker position={[site.location.latitude, site.location.longitude]}>
-                <Tooltip permanent>
+              <Marker position={[site.location.latitude, site.location.longitude]} ref={(ref) => site.markerRef = ref } >
+                  <Tooltip permanent>
                   <span>{site.name.slice(0, MAX_TOOLTIP_SIZE).trim().concat(site.name.length > MAX_TOOLTIP_SIZE ? "..." : "")}</span>
                 </Tooltip>
                 <Popup>

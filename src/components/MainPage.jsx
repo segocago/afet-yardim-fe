@@ -18,7 +18,8 @@ class MainPage extends Component {
       createSiteDialogOpen: false,
       onboardingDialogOpen: true,
       lastClickedLatitude: null,
-      lastClickedLongitude: null
+      lastClickedLongitude: null,
+      mapRef : null
     };
   }
 
@@ -62,6 +63,7 @@ class MainPage extends Component {
   addCommentToSite = (event, siteId) => {
     event.preventDefault();
     let comment = {};
+
     comment.update = event.target[0].value;
 
     if(event.target[0].value === undefined || event.target[0].value === null || event.target[0].value.trim().length === 0){
@@ -83,7 +85,7 @@ class MainPage extends Component {
 
   handleShowMeClosestSite = (lat,long) => {
 
-    const {sites} = this.state
+    const {sites, mapRef} = this.state
 
     if(!sites || sites.length === 0){
       alert("Yardım toplama noktası bulunamadı");
@@ -105,9 +107,14 @@ class MainPage extends Component {
         }
       }
     })
-    this.setState({centerLocation: [closestSite.location.latitude, closestSite.location.longitude],onboardingDialogOpen: false});
+    mapRef.setView([closestSite.location.latitude,closestSite.location.longitude],16)
+    closestSite.markerRef.openPopup();
+    this.setState({onboardingDialogOpen: false});
 
 }
+  whenMapReady = (event) => {
+    this.setState({mapRef : event.target})
+  }
 
   render() {
     return (
@@ -121,6 +128,7 @@ class MainPage extends Component {
           value={this.state.selectedCity}
         />
         <Map
+            whenMapReady={this.whenMapReady}
           sites={this.state.sites}
           center={this.state.centerLocation}
           addCommentToSite={this.addCommentToSite}
@@ -130,6 +138,7 @@ class MainPage extends Component {
           open={this.state.onboardingDialogOpen}
           handleShowMeClosestSite = {this.handleShowMeClosestSite}
           handleClose={this.handleOnboardingDialogClose}
+          showClosestSiteButton={true}
         />
         <CreateSiteDialog
           open={this.state.createSiteDialogOpen}

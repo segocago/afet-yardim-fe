@@ -46,7 +46,9 @@ class OnboardingDialog extends Component {
             <WarningTwoToneIcon> </WarningTwoToneIcon>Yardım alanlarını görmek istediğiniz ili sol üstteki menüden seçin.
           </div>
           <br />
-          <Button onClick={() => navigator.geolocation.getCurrentPosition(this.onGetUserLocation, this.onFailedToGetUserLocation)}>Bana en yakın yardım noktasını göster</Button>
+          {this.props.showClosestSiteButton &&
+              <Button onClick={() => navigator.geolocation.getCurrentPosition(this.onGetUserLocation, this.onFailedToGetUserLocation)}
+              >Bana en yakın yardım noktasını göster</Button>}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.props.handleClose()}>Anladım</Button>
