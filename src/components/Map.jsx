@@ -4,7 +4,7 @@ import {Button, Comment, Form, Header} from 'semantic-ui-react'
 
 import {ChangeView} from "./CenterView";
 
-const MAX_TOOLTIP_SIZE = 20;
+const MAX_TOOLTIP_SIZE = 15;
 
 //Times are kept in UTC timezone in DB so add 3 hours to it
 const TIME_DIFFERENCE_IN_MILLIS = 3 * 60 * 60 * 1000;
@@ -38,7 +38,7 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
             return (
               <Marker position={[site.location.latitude, site.location.longitude]}>
                 <Tooltip permanent>
-                  <span>{site.name.slice(0, MAX_TOOLTIP_SIZE).concat(site.name.length > MAX_TOOLTIP_SIZE ? "..." : "")}</span>
+                  <span>{site.name.slice(0, MAX_TOOLTIP_SIZE).trim().concat(site.name.length > MAX_TOOLTIP_SIZE ? "..." : "")}</span>
                 </Tooltip>
                 <Popup>
                   <div>
