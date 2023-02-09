@@ -20,14 +20,14 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
   }
 
   const formatDate = (dateString) => {
-      const date = new Date(new Date(dateString).getTime() +TIME_DIFFERENCE_IN_MILLIS);
-      return date.toLocaleString();
-    }
-    // https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=<latitude>,<longitude>
-    // https://www.google.es/maps/dir/'52.51758801683297,13.397978515625027'/'52.49083837044266,13.369826049804715'/data=!4m2!4m1!3e2
-    const generateGoogleMapsLinkForSite = (site) => {
-        return "https://www.google.com/maps/dir/?api=1&destination=" +site.location.latitude +","+ site.location.longitude;
-    }
+    const date = new Date(new Date(dateString).getTime() + TIME_DIFFERENCE_IN_MILLIS);
+    return date.toLocaleString();
+  }
+  // https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=<latitude>,<longitude>
+  // https://www.google.es/maps/dir/'52.51758801683297,13.397978515625027'/'52.49083837044266,13.369826049804715'/data=!4m2!4m1!3e2
+  const generateGoogleMapsLinkForSite = (site) => {
+    return "https://www.google.com/maps/dir/?api=1&destination=" + site.location.latitude + "," + site.location.longitude;
+  }
 
   return (
     <MapContainer center={center} zoom={12} maxZoom={15} scrollWheelZoom={true}>
@@ -51,15 +51,16 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
                     <p>Adres: {site.location.additionalAddress}</p>
                     <p>Organizasyon: {site.organizer}</p>
                     <p>İletişim: {site.contactInformation == "" ? "Bilinmiyor" : site.contactInformation}</p>
-                      <p><Button><a href={generateGoogleMapsLinkForSite(site)}> Bu alana yol tarifi al</a></Button></p>
+                    <p><Button><a href={generateGoogleMapsLinkForSite(site)} target="_blank"> Bu alana yol tarifi al</a></Button>
+                    </p>
 
                     <Comment.Group className={"site-comments"}>
                       <Header as='h5' dividing>
                         Güncellemeler
                       </Header>
 
-                      {site.updates && site.updates.sort((site1,site2) => {
-                          return site1.createDateTime < site2.createDateTime ? 1 : -1;
+                      {site.updates && site.updates.sort((site1, site2) => {
+                        return site1.createDateTime < site2.createDateTime ? 1 : -1;
                       }).map(update => {
                         return (
                           <Comment>
@@ -72,13 +73,13 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
                           </Comment>);
                       })
                       }
-                        {
-                            (site.updates === undefined || site.updates === null || site.updates.length === 0) &&  <Comment>
-                                <Comment.Content>
-                                    <Comment.Text>Son güncelleme bulunmuyor.</Comment.Text>
-                                </Comment.Content>
-                            </Comment>
-                        }
+                      {
+                        (site.updates === undefined || site.updates === null || site.updates.length === 0) && <Comment>
+                          <Comment.Content>
+                            <Comment.Text>Son güncelleme bulunmuyor.</Comment.Text>
+                          </Comment.Content>
+                        </Comment>
+                      }
                     </Comment.Group>
 
                     <form onSubmit={(event) => addCommentToSite(event, site.id)}>
