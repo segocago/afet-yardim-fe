@@ -12,8 +12,6 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 const FilterBox = ({showOnlyVerified, handleVerificationChange}) => {
     const [isBoxOpen, setBoxOpen] = useState(false)
     const [homeChecked, setHomeChecked] = useState(false)
-    // const map = useMap()
-
     
     const handleHomeChange = (value) => {
         setHomeChecked(value)
