@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import Map from "./Map";
-import {Autocomplete, TextField} from "@mui/material";
+import { Autocomplete, TextField} from "@mui/material";
 import SiteService from "../services/SiteService";
 import {CITIES} from "../constants/constants";
+import CreateSiteDialog from "./CreateSiteDialog";
 
 class MainPage extends Component {
     constructor(props) {
@@ -11,7 +12,10 @@ class MainPage extends Component {
         this.state = {
             selectedCity: CITIES.find(city => city.label === "Ankara"),
             sites: [],
-            centerLocation: [39.909442, 32.810491]
+            centerLocation: [39.909442, 32.810491],
+            createSiteDialogOpen: false,
+            lastClickedLatitude: null,
+            lastClickedLongitude: null
         }
     }
 
@@ -31,6 +35,42 @@ class MainPage extends Component {
         });
     }
 
+    handleCreateSiteDialogOpen = (lat,long) => {
+        this.setState({createSiteDialogOpen : true, lastClickedLatitude: lat, lastClickedLongitude: long})
+    }
+
+    handleCreateSiteDialogClose = (formValues) => {
+        console.log(formValues);
+        this.setState({createSiteDialogOpen : false})
+    }
+
+    onNewSiteCreated = (newSite) => {
+        this.setState({sites: [...this.state.sites,newSite]})
+    }
+
+    addCommentToSite = (event, siteId) => {
+        event.preventDefault();
+        let comment = {}
+        comment.update = event.target[0].value;
+        const {sites} = this.state;
+        SiteService.addCommentToSite(siteId, comment)
+            .then((res) => {
+                let updatedSites = sites.map(site => {
+                    if (site.id == siteId) {
+
+                        if(site.updates){
+                            site.updates.push(res.data)
+                        }else {
+                            site.updates = [res.data]
+                        }
+
+                    }
+                    return site;
+                });
+                this.setState({sites: updatedSites});
+            });
+    }
+
     render() {
         return (
             <div>
@@ -42,7 +82,10 @@ class MainPage extends Component {
                     onChange={this.handleSelectCity}
                     value={this.state.selectedCity}
                 />
-                <Map sites={this.state.sites} center={this.state.centerLocation}></Map>
+                <Map sites={this.state.sites} center={this.state.centerLocation} addCommentToSite={this.addCommentToSite}
+                     handleCreateSiteDialogOpen={this.handleCreateSiteDialogOpen}></Map>
+                <CreateSiteDialog open={this.state.createSiteDialogOpen} handleClose={this.handleCreateSiteDialogClose}
+                latitude={this.state.lastClickedLatitude} longitude={this.state.lastClickedLongitude} onNewSiteCreated={this.onNewSiteCreated}></CreateSiteDialog>
             </div>
         )
     }
