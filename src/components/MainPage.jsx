@@ -5,7 +5,7 @@ import SiteService from "../services/SiteService";
 import { CITIES } from "../constants/constants";
 import CreateSiteDialog from "./CreateSiteDialog";
 import OnboardingDialog from "./OnboardingDialog/OnboardingDialog";
-import { useMap } from "react-leaflet";
+import {getDistance} from "geolib";
 
 const MainPage = () => {
 
@@ -16,6 +16,7 @@ const MainPage = () => {
     const [onboardingDialogOpen, setOnboardingDialogOpen] = useState(true);
     const [lastClickedLatitude, setLastClickedLatitude] = useState(null);
     const [lastClickedLongitude, setLastClickedLongitude] = useState(null);
+    const [mapRef, setMapRef] = useState(null);
   
   const handleSelectCity = (newValue) => {
     const lat = parseFloat(newValue.latitude);
@@ -58,8 +59,15 @@ const MainPage = () => {
   const addCommentToSite = (event, siteId) => {
     event.preventDefault();
     let comment = {};
+
     comment.update = event.target[0].value;
-    
+
+    if(event.target[0].value === undefined || event.target[0].value === null || event.target[0].value.trim().length === 0){
+      alert("Boş yorum eklenemenez.")
+      return;
+    }
+
+    const { sites } = this.state;
     SiteService.addCommentToSite(siteId, comment).then((res) => {
       let updatedSites = sites.map(site => {
         if (site.id == siteId) {
@@ -70,6 +78,40 @@ const MainPage = () => {
       setSites(updatedSites);
     });
   };
+  
+  const whenMapReady = (event) => {
+    setMapRef(event.target);
+  }
+
+  const handleShowMeClosestSite = (lat,long) => {
+
+    const {sites, mapRef} = this.state
+
+    if(!sites || sites.length === 0){
+      alert("Yardım toplama noktası bulunamadı");
+      return;
+    }
+    let minDistance = Number.MAX_SAFE_INTEGER;
+    let closestSite = sites[0];
+
+    sites.forEach(site => {
+
+      if (site.location && site.location.latitude && site.location.longitude){
+        const distance   = getDistance(
+            { latitude: lat, longitude: long },
+            { latitude: site.location.latitude, longitude: site.location.longitude }
+        )
+        if(distance < minDistance){
+          minDistance = distance;
+          closestSite = site;
+        }
+      }
+    })
+    mapRef.setView([closestSite.location.latitude,closestSite.location.longitude],16)
+    closestSite.markerRef.openPopup();
+    setOnBoardingDialogOpen(false);
+  }
+
 
   return (
     <div>
@@ -85,6 +127,7 @@ const MainPage = () => {
         value={selectedCity}
       />
       <Map
+        whenMapReady={whenMapReady}
         sites={sites}
         center={centerLocation}
         addCommentToSite={addCommentToSite}
@@ -93,6 +136,8 @@ const MainPage = () => {
       <OnboardingDialog
         open={onboardingDialogOpen}
         handleClose={handleOnboardingDialogClose}
+        handleShowMeClosestSite={handleShowMeClosestSite}
+        showClosestSiteButton={true}
       />
       <CreateSiteDialog
         open={createSiteDialogOpen}

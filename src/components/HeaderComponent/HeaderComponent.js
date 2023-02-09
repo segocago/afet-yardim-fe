@@ -26,6 +26,7 @@ class HeaderComponent extends Component {
               <OnboardingDialog
                 open={this.state.onboardingDialogOpen}
                 handleClose={this.handleOnboardingDialogClose}
+                showClosestSiteButton={false}
               />
               <Button
                 className="about-btn"
