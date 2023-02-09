@@ -10,7 +10,7 @@ const MAX_TOOLTIP_SIZE = 15;
 //Times are kept in UTC timezone in DB so add 3 hours to it
 const TIME_DIFFERENCE_IN_MILLIS = 3 * 60 * 60 * 1000;
 
-const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
+const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMapReady}) => {
 
   const [mapRef, setMapRef] = useState(null);
 
@@ -42,8 +42,9 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
     return "https://www.google.com/maps/dir/?api=1&destination=" + site.location.latitude + "," + site.location.longitude;
   }
 
+
+
   return (
-    <>
     <MapContainer ref={setMapRef} center={center} zoom={12} maxZoom={15} scrollWheelZoom={true}>
     <FilterBox
       showOnlyVerified={showOnlyVerified}
@@ -69,6 +70,7 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
           return (
             <Marker
               position={[site.location.latitude, site.location.longitude]}
+              ref={(ref) => site.markerRef = ref }
             >
               <Tooltip permanent>
                 <span>
@@ -107,14 +109,10 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
                       Güncellemeler
                     </Header>
 
-                    {site.updates &&
-                      site.updates
-                        .sort((site1, site2) => {
-                          return site1.createDateTime < site2.createDateTime
-                            ? 1
-                            : -1;
-                        })
-                        .map((update) => {
+                      {site.updates && site.updates.sort((site1, site2) => {
+                        return site1.createDateTime < site2.createDateTime ? 1 : -1;
+                      }).filter(update => update.update && update.update !== "")
+                        .map(update => {
                           return (
                             <Comment>
                               <Comment.Content>
@@ -123,21 +121,19 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
                                 </Comment.Metadata>
                                 <Comment.Text>{update.update}</Comment.Text>
                               </Comment.Content>
-                            </Comment>
-                          );
-                        })}
-                    {(site.updates === undefined ||
-                      site.updates === null ||
-                      site.updates.length === 0) && (
-                      <Comment>
-                        <Comment.Content>
-                          <Comment.Text>
-                            Son güncelleme bulunmuyor.
-                          </Comment.Text>
-                        </Comment.Content>
-                      </Comment>
-                    )}
-                  </Comment.Group>
+                            </Comment>);
+                        })
+                      }
+                      {
+                        (site.updates === undefined || site.updates === null || site.updates.length === 0 ||
+                          site.updates.filter(update => update.update && update.update !== "").length === 0) &&
+                        <Comment>
+                          <Comment.Content>
+                            <Comment.Text>Son güncelleme bulunmuyor.</Comment.Text>
+                          </Comment.Content>
+                        </Comment>
+                      }
+                    </Comment.Group>
 
                   <form onSubmit={(event) => addCommentToSite(event, site.id)}>
                     <Form.TextArea />
@@ -155,7 +151,6 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
         })}
       <MyComponent></MyComponent>
     </MapContainer>
-    </>
   );
 }
 
