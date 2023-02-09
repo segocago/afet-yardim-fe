@@ -1,8 +1,9 @@
 import React from 'react'
 import {MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent} from "react-leaflet";
 import {Button, Comment, Form, Header} from 'semantic-ui-react'
-
+import FilterBox from "./FilterBox";
 import {ChangeView} from "./CenterView";
+
 
 const MAX_TOOLTIP_SIZE = 15;
 
@@ -31,6 +32,7 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
 
   return (
     <MapContainer center={center} zoom={12} maxZoom={15} scrollWheelZoom={true}>
+      <FilterBox />
       <ChangeView center={center}/>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
