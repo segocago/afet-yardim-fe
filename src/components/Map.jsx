@@ -14,7 +14,6 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
   function MyComponent() {
     const map = useMapEvent('contextmenu', (e) => {
       const {lat, lng} = e.latlng;
-      console.log(lat, lng)
       handleCreateSiteDialogOpen(lat, lng);
     })
     return null
@@ -40,7 +39,6 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
       {
         sites.filter(site => site.location && site.location.latitude && site.location.longitude)
           .map(site => {
-              console.log(site.updates);
             return (
               <Marker position={[site.location.latitude, site.location.longitude]}>
                 <Tooltip permanent>

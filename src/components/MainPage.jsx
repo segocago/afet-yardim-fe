@@ -25,9 +25,10 @@ class MainPage extends Component {
     const lat = parseFloat(newValue.latitude);
     const lon = parseFloat(newValue.longitude);
     this.setState({ selectedCity: newValue, centerLocation: [lat, lon] });
-    SiteService.getSites(newValue.label).then((res) => {
-      this.setState({ sites: res.data });
-    });
+    //Do not fetch sites since we city filter is removed from site fetching
+    // SiteService.getSites(newValue.label).then((res) => {
+    //   this.setState({ sites: res.data });
+    // });
   };
 
   componentDidMount() {
