@@ -109,7 +109,7 @@ const MainPage = () => {
     })
     mapRef.setView([closestSite.location.latitude,closestSite.location.longitude],16)
     closestSite.markerRef.openPopup();
-    setOnBoardingDialogOpen(false);
+    setOnboardingDialogOpen(false);
   }
 
 

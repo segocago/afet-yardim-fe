@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react'
 import {MapContainer, Marker, Popup, TileLayer, Tooltip, useMap, useMapEvent} from "react-leaflet";
 import {Button, Comment, Form, Header} from 'semantic-ui-react'
 import FilterBox from "./FilterBox";
-import {ChangeView} from "./CenterView";
 
 
 const MAX_TOOLTIP_SIZE = 15;
@@ -41,7 +40,6 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMa
   const generateGoogleMapsLinkForSite = (site) => {
     return "https://www.google.com/maps/dir/?api=1&destination=" + site.location.latitude + "," + site.location.longitude;
   }
-
 
 
   return (
