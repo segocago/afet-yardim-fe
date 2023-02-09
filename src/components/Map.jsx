@@ -1,5 +1,5 @@
 import React from 'react'
-import {MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent} from "react-leaflet";
+import {MapContainer, Marker, Popup, TileLayer, Tooltip, useMap, useMapEvent} from "react-leaflet";
 import {Button, Comment, Form, Header} from 'semantic-ui-react'
 
 import {ChangeView} from "./CenterView";

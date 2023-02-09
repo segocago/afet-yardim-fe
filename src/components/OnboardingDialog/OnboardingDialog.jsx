@@ -8,11 +8,21 @@ import {
 } from "@mui/material";
 import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
 import AddLocationAltTwoToneIcon from '@mui/icons-material/AddLocationAltTwoTone';
-import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 import InsertCommentTwoToneIcon from '@mui/icons-material/InsertCommentTwoTone';
 import "./OnboardingDialog.css";
 
+
 class OnboardingDialog extends Component {
+
+  onGetUserLocation = (position) => {
+    this.props.handleShowMeClosestSite(position.coords.latitude,position.coords.longitude);
+  }
+
+  onFailedToGetUserLocation = (error) => {
+
+    alert("En yakın yardım alanını bulabilmek için uygulamaya konum erişim izni vermeniz gerekiyor.")
+  }
+
   render() {
     return (
       <Dialog open={this.props.open} onClose={this.props.handleClose}>
@@ -36,6 +46,7 @@ class OnboardingDialog extends Component {
             <WarningTwoToneIcon> </WarningTwoToneIcon>Yardım alanlarını görmek istediğiniz ili sol üstteki menüden seçin.
           </div>
           <br />
+          <Button onClick={() => navigator.geolocation.getCurrentPosition(this.onGetUserLocation, this.onFailedToGetUserLocation)}>Bana en yakın yardım noktasını göster</Button>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.props.handleClose()}>Anladım</Button>

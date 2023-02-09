@@ -5,6 +5,7 @@ import SiteService from "../services/SiteService";
 import { CITIES } from "../constants/constants";
 import CreateSiteDialog from "./CreateSiteDialog";
 import OnboardingDialog from "./OnboardingDialog/OnboardingDialog";
+import {getDistance} from "geolib";
 
 class MainPage extends Component {
   constructor(props) {
@@ -17,7 +18,7 @@ class MainPage extends Component {
       createSiteDialogOpen: false,
       onboardingDialogOpen: true,
       lastClickedLatitude: null,
-      lastClickedLongitude: null,
+      lastClickedLongitude: null
     };
   }
 
@@ -80,6 +81,34 @@ class MainPage extends Component {
     });
   };
 
+  handleShowMeClosestSite = (lat,long) => {
+
+    const {sites} = this.state
+
+    if(!sites || sites.length === 0){
+      alert("Yardım toplama noktası bulunamadı");
+      return;
+    }
+    let minDistance = Number.MAX_SAFE_INTEGER;
+    let closestSite = sites[0];
+
+    sites.forEach(site => {
+
+      if (site.location && site.location.latitude && site.location.longitude){
+        const distance   = getDistance(
+            { latitude: lat, longitude: long },
+            { latitude: site.location.latitude, longitude: site.location.longitude }
+        )
+        if(distance < minDistance){
+          minDistance = distance;
+          closestSite = site;
+        }
+      }
+    })
+    this.setState({centerLocation: [closestSite.location.latitude, closestSite.location.longitude],onboardingDialogOpen: false});
+
+}
+
   render() {
     return (
       <div>
@@ -99,6 +128,7 @@ class MainPage extends Component {
         ></Map>
         <OnboardingDialog
           open={this.state.onboardingDialogOpen}
+          handleShowMeClosestSite = {this.handleShowMeClosestSite}
           handleClose={this.handleOnboardingDialogClose}
         />
         <CreateSiteDialog
