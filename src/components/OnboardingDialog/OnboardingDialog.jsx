@@ -17,19 +17,9 @@ class OnboardingDialog extends Component {
     return (
       <Dialog open={this.props.open} onClose={this.props.handleClose}>
         <DialogTitle>
-          <div className="title">Deprem Yardım Noktaları Hakkında</div>
+          <div className="title">Nasıl Kullanılır</div>
         </DialogTitle>
         <DialogContent>
-          <div className="desc-text">
-            <InfoTwoToneIcon> </InfoTwoToneIcon> Afet Yardımı, Güneyoğu depreminden etkilenen insanlara gerekecek
-            insani yardım toplama noktalarını, yardım noktalarının ihtiyaç
-            durumlarını ve son güncel durumları hakkında notlar içerir.
-          </div>
-          <br />
-          <div className="desc-text">
-            <WarningTwoToneIcon> </WarningTwoToneIcon>Yardım alanlarını görmek istediğiniz ili sol üstteki menüden seçin.
-          </div>
-          <br />
           <div className="desc-text">
             <InsertCommentTwoToneIcon></InsertCommentTwoToneIcon> Haritada işaretli olan pin noktalarına tıklayarak son yardım noktası
             hakkında bilgi alabilir, güncel durumu hakkında yeni not
@@ -38,9 +28,14 @@ class OnboardingDialog extends Component {
           <br />
           <div className="desc-text">
             <AddLocationAltTwoToneIcon></AddLocationAltTwoToneIcon>
-            <b>Haritaya yeni yardım noktası eklemek için sağ tıklayabilir, mobil
+            <b>Haritaya yeni yardım noktası eklemek için bilgisayarda sağ tıklayabilir, mobil
               cihazlar için ise ekrana basılı tutabilirsiniz.</b>
           </div>
+          <br />
+          <div className="desc-text">
+            <WarningTwoToneIcon> </WarningTwoToneIcon>Yardım alanlarını görmek istediğiniz ili sol üstteki menüden seçin.
+          </div>
+          <br />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.props.handleClose()}>Anladım</Button>
