@@ -62,14 +62,10 @@ class MainPage extends Component {
 
   addCommentToSite = (event, siteId) => {
     event.preventDefault();
-    let comment = {};
 
-    comment.update = event.target[0].value;
-
-    if(event.target[0].value === undefined || event.target[0].value === null || event.target[0].value.trim().length === 0){
-      alert("Boş yorum eklenemenez.")
-      return;
-    }
+    let comment = {
+      update: event.target[0].value,
+    };
 
     const { sites } = this.state;
     SiteService.addCommentToSite(siteId, comment).then((res) => {

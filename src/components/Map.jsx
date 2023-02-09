@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent} from "react-leaflet";
 import {Button, Comment, Form, Header} from 'semantic-ui-react'
 
@@ -29,7 +29,15 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMa
     return "https://www.google.com/maps/dir/?api=1&destination=" + site.location.latitude + "," + site.location.longitude;
   }
 
+  const [enableButton, setEnableButton] = useState(false);
 
+  const handleCommentChange = (event) => {
+    setEnableButton(Boolean(event.target.value));
+  };
+
+  const onMarkerClick = () => {
+    setEnableButton(false);
+  };
 
   return (
     <MapContainer center={center} zoom={12} maxZoom={15} scrollWheelZoom={true} whenReady={whenMapReady}>
@@ -42,7 +50,10 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMa
         sites.filter(site => site.location && site.location.latitude && site.location.longitude)
           .map(site => {
             return (
-              <Marker position={[site.location.latitude, site.location.longitude]} ref={(ref) => site.markerRef = ref } >
+              <Marker
+                position={[site.location.latitude, site.location.longitude]} ref={(ref) => site.markerRef = ref }
+                eventHandlers={{click: onMarkerClick}}
+              >
                   <Tooltip permanent>
                   <span>{site.name.slice(0, MAX_TOOLTIP_SIZE).trim().concat(site.name.length > MAX_TOOLTIP_SIZE ? "..." : "")}</span>
                 </Tooltip>
@@ -89,9 +100,9 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMa
                     </Comment.Group>
 
                     <form onSubmit={(event) => addCommentToSite(event, site.id)}>
-                      <Form.TextArea/>
+                      <Form.TextArea onChange={handleCommentChange} />
                       <Button content='Güncelleme Ekle' labelPosition='left' icon='edit'
-                              primary/>
+                              primary disabled={!enableButton}/>
                     </form>
                   </div>
                 </Popup>
