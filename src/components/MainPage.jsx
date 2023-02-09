@@ -63,17 +63,13 @@ class MainPage extends Component {
     comment.update = event.target[0].value;
     const { sites } = this.state;
     SiteService.addCommentToSite(siteId, comment).then((res) => {
-      let updatedSites = sites.map((site) => {
+      let updatedSites = sites.map(site => {
         if (site.id == siteId) {
-          if (site.updates) {
-            site.updates.push(res.data);
-          } else {
-            site.updates = [res.data];
-          }
+          return res.data;
         }
         return site;
       });
-      this.setState({ sites: updatedSites });
+      this.setState({sites: updatedSites});
     });
   };
 
