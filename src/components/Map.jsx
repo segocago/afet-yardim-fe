@@ -40,7 +40,7 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
                     <p>Organizasyon: {site.organizer}</p>
                     <p>İletişim: {site.contactInformation == "" ? "Bilinmiyor" : site.contactInformation}</p>
 
-                    <Comment.Group>
+                    <Comment.Group className={"site-comments"}>
                       <Header as='h5' dividing>
                         Güncellemeler
                       </Header>
