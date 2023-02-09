@@ -6,6 +6,10 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
+import AddLocationAltTwoToneIcon from '@mui/icons-material/AddLocationAltTwoTone';
+import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
+import InsertCommentTwoToneIcon from '@mui/icons-material/InsertCommentTwoTone';
 import "./OnboardingDialog.css";
 
 class OnboardingDialog extends Component {
@@ -17,24 +21,25 @@ class OnboardingDialog extends Component {
         </DialogTitle>
         <DialogContent>
           <div className="desc-text">
-            Afet Yardımı, Güneyoğu depreminden etkilenen insanlara gerekecek
+            <InfoTwoToneIcon> </InfoTwoToneIcon> Afet Yardımı, Güneyoğu depreminden etkilenen insanlara gerekecek
             insani yardım toplama noktalarını, yardım noktalarının ihtiyaç
             durumlarını ve son güncel durumları hakkında notlar içerir.
           </div>
           <br />
           <div className="desc-text">
-            İl seçimi sol üstteki menüden yapılmaktadır.
+            <WarningTwoToneIcon> </WarningTwoToneIcon>Yardım alanlarını görmek istediğiniz ili sol üstteki menüden seçin.
           </div>
           <br />
           <div className="desc-text">
-            Haritada işaretli olan pin noktalarına tıklayarak son yardım noktası
+            <InsertCommentTwoToneIcon></InsertCommentTwoToneIcon> Haritada işaretli olan pin noktalarına tıklayarak son yardım noktası
             hakkında bilgi alabilir, güncel durumu hakkında yeni not
             girebilirsiniz.
           </div>
           <br />
           <div className="desc-text">
-            Haritaya yeni yardım noktası eklemek için sağ tıklayabilir, mobil
-            cihazlar için ise ekrana basılı tutabilirsiniz.
+            <AddLocationAltTwoToneIcon></AddLocationAltTwoToneIcon>
+            <b>Haritaya yeni yardım noktası eklemek için sağ tıklayabilir, mobil
+              cihazlar için ise ekrana basılı tutabilirsiniz.</b>
           </div>
         </DialogContent>
         <DialogActions>
