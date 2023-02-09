@@ -52,3 +52,8 @@
   height: 100vh;
   position: fixed;
 }
+
+.site-comments {
+  max-height: 30vh;
+  overflow: scroll;
+}

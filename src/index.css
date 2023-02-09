@@ -12,7 +12,4 @@ code {
     monospace;
 }
 
-.site-comments {
-  max-height: 30vh;
-  overflow: scroll;
-}
+

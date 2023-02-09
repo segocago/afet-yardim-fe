@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.8",
     "@mui/styled-engine-sc": "^5.11.0",
     "@testing-library/jest-dom": "^4.2.4",
@@ -19,7 +20,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.1",
     "semantic-ui-react": "^2.1.4",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.6",
+    "@mui/icons-material": "5.11.0"
   },
   "scripts": {
     "start": "react-scripts start",
