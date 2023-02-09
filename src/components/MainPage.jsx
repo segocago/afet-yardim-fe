@@ -57,13 +57,7 @@ class MainPage extends Component {
             .then((res) => {
                 let updatedSites = sites.map(site => {
                     if (site.id == siteId) {
-
-                        if(site.updates){
-                            site.updates.push(res.data)
-                        }else {
-                            site.updates = [res.data]
-                        }
-
+                        return res.data;
                     }
                     return site;
                 });
