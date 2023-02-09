@@ -6,6 +6,9 @@ import {ChangeView} from "./CenterView";
 
 const MAX_TOOLTIP_SIZE = 20;
 
+//Times are kept in UTC timezone in DB so add 3 hours to it
+const TIME_DIFFERENCE_IN_MILLIS = 3 * 60 * 60 * 1000;
+
 const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
 
   function MyComponent() {
@@ -16,6 +19,11 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
     })
     return null
   }
+
+  const formatDate = (dateString) => {
+      const date = new Date(new Date(dateString).getTime() +TIME_DIFFERENCE_IN_MILLIS);
+      return date.toLocaleString();
+    }
 
   return (
     <MapContainer center={center} zoom={12} maxZoom={15} scrollWheelZoom={true}>
@@ -49,7 +57,7 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
                           <Comment>
                             <Comment.Content>
                               <Comment.Metadata>
-                                <div>{update.createDateTime}</div>
+                                <div>{formatDate(update.createDateTime)}</div>
                               </Comment.Metadata>
                               <Comment.Text>{update.update}</Comment.Text>
                             </Comment.Content>
