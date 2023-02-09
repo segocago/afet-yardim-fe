@@ -50,6 +50,7 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
                     <p>Şehir: {site.location.city}</p>
                     <p>Adres: {site.location.additionalAddress}</p>
                     <p>Organizasyon: {site.organizer}</p>
+                      <p>Açıklama: {site.description}</p>
                     <p>İletişim: {site.contactInformation == "" ? "Bilinmiyor" : site.contactInformation}</p>
                       <p><Button><a href={generateGoogleMapsLinkForSite(site)}> Bu alana yol tarifi al</a></Button></p>
 

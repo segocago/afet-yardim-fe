@@ -62,6 +62,12 @@ class MainPage extends Component {
     event.preventDefault();
     let comment = {};
     comment.update = event.target[0].value;
+
+    if(event.target[0].value === undefined || event.target[0].value === null || event.target[0].value.trim().length === 0){
+      alert("Boş yorum eklenemenez.")
+      return;
+    }
+
     const { sites } = this.state;
     SiteService.addCommentToSite(siteId, comment).then((res) => {
       let updatedSites = sites.map(site => {
