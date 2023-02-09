@@ -1,0 +1,14 @@
+.navbar-wrapper {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.about-btn {
+  color: white;
+  border-color: gainsboro;
+}
+.about-btn:hover {
+  border-color: white;
+  transform: scale(1.05);
+}
