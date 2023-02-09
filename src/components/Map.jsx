@@ -61,20 +61,23 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite}) => {
 
                       {site.updates && site.updates.sort((site1, site2) => {
                         return site1.createDateTime < site2.createDateTime ? 1 : -1;
-                      }).map(update => {
-                        return (
-                          <Comment>
-                            <Comment.Content>
-                              <Comment.Metadata>
-                                <div>{formatDate(update.createDateTime)}</div>
-                              </Comment.Metadata>
-                              <Comment.Text>{update.update}</Comment.Text>
-                            </Comment.Content>
-                          </Comment>);
-                      })
+                      }).filter(update => update.update && update.update !== "")
+                        .map(update => {
+                          return (
+                            <Comment>
+                              <Comment.Content>
+                                <Comment.Metadata>
+                                  <div>{formatDate(update.createDateTime)}</div>
+                                </Comment.Metadata>
+                                <Comment.Text>{update.update}</Comment.Text>
+                              </Comment.Content>
+                            </Comment>);
+                        })
                       }
                       {
-                        (site.updates === undefined || site.updates === null || site.updates.length === 0) && <Comment>
+                        (site.updates === undefined || site.updates === null || site.updates.length === 0 ||
+                          site.updates.filter(update => update.update && update.update !== "").length === 0) &&
+                        <Comment>
                           <Comment.Content>
                             <Comment.Text>Son güncelleme bulunmuyor.</Comment.Text>
                           </Comment.Content>
