@@ -98,7 +98,7 @@ class CreateSiteDialog extends Component {
 
   getNameLabel = () => {
     const { formValues } = this.state;
-    return formValues.type === "SHELTER" ? "Konaklama Noktası İsmi" : "Yardım Noktası İsmi";
+    return formValues.type === "SHELTER" ? "Konaklama Noktası İsmi" : "Yardım Toplama Noktası İsmi";
   }
 
   getOrganizerLabel = () => {
@@ -108,7 +108,7 @@ class CreateSiteDialog extends Component {
 
   getDialogTitle = () => {
     const { formValues } = this.state;
-    return formValues.type === "SHELTER" ? "Yeni Konaklama Noktası Ekle" : "Yeni Yardım Noktası Ekle";
+    return formValues.type === "SHELTER" ? "Yeni Konaklama Noktası Ekle" : "Yeni Yardım Toplama Noktası Ekle";
   }
 
   render() {
