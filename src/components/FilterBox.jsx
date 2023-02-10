@@ -29,7 +29,7 @@ const FilterBox = ({showOnlyVerified, handleVerificationChange}) => {
           sx={{
             p: 1,
             marginLeft: "2px",
-            top: "190px",
+            top: "210px",
             position: "fixed",
             zIndex: "9999",
           }}
