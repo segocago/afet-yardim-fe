@@ -58,7 +58,7 @@ const SiteMarker = ({site, addCommentToSite}) => {
       return new L.icon({iconSize: [35], iconUrl: require("./img/house.png")});
     }
 
-    return new L.icon({iconSize: [35], iconUrl: require("./img/box.png")});
+    return new L.icon({iconSize: [35], iconUrl: require("./img/material.jpg")});
   }
 
   const getNameLabel = (siteType) => {
