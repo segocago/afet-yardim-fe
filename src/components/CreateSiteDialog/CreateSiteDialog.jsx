@@ -126,7 +126,7 @@ class CreateSiteDialog extends Component {
 
     return (
       <>
-        <Dialog sx={{"width" : 50}} open={this.props.open} onClose={this.props.handleClose} onKeyDown={this.handleKeyDown} >
+        <Dialog open={this.props.open} onClose={this.props.handleClose} onKeyDown={this.handleKeyDown} >
           {
             <Backdrop
               sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -135,8 +135,7 @@ class CreateSiteDialog extends Component {
               <CircularProgress color="inherit" />
             </Backdrop>
           }
-          adklsmdşöasnjkdaslmş
-          <DialogTitle>{"Agmet"}</DialogTitle>
+          <DialogTitle>{getDialogTitle()}</DialogTitle>
           <DialogContent>
             <RadioGroup
                 aria-labelledby="demo-controlled-radio-buttons-group"
