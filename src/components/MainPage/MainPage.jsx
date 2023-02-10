@@ -137,7 +137,9 @@ const MainPage = () => {
           disablePortal
           options={CITIES}
           renderInput={(params) => <TextField {...params} label="Şehir" />}
-          onChange={handleSelectCity}
+          onChange={(event, value) => {
+            handleSelectCity(value);
+          }}
           value={selectedCity}
         />
         <Button
