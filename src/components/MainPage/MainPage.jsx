@@ -36,12 +36,11 @@ class MainPage extends Component {
     });
   }
 
-  handleCreateSiteDialogOpen = (e) => {
-    const { lat, lng } = e.latlng;
+  handleCreateSiteDialogOpen = (lat, long) => {
     this.setState({
       createSiteDialogOpen: true,
       lastClickedLatitude: lat,
-      lastClickedLongitude: lng,
+      lastClickedLongitude: long,
     });
   };
 
