@@ -37,6 +37,7 @@ const NO_NEED_ICON = new L.icon({
 
 const SiteMarker = ({ site, addCommentToSite }) => {
   //Status levels
+  const UNKNOWN = "UNKNOWN";
   const NO_NEED_REQUIRED = "NO_NEED_REQUIRED";
   const NEED_REQUIRED = "NEED_REQUIRED";
   const URGENT_NEED_REQUIRED = "URGENT_NEED_REQUIRED";
@@ -141,15 +142,12 @@ const SiteMarker = ({ site, addCommentToSite }) => {
   };
 
   const getTextForSiteStatusLevel = (siteStatusLevel) => {
-    switch (siteStatusLevel) {
-      case NO_NEED_REQUIRED:
-        return <span style={{ color: "green" }}>Yok </span>;
-      case NEED_REQUIRED:
-        return <span style={{ color: "blue" }}>Var </span>;
-      case URGENT_NEED_REQUIRED:
-        return <span style={{ color: "red" }}>Acil var </span>;
-      default:
-        return <span style="color:green">Yok</span>;
+    switch (siteStatusLevel){
+      case UNKNOWN: return  <span style={{color:"gray"}}>Yok </span>
+      case NO_NEED_REQUIRED: return  <span style={{color:"green"}}>Yok </span>;
+      case NEED_REQUIRED: return <span style={{color:"blue"}}>Var </span>;
+      case URGENT_NEED_REQUIRED:  return <span style={{color:"red"}}>Acil var </span>
+      default: return  <span style="color:green">Yok</span>;
     }
   };
 
@@ -160,22 +158,23 @@ const SiteMarker = ({ site, addCommentToSite }) => {
 
   const constructSiteStatuses = () => {
     const siteStatuses = [];
-    siteStatuses.push({
-      siteStatusType: HUMAN_HELP,
-      siteStatusLevel: humanHelp ? humanHelp : NO_NEED_REQUIRED,
-    });
-    siteStatuses.push({
-      siteStatusType: MATERIAL,
-      siteStatusLevel: material ? material : NO_NEED_REQUIRED,
-    });
-    siteStatuses.push({
-      siteStatusType: FOOD,
-      siteStatusLevel: food ? food : NO_NEED_REQUIRED,
-    });
-    siteStatuses.push({
-      siteStatusType: PACKAGE_STATUS,
-      siteStatusLevel: packageStatus ? packageStatus : NO_NEED_REQUIRED,
-    });
+
+    siteStatuses.push( {
+      siteStatusType : HUMAN_HELP,
+      siteStatusLevel: humanHelp ? humanHelp : UNKNOWN
+    })
+    siteStatuses.push( {
+      siteStatusType : MATERIAL,
+      siteStatusLevel: material ? material : UNKNOWN
+    })
+    siteStatuses.push( {
+      siteStatusType : FOOD,
+      siteStatusLevel: food ? food : UNKNOWN
+    })
+    siteStatuses.push( {
+      siteStatusType : PACKAGE_STATUS,
+      siteStatusLevel: packageStatus ? packageStatus : UNKNOWN
+    })
     return siteStatuses;
   };
 
