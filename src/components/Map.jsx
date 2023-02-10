@@ -1,6 +1,7 @@
 import React from 'react'
 import {MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent} from "react-leaflet";
 import {Button, Comment, Form, Header} from 'semantic-ui-react'
+import L from "leaflet";
 
 import {ChangeView} from "./CenterView";
 
@@ -10,6 +11,7 @@ const MAX_TOOLTIP_SIZE = 15;
 const TIME_DIFFERENCE_IN_MILLIS = 3 * 60 * 60 * 1000;
 
 const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMapReady}) => {
+
 
   function MyComponent() {
     const map = useMapEvent('contextmenu', (e) => {
@@ -30,6 +32,10 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMa
   }
 
 
+  const getPinForSite = (siteType) => {
+    return siteType === "SHELTER" ? new L.icon({iconSize: [35], iconUrl: require("./img/house.png")}) :
+        new L.icon({iconSize: [35], iconUrl: require("./img/box.png")});
+  }
 
   return (
     <MapContainer center={center} zoom={12} maxZoom={15} scrollWheelZoom={true} whenReady={whenMapReady}>
@@ -42,7 +48,7 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMa
         sites.filter(site => site.location && site.location.latitude && site.location.longitude)
           .map(site => {
             return (
-              <Marker position={[site.location.latitude, site.location.longitude]} ref={(ref) => site.markerRef = ref } >
+              <Marker position={[site.location.latitude, site.location.longitude]} ref={(ref) => site.markerRef = ref } icon={getPinForSite(site.type)}>
                   <Tooltip permanent>
                   <span>{site.name.slice(0, MAX_TOOLTIP_SIZE).trim().concat(site.name.length > MAX_TOOLTIP_SIZE ? "..." : "")}</span>
                 </Tooltip>

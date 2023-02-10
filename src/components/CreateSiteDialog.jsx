@@ -8,7 +8,7 @@ import {
   DialogTitle,
   TextField,
   CircularProgress,
-  Backdrop,
+  Backdrop, RadioGroup, FormControlLabel, Radio,
 } from "@mui/material";
 import siteService from "../services/SiteService";
 import { CITIES } from "../constants/constants";
@@ -23,6 +23,11 @@ class CreateSiteDialog extends Component {
   handleCityInputChange = (event, newValue) => {
     const { formValues } = this.state;
     this.setState({ formValues: { ...formValues, city: newValue.label } });
+  };
+
+  handleTypeInputChange = (event, newValue) => {
+    const { formValues } = this.state;
+    this.setState({ formValues: { ...formValues, type: newValue } });
   };
 
   handleInputChange = (e) => {
@@ -72,7 +77,7 @@ class CreateSiteDialog extends Component {
   validateFields = (formValues) => {
     let invalidValues = [];
     if (formValues.name == undefined) {
-      invalidValues.push("Yardım noktası ismi");
+      invalidValues.push(formValues.type === "SHELTER" ? "Konaklama Noktası İsmi" : "Yardım Noktası İsmi");
     }
 
     if (formValues.city == undefined) {
@@ -90,27 +95,56 @@ class CreateSiteDialog extends Component {
     return invalidValues;
   };
 
+  getNameLabel = () => {
+    const { formValues } = this.state;
+    return formValues.type === "SHELTER" ? "Konaklama Noktası İsmi" : "Yardım Noktası İsmi";
+  }
+
+  getOrganizerLabel = () => {
+    const { formValues } = this.state;
+    return formValues.type === "SHELTER" ? "Ev Sahibi İsmi" : "Organize Eden Kurum";
+  }
+
+  getDialogTitle = () => {
+    const { formValues } = this.state;
+    return formValues.type === "SHELTER" ? "Yeni Konaklama Noktası Ekle" : "Yeni Yardım Noktası Ekle";
+  }
+
   render() {
-    const { handleInputChange } = this;
+    const { handleInputChange, handleConfirmSiteCreation, handleTypeInputChange, getNameLabel, getDialogTitle, getOrganizerLabel, handleCityInputChange } = this;
+    const { formValues, isSiteProcessing } = this.state;
+    const { latitude, longitude, handleClose } = this.props;
+
     return (
       <>
         <Dialog open={this.props.open} onClose={this.props.handleClose}>
           {
             <Backdrop
               sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-              open={this.state.isSiteProcessing}
+              open={isSiteProcessing}
             >
               <CircularProgress color="inherit" />
             </Backdrop>
           }
-          <DialogTitle>Yeni Yardım Noktası Yarat</DialogTitle>
+          <DialogTitle>{getDialogTitle()}</DialogTitle>
           <DialogContent>
+            <RadioGroup
+                aria-labelledby="demo-controlled-radio-buttons-group"
+                name="controlled-radio-buttons-group"
+                defaultValue="SUPPLY"
+                value={formValues.type}
+                onChange={handleTypeInputChange}
+                row
+            >
+              <FormControlLabel value="SUPPLY" control={<Radio />} label="Yardım Toplama Noktası" />
+              <FormControlLabel value="SHELTER" control={<Radio />} label="Konaklama Noktası" />
+            </RadioGroup>
             <TextField
               autoFocus
               margin="dense"
               id="name"
               name="name"
-              label="Yardım noktası ismi"
+              label={getNameLabel()}
               type="text"
               fullWidth
               variant="standard"
@@ -144,7 +178,7 @@ class CreateSiteDialog extends Component {
               margin="dense"
               id="organizer"
               name="organizer"
-              label="Organize eden"
+              label={getOrganizerLabel()}
               type="text"
               fullWidth
               variant="standard"
@@ -155,8 +189,8 @@ class CreateSiteDialog extends Component {
               disablePortal
               options={CITIES}
               renderInput={(params) => <TextField {...params} label="Şehir" />}
-              onChange={this.handleCityInputChange}
-              value={this.state.formValues.city}
+              onChange={handleCityInputChange}
+              value={formValues.city}
             />
             <TextField
               autoFocus
@@ -191,7 +225,7 @@ class CreateSiteDialog extends Component {
               type="number"
               fullWidth
               variant="standard"
-              value={this.props.latitude}
+              value={latitude}
               required
               disabled
             />
@@ -204,16 +238,16 @@ class CreateSiteDialog extends Component {
               type="number"
               fullWidth
               variant="standard"
-              value={this.props.longitude}
+              value={longitude}
               required
               disabled
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => this.handleConfirmSiteCreation()}>
-              Yarat
+            <Button onClick={() => handleConfirmSiteCreation()}>
+              Ekle
             </Button>
-            <Button onClick={() => this.props.handleClose()}>İptal</Button>
+            <Button onClick={() => handleClose()}>İptal</Button>
           </DialogActions>
         </Dialog>
       </>
