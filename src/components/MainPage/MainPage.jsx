@@ -67,7 +67,7 @@ const MainPage = () => {
     comment.update = event.target[0].value;
     comment.siteStatuses = siteStatuses;
 
-    const { sites } = this.state;
+
     SiteService.addCommentToSite(siteId, comment).then((res) => {
       let updatedSites = sites.map((site) => {
         if (site.id === siteId) {
