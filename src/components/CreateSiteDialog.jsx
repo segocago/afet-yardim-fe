@@ -71,6 +71,7 @@ class CreateSiteDialog extends Component {
       },
       description: formValues.description,
       contactInformation: formValues.contactInformation,
+      type: formValues.type
     };
   };
 
