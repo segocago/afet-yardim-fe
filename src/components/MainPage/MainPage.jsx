@@ -57,20 +57,17 @@ class MainPage extends Component {
     this.setState({ sites: [...this.state.sites, newSite] });
   };
 
-  addCommentToSite = (event, siteId) => {
+  addCommentToSite = (event, siteId, siteStatuses) => {
     event.preventDefault();
     let comment = {};
 
-    comment.update = event.target[0].value;
-
-    if (
-      event.target[0].value === undefined ||
-      event.target[0].value === null ||
-      event.target[0].value.trim().length === 0
-    ) {
-      alert("Boş yorum eklenemenez.");
+    if(event.target[0].value === undefined || event.target[0].value === null || event.target[0].value.trim().length === 0){
+      alert("Boş yorum eklenemenez.")
       return;
     }
+
+    comment.update = event.target[0].value;
+    comment.siteStatuses = siteStatuses;
 
     const { sites } = this.state;
     SiteService.addCommentToSite(siteId, comment).then((res) => {

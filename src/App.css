@@ -57,3 +57,16 @@
   max-height: 30vh;
   overflow: scroll;
 }
+
+.popup-container-div {
+
+  overflow: auto;
+  height: 60vh;
+  width: 80vw;
+
+}
+
+
+.leaflet-popup-content {
+  width: 80vw !important; /* This must be same as popup-container-div*/
+}
