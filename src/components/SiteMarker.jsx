@@ -200,7 +200,7 @@ const SiteMarker = ({site, addCommentToSite}) => {
               }
             </Comment.Group>
 
-            <Form onSubmit={(event) => addCommentToSite(event, site.id, constructSiteStatuses())}>
+            <Form onSubmit={(event) => addCommentToSite(event, site.id, constructSiteStatuses())} style={{minHeight: 100,width: "35vw"}}>
               <TextArea placeholder="Alanla ilgili son bilgileri buraya girebilirsiniz" style={{minHeight: 100,width: "100%"}}/>
               <Form.Group inline>
                 <label>İnsan İhtiyacı:</label>

@@ -56,15 +56,15 @@
 .site-comments {
   max-height: 30vh;
   overflow: scroll;
-  width: 80vw ; /* This must be same as popup-container-div*/
-  max-width: 80vw !important; /* This must be same as popup-container-div*/;
+  width: 40vw ; /* This must be same as popup-container-div*/
+  max-width: 60vw !important; /* This must be same as popup-container-div*/;
 }
 
 .popup-container-div {
 
   overflow: auto;
   height: 60vh;
-  width: 80vw;
+  width: 40vw;
 
 }
 

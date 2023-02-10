@@ -4,7 +4,7 @@ import Map from "../Map";
 import { Autocomplete, TextField, Button, Tooltip } from "@mui/material";
 import SiteService from "../../services/SiteService";
 import { CITIES } from "../../constants/constants";
-import CreateSiteDialog from "../CreateSiteDialog";
+import CreateSiteDialog from "../CreateSiteDialog/CreateSiteDialog";
 import OnboardingDialog from "../OnboardingDialog/OnboardingDialog";
 import {getDistance} from "geolib";
 

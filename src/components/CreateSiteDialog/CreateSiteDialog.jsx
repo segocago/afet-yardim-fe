@@ -10,8 +10,9 @@ import {
   CircularProgress,
   Backdrop, RadioGroup, FormControlLabel, Radio,
 } from "@mui/material";
-import siteService from "../services/SiteService";
-import { CITIES } from "../constants/constants";
+import siteService from "../../services/SiteService";
+import { CITIES } from "../../constants/constants";
+import "./CreateSiteDialog.css";
 
 class CreateSiteDialog extends Component {
   constructor(props) {
@@ -111,6 +112,13 @@ class CreateSiteDialog extends Component {
     return formValues.type === "SHELTER" ? "Yeni Konaklama Noktası Ekle" : "Yeni Yardım Toplama Noktası Ekle";
   }
 
+  handleKeyDown =(e) => {
+    if (e.key === 27) {
+      console.log('You pressed the escape key!')
+      this.props.handleClose();
+    }
+  }
+
   render() {
     const { handleInputChange, handleConfirmSiteCreation, handleTypeInputChange, getNameLabel, getDialogTitle, getOrganizerLabel, handleCityInputChange } = this;
     const { formValues, isSiteProcessing } = this.state;
@@ -118,7 +126,7 @@ class CreateSiteDialog extends Component {
 
     return (
       <>
-        <Dialog open={this.props.open} onClose={this.props.handleClose}>
+        <Dialog sx={{"width" : 50}} open={this.props.open} onClose={this.props.handleClose} onKeyDown={this.handleKeyDown} >
           {
             <Backdrop
               sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -127,7 +135,8 @@ class CreateSiteDialog extends Component {
               <CircularProgress color="inherit" />
             </Backdrop>
           }
-          <DialogTitle>{getDialogTitle()}</DialogTitle>
+          adklsmdşöasnjkdaslmş
+          <DialogTitle>{"Agmet"}</DialogTitle>
           <DialogContent>
             <RadioGroup
                 aria-labelledby="demo-controlled-radio-buttons-group"
