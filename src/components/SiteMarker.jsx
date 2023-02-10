@@ -1,9 +1,8 @@
 import React, {useState} from 'react'
-import {MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent} from "react-leaflet";
+import { Marker, Popup,  Tooltip} from "react-leaflet";
 import {Button, Comment, Form, Header, TextArea} from 'semantic-ui-react'
 import L from "leaflet";
 
-import {ChangeView} from "./CenterView";
 
 const MAX_TOOLTIP_SIZE = 10;
 
@@ -21,7 +20,7 @@ const SiteMarker = ({site, addCommentToSite}) => {
   const HUMAN_HELP = "HUMAN_HELP";
   const MATERIAL = "MATERIAL";
   const FOOD ="FOOD";
-  const PACKAGE ="PACKAGE";
+  const PACKAGE_STATUS ="PACKAGE";
 
   const getStatusLevelForType = (site,siteStatusType) => {
 
@@ -35,6 +34,9 @@ const SiteMarker = ({site, addCommentToSite}) => {
   }
 
   const [humanHelp,setHumanHelp] = useState(getStatusLevelForType(site,HUMAN_HELP))
+  const [material,setMaterial] = useState(getStatusLevelForType(site,MATERIAL))
+  const [food,setFood] = useState(getStatusLevelForType(site,FOOD))
+  const [packageStatus,setPackageStatus] = useState(getStatusLevelForType(site,PACKAGE_STATUS))
 
   const formatDate = (dateString) => {
     const date = new Date(new Date(dateString).getTime() + TIME_DIFFERENCE_IN_MILLIS);
@@ -183,31 +185,94 @@ const SiteMarker = ({site, addCommentToSite}) => {
               }
             </Comment.Group>
 
-            <form onSubmit={(event) => addCommentToSite(event, site.id)}>
+            <Form onSubmit={(event) => addCommentToSite(event, site.id)}>
               <TextArea placeholder="Alanla ilgili son bilgileri buraya girebilirsiniz" style={{minHeight: 100,width: "100%"}}/>
-              <Button content='Güncelleme Ekle' labelPosition='left' icon='edit' primary/>
               <Form.Group inline>
                 <label>İnsan Gücü </label>
                 <Form.Radio
                     label='İhtiyaç Yok'
                     value='NO_NEED_REQUIRED'
                     checked={humanHelp === 'NO_NEED_REQUIRED'}
-                    onChange={setHumanHelp}
+                    onChange={(e,{value}) => setHumanHelp(value)}
                 />
                 <Form.Radio
                     label='İhtiyaç Var'
                     value='NEED_REQUIRED'
                     checked={humanHelp === 'NEED_REQUIRED'}
-                    onChange={setHumanHelp}
+                    onChange={(e,{value}) => setHumanHelp(value)}
                 />
                 <Form.Radio
                     label='Acil İhtiyaç Var'
                     value='URGENT_NEED_REQUIRED'
                     checked={humanHelp === 'URGENT_NEED_REQUIRED'}
-                    onChange={setHumanHelp}
+                    onChange={(e,{value}) => setHumanHelp(value)}
                 />
               </Form.Group>
-            </form>
+              <Form.Group inline>
+                <label>Materyal</label>
+                <Form.Radio
+                    label='İhtiyaç Yok'
+                    value='NO_NEED_REQUIRED'
+                    checked={material === 'NO_NEED_REQUIRED'}
+                    onChange={(e,{value}) => setMaterial(value)}
+                />
+                <Form.Radio
+                    label='İhtiyaç Var'
+                    value='NEED_REQUIRED'
+                    checked={material === 'NEED_REQUIRED'}
+                    onChange={(e,{value}) => setMaterial(value)}
+                />
+                <Form.Radio
+                    label='Acil İhtiyaç Var'
+                    value='URGENT_NEED_REQUIRED'
+                    checked={material === 'URGENT_NEED_REQUIRED'}
+                    onChange={(e,{value}) => setMaterial(value)}
+                />
+              </Form.Group>
+              <Form.Group inline>
+                <label>Gıda </label>
+                <Form.Radio
+                    label='İhtiyaç Yok'
+                    value='NO_NEED_REQUIRED'
+                    checked={food === 'NO_NEED_REQUIRED'}
+                    onChange={(e,{value}) => setFood(value)}
+                />
+                <Form.Radio
+                    label='İhtiyaç Var'
+                    value='NEED_REQUIRED'
+                    checked={food === 'NEED_REQUIRED'}
+                    onChange={(e,{value}) => setFood(value)}
+                />
+                <Form.Radio
+                    label='Acil İhtiyaç Var'
+                    value='URGENT_NEED_REQUIRED'
+                    checked={food === 'URGENT_NEED_REQUIRED'}
+                    onChange={(e,{value}) => setFood(value)}
+                />
+              </Form.Group>
+              <Form.Group inline>
+                <label>Koli </label>
+                <Form.Radio
+                    label='İhtiyaç Yok'
+                    value='NO_NEED_REQUIRED'
+                    checked={packageStatus === 'NO_NEED_REQUIRED'}
+                    onChange={(e,{value}) => setPackageStatus(value)}
+                />
+                <Form.Radio
+                    label='İhtiyaç Var'
+                    value='NEED_REQUIRED'
+                    checked={packageStatus === 'NEED_REQUIRED'}
+                    onChange={(e,{value}) => setPackageStatus(value)}
+                />
+                <Form.Radio
+                    label='Acil İhtiyaç Var'
+                    value='URGENT_NEED_REQUIRED'
+                    checked={packageStatus === 'URGENT_NEED_REQUIRED'}
+                    onChange={(e,{value}) => setPackageStatus(value)}
+                />
+              </Form.Group>
+              <Button content='Güncelleme Ekle' labelPosition='left' icon='edit' primary/>
+            </Form>
           </div>
         </Popup>
       </Marker>
