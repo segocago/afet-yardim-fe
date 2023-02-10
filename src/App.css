@@ -62,11 +62,11 @@
 
   overflow: auto;
   height: 60vh;
-  width: 80vw;
+  width: 40vw;
 
 }
 
 
 .leaflet-popup-content {
-  width: 80vw !important; /* This must be same as popup-container-div*/
+  width: 40vw !important; /* This must be same as popup-container-div*/
 }

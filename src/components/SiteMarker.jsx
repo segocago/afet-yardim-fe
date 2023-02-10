@@ -24,6 +24,10 @@ const SiteMarker = ({site, addCommentToSite}) => {
 
   const getStatusLevelForType = (site,siteStatusType) => {
 
+    if(!site.lastSiteStatuses){
+      return NO_NEED_REQUIRED;
+    }
+
     const siteStatus = site.lastSiteStatuses.find(siteStatus => siteStatus.siteStatusType === siteStatusType);
 
     if(!siteStatus){
