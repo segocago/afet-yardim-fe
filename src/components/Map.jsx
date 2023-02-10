@@ -1,6 +1,6 @@
 import React from 'react'
 import {MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent} from "react-leaflet";
-import {Button, Comment, Form, Header} from 'semantic-ui-react'
+import {Button, Comment, Form, Header, TextArea} from 'semantic-ui-react'
 import L from "leaflet";
 
 import {ChangeView} from "./CenterView";
@@ -33,8 +33,12 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMa
 
 
   const getPinForSite = (siteType) => {
-    return siteType === "SHELTER" ? new L.icon({iconSize: [35], iconUrl: require("./img/house.png")}) :
-        new L.icon({iconSize: [35], iconUrl: require("./img/box.png")});
+
+    if(siteType === "SHELTER" ){
+      return new L.icon({iconSize: [35], iconUrl: require("./img/house.png")});
+    }
+
+    return new L.icon({iconSize: [35], iconUrl: require("./img/box.png")});
   }
 
   const getNameLabel = (siteType) => {
@@ -104,7 +108,7 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMa
                     </Comment.Group>
 
                     <form onSubmit={(event) => addCommentToSite(event, site.id)}>
-                      <Form.TextArea/>
+                      <TextArea placeholder="Alanla ilgili son bilgileri buraya girebilirsiniz" style={{minHeight: 100,width: "100%"}}/>
                       <Button content='Güncelleme Ekle' labelPosition='left' icon='edit' primary/>
                     </form>
                   </div>
