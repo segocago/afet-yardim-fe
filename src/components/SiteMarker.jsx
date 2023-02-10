@@ -42,84 +42,11 @@ const SiteMarker = ({site, addCommentToSite}) => {
     const date = new Date(new Date(dateString).getTime() + TIME_DIFFERENCE_IN_MILLIS);
     return date.toLocaleString();
   }
-  // https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=<latitude>,<longitude>
-  // https://www.google.es/maps/dir/'52.51758801683297,13.397978515625027'/'52.49083837044266,13.369826049804715'/data=!4m2!4m1!3e2
+
+
   const generateGoogleMapsLinkForSite = (site) => {
     return "https://www.google.com/maps/dir/?api=1&destination=" + site.location.latitude + "," + site.location.longitude;
   }
-
-  // {
-  //   "id": 221,
-  //     "createDateTime": "2023-02-10T08:15:51.232218",
-  //     "name": "Yazılım Test Alanı - Görmezden Gelin",
-  //     "location": {
-  //   "city": "Ankara",
-  //       "district": "Yazılım Test Alanı - Görmezden Gelin",
-  //       "additionalAddress": "Yazılım Test Alanı - Görmezden Gelin",
-  //       "longitude": 31.629638671875004,
-  //       "latitude": 41.274839240974394
-  // },
-  //   "organizer": "Yazılım Test Alanı - Görmezden Gelin",
-  //     "description": "Yazılım Test Alanı - Görmezden Gelin",
-  //     "contactInformation": "Yazılım Test Alanı - Görmezden Gelin",
-  //     "updates": [
-  //   {
-  //     "createDateTime": "2023-02-10T08:54:52.116882634",
-  //     "update": "test1",
-  //     "siteStatuses": null
-  //   },
-  //   {
-  //     "createDateTime": "2023-02-10T08:54:58.077368435",
-  //     "update": "test2",
-  //     "siteStatuses": null
-  //   },
-  //   {
-  //     "createDateTime": "2023-02-10T09:01:44.387126164",
-  //     "update": "2- Test update 3",
-  //     "siteStatuses": [
-  //       {
-  //         "siteStatusType": "HUMAN_HELP",
-  //         "siteStatusLevel": "URGENT_NEED_REQUIRED"
-  //       },
-  //       {
-  //         "siteStatusType": "MATERIAL",
-  //         "siteStatusLevel": "NEED_REQUIRED"
-  //       },
-  //       {
-  //         "siteStatusType": "FOOD",
-  //         "siteStatusLevel": "NEED_REQUIRED"
-  //       },
-  //       {
-  //         "siteStatusType": "PACKAGE",
-  //         "siteStatusLevel": "NO_NEED_REQUIRED"
-  //       }
-  //     ]
-  //   }
-  // ],
-  //     "lastSiteStatuses": [
-  //   {
-  //     "siteStatusType": "HUMAN_HELP",
-  //     "siteStatusLevel": "URGENT_NEED_REQUIRED"
-  //   },
-  //   {
-  //     "siteStatusType": "MATERIAL",
-  //     "siteStatusLevel": "NEED_REQUIRED"
-  //   },
-  //   {
-  //     "siteStatusType": "FOOD",
-  //     "siteStatusLevel": "NEED_REQUIRED"
-  //   },
-  //   {
-  //     "siteStatusType": "PACKAGE",
-  //     "siteStatusLevel": "NO_NEED_REQUIRED"
-  //   }
-  // ],
-  //     "type": "SUPPLY",
-  //     "verified": false
-  // }
-
-
-
 
   const getPinForSite = (siteType) => {
 
@@ -138,6 +65,43 @@ const SiteMarker = ({site, addCommentToSite}) => {
     return siteType === "SHELTER" ? "Ev Sahibi İsmi" : "Organize Eden Kurum";
   }
 
+  const getTextForSiteStatusLevel = (siteStatusLevel) => {
+    switch (siteStatusLevel){
+      case NO_NEED_REQUIRED: return  <span style={{color:"green"}}>Yok </span>;
+      case NEED_REQUIRED: return <span style={{color:"blue"}}>Var </span>;
+      case URGENT_NEED_REQUIRED:  return <span style={{color:"red"}}>Acil var </span>
+      default: return  <span style="color:green">Yok</span>;
+    }
+  }
+
+  const getStatusLevelTextForType = (site,siteStatusType) => {
+    const statusLevel = getStatusLevelForType(site,siteStatusType);
+    return getTextForSiteStatusLevel(statusLevel);
+  }
+
+
+  const constructSiteStatuses = () => {
+
+    const siteStatuses = [];
+    siteStatuses.push( {
+      siteStatusType : HUMAN_HELP,
+      siteStatusLevel: humanHelp ? humanHelp : NO_NEED_REQUIRED
+    })
+    siteStatuses.push( {
+      siteStatusType : MATERIAL,
+      siteStatusLevel: material ? material : NO_NEED_REQUIRED
+    })
+    siteStatuses.push( {
+      siteStatusType : FOOD,
+      siteStatusLevel: food ? food : NO_NEED_REQUIRED
+    })
+    siteStatuses.push( {
+      siteStatusType : PACKAGE_STATUS,
+      siteStatusLevel: packageStatus? packageStatus : NO_NEED_REQUIRED
+    })
+    return siteStatuses;
+  }
+
   return (
       <Marker position={[site.location.latitude, site.location.longitude]} ref={(ref) => site.markerRef = ref } icon={getPinForSite(site.type)}>
         <Tooltip permanent>
@@ -152,6 +116,9 @@ const SiteMarker = ({site, addCommentToSite}) => {
             <p><b>{getOrganizerLabel(site.type)}:</b> {site.organizer}</p>
             <p><b>Açıklama:</b> {site.description}</p>
             <p><b>İletişim Bilgileri:</b> {site.contactInformation == "" ? "Bilinmiyor" : site.contactInformation}</p>
+            <p><b>İnsan İhtiyacı:</b> {getStatusLevelTextForType(site,HUMAN_HELP)} <b>Materyal İhtiyacı:</b> {getStatusLevelTextForType(site,MATERIAL)}
+              <b>Gıda İhtiyacı:</b> {getStatusLevelTextForType(site,FOOD)} <b>Koli İhtiyacı:</b> {getStatusLevelTextForType(site,PACKAGE_STATUS)}
+            </p>
             <p><Button><a href={generateGoogleMapsLinkForSite(site)} target="_blank"> Bu Alana Yol Tarifi Al</a></Button>
             </p>
 
@@ -185,7 +152,7 @@ const SiteMarker = ({site, addCommentToSite}) => {
               }
             </Comment.Group>
 
-            <Form onSubmit={(event) => addCommentToSite(event, site.id)}>
+            <Form onSubmit={(event) => addCommentToSite(event, site.id, constructSiteStatuses())}>
               <TextArea placeholder="Alanla ilgili son bilgileri buraya girebilirsiniz" style={{minHeight: 100,width: "100%"}}/>
               <Form.Group inline>
                 <label>İnsan İhtiyacı:</label>
