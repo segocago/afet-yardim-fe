@@ -33,7 +33,7 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMa
   }
 
   return (
-    <MapContainer ref={setMapRef} center={center} zoom={12} maxZoom={15} scrollWheelZoom={true}>
+    <MapContainer ref={setMapRef} center={center} zoom={12} maxZoom={15} scrollWheelZoom={true} whenReady={whenMapReady}>
     <FilterBox
       showOnlyVerified={showOnlyVerified}
       handleVerificationChange={handleVerificationChange}

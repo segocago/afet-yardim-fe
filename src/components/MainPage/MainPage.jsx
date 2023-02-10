@@ -116,7 +116,7 @@ const MainPage = () => {
   }
   
   const onGetUserLocation = (position) => {
-    this.props.handleShowMeClosestSite(
+    handleShowMeClosestSite(
       position.coords.latitude,
       position.coords.longitude
     );
