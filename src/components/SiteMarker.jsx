@@ -9,6 +9,15 @@ const MAX_TOOLTIP_SIZE = 10;
 //Times are kept in UTC timezone in DB so add 3 hours to it
 const TIME_DIFFERENCE_IN_MILLIS = 3 * 60 * 60 * 1000;
 
+const HOUSE_ICON = new L.icon({iconSize: [35], iconUrl: require("./img/house.png")});
+
+const HUMAN_ICON = new L.icon({iconSize: [35], iconUrl: require("./img/human.jpg")});
+const MATERIAL_ICON = new L.icon({iconSize: [35], iconUrl: require("./img/material.png")});
+const FOOD_ICON = new L.icon({iconSize: [35], iconUrl: require("./img/food.png")});
+const PACKAGE_ICON = new L.icon({iconSize: [35], iconUrl: require("./img/package.png")});
+
+const NO_NEED_ICON = new L.icon({iconSize: [35], iconUrl: require("./img/no_need_icon.png")});
+
 const SiteMarker = ({site, addCommentToSite}) => {
 
   //Status levels
@@ -21,6 +30,7 @@ const SiteMarker = ({site, addCommentToSite}) => {
   const MATERIAL = "MATERIAL";
   const FOOD ="FOOD";
   const PACKAGE_STATUS ="PACKAGE";
+
 
   const getStatusLevelForType = (site,siteStatusType) => {
 
@@ -52,14 +62,48 @@ const SiteMarker = ({site, addCommentToSite}) => {
     return "https://www.google.com/maps/dir/?api=1&destination=" + site.location.latitude + "," + site.location.longitude;
   }
 
-  const getPinForSite = (siteType) => {
+  const getPinForSite = (site) => {
 
-    if(siteType === "SHELTER" ){
-      return new L.icon({iconSize: [35], iconUrl: require("./img/house.png")});
+    if(site.type === "SHELTER" ){
+      return HOUSE_ICON;
     }
 
-    return new L.icon({iconSize: [35], iconUrl: require("./img/box.png")});
+    const humanNeedLevel = getStatusLevelForType(site,HUMAN_HELP);
+    const materialNeedLevel = getStatusLevelForType(site,MATERIAL);
+    const foodNeedLevel = getStatusLevelForType(site,FOOD);
+    const packageNeedLevel = getStatusLevelForType(site,PACKAGE_STATUS);
+
+    //Urgent needs
+    if(humanNeedLevel === URGENT_NEED_REQUIRED){
+      return HUMAN_ICON;
+    }
+    if(materialNeedLevel === URGENT_NEED_REQUIRED){
+      return MATERIAL_ICON;
+    }
+    if(foodNeedLevel === URGENT_NEED_REQUIRED){
+      return FOOD_ICON;
+    }
+    if(packageNeedLevel === URGENT_NEED_REQUIRED){
+      return PACKAGE_ICON;
+    }
+
+    //Need requireds
+    if(humanNeedLevel === NEED_REQUIRED){
+      return HUMAN_ICON;
+    }
+    if(materialNeedLevel === NEED_REQUIRED){
+      return MATERIAL_ICON;
+    }
+    if(foodNeedLevel === NEED_REQUIRED){
+      return FOOD_ICON;
+    }
+    if(packageNeedLevel === NEED_REQUIRED){
+      return PACKAGE_ICON;
+    }
+
+    return NO_NEED_ICON;
   }
+
 
   const getNameLabel = (siteType) => {
     return siteType === "SHELTER" ? "Konaklama Noktası İsmi" : "Yardım Noktası İsmi";
@@ -107,7 +151,7 @@ const SiteMarker = ({site, addCommentToSite}) => {
   }
 
   return (
-      <Marker position={[site.location.latitude, site.location.longitude]} ref={(ref) => site.markerRef = ref } icon={getPinForSite(site.type)}>
+      <Marker position={[site.location.latitude, site.location.longitude]} ref={(ref) => site.markerRef = ref } icon={getPinForSite(site)}>
         <Tooltip permanent>
           <span>{site.name.slice(0, MAX_TOOLTIP_SIZE).trim().concat(site.name.length > MAX_TOOLTIP_SIZE ? "..." : "")}</span>
         </Tooltip>
