@@ -21,7 +21,7 @@ class HeaderComponent extends Component {
           <nav className="navbar navbar-expand-md navbar-dark bg-dark">
             <div className="navbar-wrapper">
               <div className="navbar-brand">
-                Afet Yardımı Toplama ve Konaklama Alanları
+                 AFET YARDIM ALANLARI
               </div>
               <OnboardingDialog
                 open={this.state.onboardingDialogOpen}
