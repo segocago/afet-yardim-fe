@@ -5,7 +5,7 @@ import L from "leaflet";
 
 import {ChangeView} from "./CenterView";
 
-const MAX_TOOLTIP_SIZE = 15;
+const MAX_TOOLTIP_SIZE = 10;
 
 //Times are kept in UTC timezone in DB so add 3 hours to it
 const TIME_DIFFERENCE_IN_MILLIS = 3 * 60 * 60 * 1000;
@@ -37,6 +37,14 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMa
         new L.icon({iconSize: [35], iconUrl: require("./img/box.png")});
   }
 
+  const getNameLabel = (siteType) => {
+    return siteType === "SHELTER" ? "Konaklama Noktası İsmi" : "Yardım Noktası İsmi";
+  }
+
+  const getOrganizerLabel = (siteType) => {
+    return siteType === "SHELTER" ? "Ev Sahibi İsmi" : "Organize Eden Kurum";
+  }
+
   return (
     <MapContainer center={center} zoom={12} maxZoom={15} scrollWheelZoom={true} whenReady={whenMapReady}>
       <ChangeView center={center}/>
@@ -54,13 +62,14 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMa
                 </Tooltip>
                 <Popup>
                   <div>
-                    <p>Mekan: {site.name}</p>
-                    <p>Şehir: {site.location.city}</p>
-                    <p>Adres: {site.location.additionalAddress}</p>
-                    <p>Organizasyon: {site.organizer}</p>
-                      <p>Açıklama: {site.description}</p>
-                    <p>İletişim: {site.contactInformation == "" ? "Bilinmiyor" : site.contactInformation}</p>
-                    <p><Button><a href={generateGoogleMapsLinkForSite(site)} target="_blank"> Bu alana yol tarifi al</a></Button>
+                    <p><b>{getNameLabel(site.type)}:</b> {site.name}</p>
+                    <p><b>Şehir:</b> {site.location.city}</p>
+                    <p><b>İlçe:</b> {site.location.district}</p>
+                    <p><b>Adres:</b> {site.location.additionalAddress}</p>
+                    <p><b>{getOrganizerLabel(site.type)}:</b> {site.organizer}</p>
+                    <p><b>Açıklama:</b> {site.description}</p>
+                    <p><b>İletişim Bilgileri:</b> {site.contactInformation == "" ? "Bilinmiyor" : site.contactInformation}</p>
+                    <p><Button><a href={generateGoogleMapsLinkForSite(site)} target="_blank"> Bu Alana Yol Tarifi Al</a></Button>
                     </p>
 
                     <Comment.Group className={"site-comments"}>
@@ -96,8 +105,7 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMa
 
                     <form onSubmit={(event) => addCommentToSite(event, site.id)}>
                       <Form.TextArea/>
-                      <Button content='Güncelleme Ekle' labelPosition='left' icon='edit'
-                              primary/>
+                      <Button content='Güncelleme Ekle' labelPosition='left' icon='edit' primary/>
                     </form>
                   </div>
                 </Popup>
