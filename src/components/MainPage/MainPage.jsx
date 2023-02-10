@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import "./MainPage.css";
 import Map from "../Map";
 import { Autocomplete, TextField, Button, Tooltip } from "@mui/material";
@@ -6,58 +6,56 @@ import SiteService from "../../services/SiteService";
 import { CITIES } from "../../constants/constants";
 import CreateSiteDialog from "../CreateSiteDialog";
 import OnboardingDialog from "../OnboardingDialog/OnboardingDialog";
-import { getDistance } from "geolib";
+import {getDistance} from "geolib";
 
-class MainPage extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      selectedCity: CITIES.find((city) => city.label === "Ankara"),
-      sites: [],
-      centerLocation: [39.909442, 32.810491],
-      createSiteDialogOpen: false,
-      onboardingDialogOpen: true,
-      lastClickedLatitude: null,
-      lastClickedLongitude: null,
-      mapRef: null,
-    };
-  }
-
-  handleSelectCity = (event, newValue) => {
+const MainPage = () => {
+    const [selectedCity, setSelectedCity] = useState(CITIES.find((city) => city.label === "Ankara"));
+    const [sites, setSites] = useState([]);
+    const [centerLocation, setCenterLocation] = useState([39.909442, 32.810491]);
+    const [createSiteDialogOpen, setCreateSiteDialogOpen] = useState(false);
+    const [onboardingDialogOpen, setOnboardingDialogOpen] = useState(true);
+    const [lastClickedLatitude, setLastClickedLatitude] = useState(null);
+    const [lastClickedLongitude, setLastClickedLongitude] = useState(null);
+    const [mapRef, setMapRef] = useState(null);
+  
+  const handleSelectCity = (newValue) => {
     const lat = parseFloat(newValue.latitude);
     const lon = parseFloat(newValue.longitude);
-    this.setState({ selectedCity: newValue, centerLocation: [lat, lon] });
-  };
+    setSelectedCity(newValue);
+    const center = [lat, lon]
 
-  componentDidMount() {
-    SiteService.getSites(this.state.selectedCity.label).then((res) => {
-      this.setState({ sites: res.data });
-    });
+    if (center !== undefined) {
+      setCenterLocation(center);
+    }
   }
-
-  handleCreateSiteDialogOpen = (lat, long) => {
-    this.setState({
-      createSiteDialogOpen: true,
-      lastClickedLatitude: lat,
-      lastClickedLongitude: long,
+  
+  useEffect(() => {
+    SiteService.getSites(selectedCity.label).then((res) => {
+      setSites(res.data);
     });
+  }, []);
+
+
+  const handleCreateSiteDialogOpen = (lat, long) => {
+    setCreateSiteDialogOpen(true);
+    setLastClickedLatitude(lat);
+    setLastClickedLongitude(long);
   };
 
-  handleCreateSiteDialogClose = (formValues) => {
+  const handleCreateSiteDialogClose = (formValues) => {
     console.log(formValues);
-    this.setState({ createSiteDialogOpen: false });
+    setCreateSiteDialogOpen(false);
   };
 
-  handleOnboardingDialogClose = () => {
-    this.setState({ onboardingDialogOpen: false });
+  const handleOnboardingDialogClose = () => {
+    setOnboardingDialogOpen(false);
   };
 
-  onNewSiteCreated = (newSite) => {
-    this.setState({ sites: [...this.state.sites, newSite] });
+  const onNewSiteCreated = (newSite) => {
+    setSites([...sites, newSite]);
   };
 
-  addCommentToSite = (event, siteId, siteStatuses) => {
+  const addCommentToSite = (event, siteId, siteStatuses) => {
     event.preventDefault();
     let comment = {};
 
@@ -77,12 +75,15 @@ class MainPage extends Component {
         }
         return site;
       });
-      this.setState({ sites: updatedSites });
+      setSites(updatedSites);
     });
   };
+  
+  const whenMapReady = (event) => {
+    setMapRef(event.target);
+  }
 
-  handleShowMeClosestSite = (lat, long) => {
-    const { sites, mapRef } = this.state;
+  const handleShowMeClosestSite = (lat,long) => {
 
     if (!sites || sites.length === 0) {
       alert("Yardım toplama noktası bulunamadı");
@@ -111,76 +112,72 @@ class MainPage extends Component {
       16
     );
     closestSite.markerRef.openPopup();
-    this.setState({ onboardingDialogOpen: false });
-  };
-  whenMapReady = (event) => {
-    this.setState({ mapRef: event.target });
-  };
-
-  onGetUserLocation = (position) => {
+    setOnboardingDialogOpen(false);
+  }
+  
+  const onGetUserLocation = (position) => {
     this.props.handleShowMeClosestSite(
       position.coords.latitude,
       position.coords.longitude
     );
   };
 
-  onFailedToGetUserLocation = (error) => {
+  
+  const onFailedToGetUserLocation = (error) => {
     alert(
       "En yakın yardım alanını bulabilmek için uygulamaya konum erişim izni vermeniz gerekiyor."
     );
   };
 
-  render() {
-    return (
-      <div>
-        <div className="button-group">
-          <Autocomplete
-            style={{ marginTop: 15, width: "30%" }}
-            disablePortal
-            options={CITIES}
-            renderInput={(params) => <TextField {...params} label="Şehir" />}
-            onChange={this.handleSelectCity}
-            value={this.state.selectedCity}
-          />
-          <Button
-            variant="contained"
-            onClick={() =>
-              navigator.geolocation.getCurrentPosition(
-                this.onGetUserLocation,
-                this.onFailedToGetUserLocation
-              )
-            }
-          >
-            BANA EN YAKIN YARDIM NOKTASINI GÖSTER
-          </Button>
-          <Tooltip title="Haritaya sağ tıklayarak veya mobil cihazlarda ekrana basılı tutarak yeni yardım noktası ekleyebilirsiniz">
-            <Button variant="contained">YENİ YARDIM NOKTASI EKLE</Button>
-          </Tooltip>
-        </div>
-
-        <Map
-          whenMapReady={this.whenMapReady}
-          sites={this.state.sites}
-          center={this.state.centerLocation}
-          addCommentToSite={this.addCommentToSite}
-          handleCreateSiteDialogOpen={this.handleCreateSiteDialogOpen}
-        ></Map>
-        <OnboardingDialog
-          open={this.state.onboardingDialogOpen}
-          handleShowMeClosestSite={this.handleShowMeClosestSite}
-          handleClose={this.handleOnboardingDialogClose}
-          showClosestSiteButton={true}
+  return (
+    <div>
+      <div className="button-group">
+        <Autocomplete
+          style={{ marginTop: 15, width: "30%" }}
+          disablePortal
+          options={CITIES}
+          renderInput={(params) => <TextField {...params} label="Şehir" />}
+          onChange={handleSelectCity}
+          value={selectedCity}
         />
-        <CreateSiteDialog
-          open={this.state.createSiteDialogOpen}
-          handleClose={this.handleCreateSiteDialogClose}
-          latitude={this.state.lastClickedLatitude}
-          longitude={this.state.lastClickedLongitude}
-          onNewSiteCreated={this.onNewSiteCreated}
-        />
+        <Button
+          variant="contained"
+          onClick={() =>
+            navigator.geolocation.getCurrentPosition(
+              onGetUserLocation,
+              onFailedToGetUserLocation
+            )
+          }
+        >
+          BANA EN YAKIN YARDIM NOKTASINI GÖSTER
+        </Button>
+        <Tooltip title="Haritaya sağ tıklayarak veya mobil cihazlarda ekrana basılı tutarak yeni yardım noktası ekleyebilirsiniz">
+          <Button variant="contained">YENİ YARDIM NOKTASI EKLE</Button>
+        </Tooltip>
       </div>
-    );
-  }
+
+      <Map
+        whenMapReady={whenMapReady}
+        sites={sites}
+        center={centerLocation}
+        addCommentToSite={addCommentToSite}
+        handleCreateSiteDialogOpen={handleCreateSiteDialogOpen}
+      ></Map>
+      <OnboardingDialog
+        open={onboardingDialogOpen}
+        handleClose={handleOnboardingDialogClose}
+        handleShowMeClosestSite={handleShowMeClosestSite}
+        showClosestSiteButton={true}
+      />
+      <CreateSiteDialog
+        open={createSiteDialogOpen}
+        handleClose={handleCreateSiteDialogClose}
+        latitude={lastClickedLatitude}
+        longitude={lastClickedLongitude}
+        onNewSiteCreated={onNewSiteCreated}
+      />
+    </div>
+  );
 }
 
 export default MainPage;
