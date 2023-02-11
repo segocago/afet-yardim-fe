@@ -2,6 +2,14 @@ import React, { useState } from "react";
 import { Marker, Popup, Tooltip } from "react-leaflet";
 import { Button, Comment, Form, Header, TextArea } from "semantic-ui-react";
 import L from "leaflet";
+import {
+  FOOD,
+  getStatusLevelForType,
+  HUMAN_HELP,
+  MATERIAL, NEED_REQUIRED, NO_NEED_REQUIRED,
+  PACKAGE_STATUS, UNKNOWN,
+  URGENT_NEED_REQUIRED
+} from "./utils/SiteUtils";
 
 const MAX_TOOLTIP_SIZE = 10;
 
@@ -30,38 +38,19 @@ const PACKAGE_ICON = new L.icon({
   iconUrl: require("./img/package.png"),
 });
 
-const NO_NEED_ICON = new L.icon({
+const NO_NEED_OR_CLOSED_ICON = new L.icon({
   iconSize: [35],
-  iconUrl: require("./img/no_need_icon.png"),
+  iconUrl: require("./img/no_need_or_closed_icon.png"),
+});
+
+const UNKNOWN_ICON = new L.icon({
+  iconSize: [35],
+  iconUrl: require("./img/unknown.png"),
 });
 
 const SiteMarker = ({ site, addCommentToSite }) => {
-  //Status levels
-  const UNKNOWN = "UNKNOWN";
-  const NO_NEED_REQUIRED = "NO_NEED_REQUIRED";
-  const NEED_REQUIRED = "NEED_REQUIRED";
-  const URGENT_NEED_REQUIRED = "URGENT_NEED_REQUIRED";
 
-  //status types
-  const HUMAN_HELP = "HUMAN_HELP";
-  const MATERIAL = "MATERIAL";
-  const FOOD = "FOOD";
-  const PACKAGE_STATUS = "PACKAGE";
 
-  const getStatusLevelForType = (site, siteStatusType) => {
-    if (!site.lastSiteStatuses) {
-      return NO_NEED_REQUIRED;
-    }
-
-    const siteStatus = site.lastSiteStatuses.find(
-      (siteStatus) => siteStatus.siteStatusType === siteStatusType
-    );
-
-    if (!siteStatus) {
-      return NO_NEED_REQUIRED;
-    }
-    return siteStatus.siteStatusLevel;
-  };
 
   const [humanHelp, setHumanHelp] = useState(
     getStatusLevelForType(site, HUMAN_HELP)
@@ -93,6 +82,10 @@ const SiteMarker = ({ site, addCommentToSite }) => {
   const getPinForSite = (site) => {
     if (site.type === "SHELTER") {
       return HOUSE_ICON;
+    }
+
+    if (!site.active){
+      return NO_NEED_OR_CLOSED_ICON;
     }
 
     const humanNeedLevel = getStatusLevelForType(site, HUMAN_HELP);
@@ -128,7 +121,13 @@ const SiteMarker = ({ site, addCommentToSite }) => {
       return PACKAGE_ICON;
     }
 
-    return NO_NEED_ICON;
+    //No need requireds
+    if (humanNeedLevel === NO_NEED_REQUIRED &&materialNeedLevel === NO_NEED_REQUIRED
+        && foodNeedLevel === NO_NEED_REQUIRED && packageNeedLevel === NO_NEED_REQUIRED) {
+      return NO_NEED_OR_CLOSED_ICON;
+    }
+    //Unknown
+    return UNKNOWN_ICON;
   };
 
   const getNameLabel = (siteType) => {
@@ -143,7 +142,7 @@ const SiteMarker = ({ site, addCommentToSite }) => {
 
   const getTextForSiteStatusLevel = (siteStatusLevel) => {
     switch (siteStatusLevel){
-      case UNKNOWN: return  <span style={{color:"gray"}}>Yok </span>
+      case UNKNOWN: return  <span style={{color:"gray"}}>Bilinmiyor </span>
       case NO_NEED_REQUIRED: return  <span style={{color:"green"}}>Yok </span>;
       case NEED_REQUIRED: return <span style={{color:"blue"}}>Var </span>;
       case URGENT_NEED_REQUIRED:  return <span style={{color:"red"}}>Acil var </span>
@@ -155,6 +154,16 @@ const SiteMarker = ({ site, addCommentToSite }) => {
     const statusLevel = getStatusLevelForType(site, siteStatusType);
     return getTextForSiteStatusLevel(statusLevel);
   };
+
+  const getSiteActiveText = (active)=> {
+
+    return active ? <span style={{color:"green"}}>AÇIK </span> : <span style={{color:"red"}}>KAPALI </span>
+  }
+
+  const getSiteNameText = (site)=> {
+
+    return site.active ? <span style={{color:"green"}}>{site.name} </span> : <span style={{color:"red"}}>{site.name} </span>
+  }
 
   const constructSiteStatuses = () => {
     const siteStatuses = [];
@@ -196,7 +205,10 @@ const SiteMarker = ({ site, addCommentToSite }) => {
         <div className="popup-container-div">
           <div className="popup-text-form">
             <p>
-              <b>{getNameLabel(site.type)}:</b> {site.name}
+              <b>{getNameLabel(site.type)}:</b> {getSiteNameText(site)}
+            </p>
+            <p>
+              <b>Açık/Kapalı:</b> {getSiteActiveText(site.active)}
             </p>
             <p>
               <b>Şehir:</b> {site.location.city}

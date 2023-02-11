@@ -9,8 +9,21 @@ import OnboardingDialog from "../OnboardingDialog/OnboardingDialog";
 import { getDistance } from "geolib";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import {
+  doesSiteNeedAnyHelp,
+  FOOD,
+  getStatusLevelForType,
+  HUMAN_HELP,
+  MATERIAL,
+  NO_NEED_REQUIRED,
+  PACKAGE_STATUS,
+  UNKNOWN
+} from "../utils/SiteUtils";
 
 const SCREEN_WIDTH = window.screen.width;
+
+// Move map to a bit north of closest site so that the popup dialog for marker shows correctly
+const LONGITUDE_OFFSET =1.0;
 
 const MainPage = () => {
   const [selectedCity, setSelectedCity] = useState(
@@ -92,6 +105,7 @@ const MainPage = () => {
     setMapRef(event.target);
   };
 
+
   const handleShowMeClosestSite = (lat, long) => {
     if (!sites || sites.length === 0) {
       alert("Yardım toplama noktası bulunamadı");
@@ -100,23 +114,28 @@ const MainPage = () => {
     let minDistance = Number.MAX_SAFE_INTEGER;
     let closestSite = sites[0];
 
-    sites.forEach((site) => {
-      if (site.location && site.location.latitude && site.location.longitude) {
-        const distance = getDistance(
-          { latitude: lat, longitude: long },
-          {
-            latitude: site.location.latitude,
-            longitude: site.location.longitude,
+    const helpRequiredSites = sites.filter(site => doesSiteNeedAnyHelp(site));
+    console.log(helpRequiredSites);
+
+    helpRequiredSites.forEach((site) => {
+
+          if (site.location && site.location.latitude && site.location.longitude) {
+            const distance = getDistance(
+              { latitude: lat, longitude: long },
+              {
+                latitude: site.location.latitude,
+                longitude: site.location.longitude,
+              }
+            );
+            if (distance < minDistance) {
+              minDistance = distance;
+              closestSite = site;
+            }
           }
-        );
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestSite = site;
-        }
-      }
-    });
+        });
+
     mapRef.setView(
-      [closestSite.location.latitude, closestSite.location.longitude],
+      [closestSite.location.latitude, closestSite.location.longitude + LONGITUDE_OFFSET],
       16
     );
     closestSite.markerRef.openPopup();
@@ -160,12 +179,8 @@ const MainPage = () => {
               onFailedToGetUserLocation
             )
           }
-        >
-          BANA EN YAKIN YARDIM NOKTASINI GÖSTER
+        > EN YAKIN YARDIM GEREKEN ALANI GÖSTER
         </Button>
-        <Tooltip title="Haritaya sağ tıklayarak veya mobil cihazlarda ekrana basılı tutarak yeni yardım noktası ekleyebilirsiniz">
-          <Button variant="contained">YENİ YARDIM NOKTASI EKLE</Button>
-        </Tooltip>
         {SCREEN_WIDTH < 600 && (
           <div className="minimize-icon-cont">
             {!minimizeHeader ? (
@@ -196,8 +211,10 @@ const MainPage = () => {
         handleShowMeClosestSite={handleShowMeClosestSite}
         showClosestSiteButton={true}
       />
+
+      {/*Disabled site creation dialog, only feed the system from spreadsheets*/}
       <CreateSiteDialog
-        open={createSiteDialogOpen}
+        open={false}
         handleClose={handleCreateSiteDialogClose}
         latitude={lastClickedLatitude}
         longitude={lastClickedLongitude}
