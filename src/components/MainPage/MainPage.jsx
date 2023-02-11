@@ -73,7 +73,6 @@ const MainPage = () => {
   };
 
   const handleCreateSiteDialogClose = (formValues) => {
-    console.log(formValues);
     setCreateSiteDialogOpen(false);
   };
 
@@ -131,7 +130,6 @@ const MainPage = () => {
     let closestSite = sites[0];
 
     const helpRequiredSites = sites.filter(site => doesSiteNeedAnyHelp(site));
-    console.log(helpRequiredSites);
 
     helpRequiredSites.forEach((site) => {
 
