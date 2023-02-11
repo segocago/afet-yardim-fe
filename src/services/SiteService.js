@@ -4,7 +4,7 @@ const SITES_API_BASE_URL = "https://pfkuirisqb.execute-api.eu-central-1.amazonaw
 // const SITES_API_BASE_URL = "http://localhost:8080/sites";
 class SiteService {
   getSites(cityName) {
-    return axios.get(`${SITES_API_BASE_URL}`);
+    return axios.get(`${SITES_API_BASE_URL}?cityFilter=${cityName}`);
   }
 
   createSite(site) {

@@ -1,42 +1,50 @@
-import React, { Component } from "react";
+import React from "react";
 import {
+  Autocomplete,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
+  DialogTitle, TextField,
 } from "@mui/material";
+import SendIcon from '@mui/icons-material/Send';
 import "./OnboardingDialog.css";
+import {CITIES} from "../../constants/constants";
 
-
-class OnboardingDialog extends Component {
-
-  onGetUserLocation = (position) => {
-    this.props.handleShowMeClosestSite(position.coords.latitude,position.coords.longitude);
+const OnboardingDialog = ({open, handleClose, showClosestSiteButton, handleSelectCity, selectedCity}) => {
+  const onGetUserLocation = (position) => {
+    this.props.handleShowMeClosestSite(position.coords.latitude, position.coords.longitude);
   }
 
-  onFailedToGetUserLocation = (error) => {
-
+  const onFailedToGetUserLocation = (error) => {
     alert("En yakın yardım alanını bulabilmek için uygulamaya konum erişim izni vermeniz gerekiyor.")
   }
 
-  render() {
-    return (
-      <Dialog open={this.props.open} onClose={this.props.handleClose}>
-        <DialogTitle>
-          <div className="title">En Yakın Yardım Noktası</div>
-        </DialogTitle>
-        <DialogContent>
-            {this.props.showClosestSiteButton &&
-              <Button variant="contained" onClick={() => navigator.geolocation.getCurrentPosition(this.onGetUserLocation, this.onFailedToGetUserLocation)}
-              > BANA EN YAKIN YARDIM GEREKEN ALANI GÖSTER </Button>}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.props.handleClose()}>Kapat</Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
+  return (
+    <Dialog disableEscapeKeyDown={selectedCity} open={open} onClose={handleClose}>
+      <DialogTitle>
+        <div className="title">{selectedCity ? "En Yakın Yardım Alanı" : "İlerlemek İçin Şehir Seçiniz"}</div>
+      </DialogTitle>
+      {!selectedCity && <Autocomplete
+          className="auto-complete-dropdown"
+          style={{width: "100%"}}
+          options={CITIES}
+          renderInput={(params) => <TextField {...params} label="Şehir"/>}
+          onChange={(event, value) => {
+            handleSelectCity(value);
+          }}
+          value={selectedCity}
+      />}
+      <DialogContent>
+          {showClosestSiteButton && selectedCity &&
+            <Button startIcon={<SendIcon/>} variant="contained" onClick={() => navigator.geolocation.getCurrentPosition(onGetUserLocation, onFailedToGetUserLocation)}
+            > Bana En Yakın Yardım Alanını Göster</Button>}
+      </DialogContent>
+      <DialogActions>
+        <Button disabled={!selectedCity} onClick={() => handleClose()}>{selectedCity && "Kapat"}</Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
 export default OnboardingDialog;
