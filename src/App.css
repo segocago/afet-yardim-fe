@@ -68,6 +68,14 @@
 
 }
 
+.map-legend{
+  margin-bottom: 2px;
+  right: 0px;
+  bottom: 0px;
+  position: fixed;
+  zIndex: 9999;
+}
+
 
 .leaflet-popup-content {
   width: 80vw !important; /* This must be same as popup-container-div*/

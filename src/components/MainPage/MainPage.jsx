@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./MainPage.css";
 import Map from "../Map";
-import { Autocomplete, TextField, Button, Tooltip } from "@mui/material";
+import {Autocomplete, TextField, Button, Tooltip, CardMedia, Grid} from "@mui/material";
 import SiteService from "../../services/SiteService";
 import { CITIES } from "../../constants/constants";
 import CreateSiteDialog from "../CreateSiteDialog";
@@ -19,11 +19,14 @@ import {
   PACKAGE_STATUS,
   UNKNOWN
 } from "../utils/SiteUtils";
+import L from "leaflet";
+import {foodImage, humanImage, materialImage, noNeedOrClosedImaged, packageImage, unknownImage} from "../img/images";
 
 const SCREEN_WIDTH = window.screen.width;
 
 // Move map to a bit north of closest site so that the popup dialog for marker shows correctly
 const LONGITUDE_OFFSET =1.0;
+const LEGEND_IMAGE_DIMENSION = 20;
 
 const MainPage = () => {
   const [selectedCity, setSelectedCity] = useState(
@@ -220,6 +223,61 @@ const MainPage = () => {
         longitude={lastClickedLongitude}
         onNewSiteCreated={onNewSiteCreated}
       />
+      <Grid container spacing={1} className="map-legend">
+
+        <CardMedia
+            component="img"
+            sx={{
+              height: LEGEND_IMAGE_DIMENSION,
+              width: LEGEND_IMAGE_DIMENSION
+            }}
+            src={humanImage}
+        /> İnsan
+        <CardMedia
+            component="img"
+            sx={{
+              height: LEGEND_IMAGE_DIMENSION,
+              width: LEGEND_IMAGE_DIMENSION
+            }}
+            src={materialImage}
+        />Materyal
+
+        <CardMedia
+            component="img"
+            sx={{
+              height: LEGEND_IMAGE_DIMENSION,
+              width: LEGEND_IMAGE_DIMENSION
+            }}
+            src={foodImage}
+        />Gıda
+        <CardMedia
+            component="img"
+            sx={{
+              height: LEGEND_IMAGE_DIMENSION,
+              width: LEGEND_IMAGE_DIMENSION
+            }}
+            src={packageImage}
+        />Koli
+
+          <CardMedia
+              component="img"
+              sx={{
+                  height: LEGEND_IMAGE_DIMENSION,
+                  width: LEGEND_IMAGE_DIMENSION
+              }}
+              src={noNeedOrClosedImaged}
+          /> Kapalı/Yardım Gerekmiyor
+
+          <CardMedia
+              component="img"
+              sx={{
+                  height: LEGEND_IMAGE_DIMENSION,
+                  width: LEGEND_IMAGE_DIMENSION
+              }}
+              src={unknownImage}
+          />Bilgi Yok
+
+      </Grid>
     </div>
   );
 };
