@@ -7,9 +7,7 @@ import MainPage from "./components/MainPage/MainPage";
 function App() {
   return (
     <div>
-      <HeaderComponent />
       <MainPage />
-      <FooterComponent />
     </div>
   );
 }

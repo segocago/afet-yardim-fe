@@ -30,9 +30,14 @@ const PACKAGE_ICON = new L.icon({
   iconUrl: require("./img/package.png"),
 });
 
-const NO_NEED_ICON = new L.icon({
+const NO_NEED_OR_CLOSED_ICON = new L.icon({
   iconSize: [35],
-  iconUrl: require("./img/no_need_icon.png"),
+  iconUrl: require("./img/no_need_or_closed_icon.png"),
+});
+
+const UNKNOWN_ICON = new L.icon({
+  iconSize: [35],
+  iconUrl: require("./img/unknown.png"),
 });
 
 const SiteMarker = ({ site, addCommentToSite }) => {
@@ -58,7 +63,7 @@ const SiteMarker = ({ site, addCommentToSite }) => {
     );
 
     if (!siteStatus) {
-      return NO_NEED_REQUIRED;
+      return UNKNOWN;
     }
     return siteStatus.siteStatusLevel;
   };
@@ -95,6 +100,10 @@ const SiteMarker = ({ site, addCommentToSite }) => {
       return HOUSE_ICON;
     }
 
+    if (!site.active){
+      return NO_NEED_OR_CLOSED_ICON;
+    }
+
     const humanNeedLevel = getStatusLevelForType(site, HUMAN_HELP);
     const materialNeedLevel = getStatusLevelForType(site, MATERIAL);
     const foodNeedLevel = getStatusLevelForType(site, FOOD);
@@ -128,7 +137,26 @@ const SiteMarker = ({ site, addCommentToSite }) => {
       return PACKAGE_ICON;
     }
 
-    return NO_NEED_ICON;
+    //No need requireds
+    if (humanNeedLevel === NO_NEED_REQUIRED) {
+      return HUMAN_ICON;
+    }
+    if (materialNeedLevel === NO_NEED_REQUIRED) {
+      return MATERIAL_ICON;
+    }
+    if (foodNeedLevel === NO_NEED_REQUIRED) {
+      return FOOD_ICON;
+    }
+    if (packageNeedLevel === NO_NEED_REQUIRED) {
+      return PACKAGE_ICON;
+    }
+
+    //Unknown
+    return UNKNOWN_ICON;
+
+
+
+
   };
 
   const getNameLabel = (siteType) => {
@@ -143,7 +171,7 @@ const SiteMarker = ({ site, addCommentToSite }) => {
 
   const getTextForSiteStatusLevel = (siteStatusLevel) => {
     switch (siteStatusLevel){
-      case UNKNOWN: return  <span style={{color:"gray"}}>Yok </span>
+      case UNKNOWN: return  <span style={{color:"gray"}}>Bilinmiyor </span>
       case NO_NEED_REQUIRED: return  <span style={{color:"green"}}>Yok </span>;
       case NEED_REQUIRED: return <span style={{color:"blue"}}>Var </span>;
       case URGENT_NEED_REQUIRED:  return <span style={{color:"red"}}>Acil var </span>
@@ -155,6 +183,12 @@ const SiteMarker = ({ site, addCommentToSite }) => {
     const statusLevel = getStatusLevelForType(site, siteStatusType);
     return getTextForSiteStatusLevel(statusLevel);
   };
+
+  const getSiteActiveText = (active)=> {
+
+    return active ? <span style={{color:"green"}}>AÇIK </span> : <span style={{color:"red"}}>KAPALI </span>
+
+  }
 
   const constructSiteStatuses = () => {
     const siteStatuses = [];
@@ -197,6 +231,9 @@ const SiteMarker = ({ site, addCommentToSite }) => {
           <div className="popup-text-form">
             <p>
               <b>{getNameLabel(site.type)}:</b> {site.name}
+            </p>
+            <p>
+              <b>Açık/Kapalı:</b> {getSiteActiveText(site.active)}
             </p>
             <p>
               <b>Şehir:</b> {site.location.city}

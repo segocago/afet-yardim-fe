@@ -160,12 +160,8 @@ const MainPage = () => {
               onFailedToGetUserLocation
             )
           }
-        >
-          BANA EN YAKIN YARDIM NOKTASINI GÖSTER
+        > BANA EN YAKIN YARDIM NOKTASINI GÖSTER
         </Button>
-        <Tooltip title="Haritaya sağ tıklayarak veya mobil cihazlarda ekrana basılı tutarak yeni yardım noktası ekleyebilirsiniz">
-          <Button variant="contained">YENİ YARDIM NOKTASI EKLE</Button>
-        </Tooltip>
         {SCREEN_WIDTH < 600 && (
           <div className="minimize-icon-cont">
             {!minimizeHeader ? (
