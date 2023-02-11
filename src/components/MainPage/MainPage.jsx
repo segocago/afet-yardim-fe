@@ -211,8 +211,10 @@ const MainPage = () => {
         handleShowMeClosestSite={handleShowMeClosestSite}
         showClosestSiteButton={true}
       />
+
+      {/*Disabled site creation dialog, only feed the system from spreadsheets*/}
       <CreateSiteDialog
-        open={createSiteDialogOpen}
+        open={false}
         handleClose={handleCreateSiteDialogClose}
         latitude={lastClickedLatitude}
         longitude={lastClickedLongitude}
