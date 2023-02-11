@@ -11,9 +11,9 @@ import SendIcon from '@mui/icons-material/Send';
 import "./OnboardingDialog.css";
 import {CITIES} from "../../constants/constants";
 
-const OnboardingDialog = ({open, handleClose, showClosestSiteButton, handleSelectCity, selectedCity}) => {
+const OnboardingDialog = ({open, handleClose, showClosestSiteButton, handleSelectCity, selectedCity,handleShowMeClosestSite}) => {
   const onGetUserLocation = (position) => {
-    this.props.handleShowMeClosestSite(position.coords.latitude, position.coords.longitude);
+    handleShowMeClosestSite(position.coords.latitude, position.coords.longitude);
   }
 
   const onFailedToGetUserLocation = (error) => {
