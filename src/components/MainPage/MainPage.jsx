@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from "react";
-import "./MainPage.css";
-import Map from "../Map";
-import {Autocomplete, TextField, Button, CardMedia, Grid} from "@mui/material";
-import SiteService from "../../services/SiteService";
-import { CITIES } from "../../constants/constants";
-import CreateSiteDialog from "../CreateSiteDialog";
-import OnboardingDialog from "../OnboardingDialog/OnboardingDialog";
-import { getDistance } from "geolib";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { LoadingButton } from "@mui/lab";
+import { Autocomplete, Button, CardMedia, Grid, TextField } from "@mui/material";
+import { getDistance } from "geolib";
+import React, { useEffect, useState } from "react";
+import { CITIES } from "../../constants/constants";
+import SiteService from "../../services/SiteService";
+import ClosestHelpSiteButton from "../ClosestHelpSiteButton";
+import CreateSiteDialog from "../CreateSiteDialog";
+import Map from "../Map";
+import OnboardingDialog from "../OnboardingDialog/OnboardingDialog";
+import { foodImage, humanImage, materialImage, noNeedOrClosedImaged, packageImage, unknownImage } from "../img/images";
 import {
   doesSiteNeedAnyHelp
 } from "../utils/SiteUtils";
-import {foodImage, humanImage, materialImage, noNeedOrClosedImaged, packageImage, unknownImage} from "../img/images";
+import "./MainPage.css";
 
 const SCREEN_WIDTH = window.screen.width;
 
 // Move map to a bit north of closest site so that the popup dialog for marker shows correctly
-const LONGITUDE_OFFSET =1.0;
 const LEGEND_IMAGE_DIMENSION = 20;
 const INITIAL_SELECTED_CITY = CITIES.find((city) => city.label === "Ankara");
 
@@ -120,55 +121,6 @@ const MainPage = () => {
     setMapRef(event.target);
   };
 
-
-  const handleShowMeClosestSite = (lat, long) => {
-    if (!sites || sites.length === 0) {
-      alert("Yardım toplama noktası bulunamadı");
-      return;
-    }
-    let minDistance = Number.MAX_SAFE_INTEGER;
-    let closestSite = sites[0];
-
-    const helpRequiredSites = sites.filter(site => doesSiteNeedAnyHelp(site));
-
-    helpRequiredSites.forEach((site) => {
-
-          if (site.location && site.location.latitude && site.location.longitude) {
-            const distance = getDistance(
-              { latitude: lat, longitude: long },
-              {
-                latitude: site.location.latitude,
-                longitude: site.location.longitude,
-              }
-            );
-            if (distance < minDistance) {
-              minDistance = distance;
-              closestSite = site;
-            }
-          }
-        });
-
-    mapRef.setView(
-      [closestSite.location.latitude, closestSite.location.longitude + LONGITUDE_OFFSET],
-      16
-    );
-    closestSite.markerRef.openPopup();
-    setOnboardingDialogOpen(false);
-  };
-
-  const onGetUserLocation = (position) => {
-    handleShowMeClosestSite(
-      position.coords.latitude,
-      position.coords.longitude
-    );
-  };
-
-  const onFailedToGetUserLocation = (error) => {
-    alert(
-      "En yakın yardım alanını bulabilmek için uygulamaya konum erişim izni vermeniz gerekiyor."
-    );
-  };
-
   return (
     <div>
       <div
@@ -185,16 +137,13 @@ const MainPage = () => {
           }}
           value={selectedCity}
         />
-        <Button
-          variant="contained"
-          onClick={() =>
-            navigator.geolocation.getCurrentPosition(
-              onGetUserLocation,
-              onFailedToGetUserLocation
-            )
-          }
-        > EN YAKIN YARDIM GEREKEN ALANI GÖSTER
-        </Button>
+        <ClosestHelpSiteButton
+          sites={sites}
+          mapRef={mapRef}
+          callback={() => setOnboardingDialogOpen(false)}
+        >
+          BANA EN YAKIN YARDIM ALANINI GÖSTER
+        </ClosestHelpSiteButton>
         {SCREEN_WIDTH < 600 && (
           <div className="minimize-icon-cont">
             {!minimizeHeader ? (
@@ -219,14 +168,19 @@ const MainPage = () => {
         addCommentToSite={addCommentToSite}
         handleCreateSiteDialogOpen={handleCreateSiteDialogOpen}
       ></Map>
-      <OnboardingDialog
-        open={onboardingDialogOpen}
-        handleClose={handleOnboardingDialogClose}
-        handleShowMeClosestSite={handleShowMeClosestSite}
-        showClosestSiteButton={true}
-        handleSelectCity={setSelectedCity}
-        selectedCity={selectedCity}
-      />
+      {
+        sites.length !== 0 && 
+          <OnboardingDialog
+          open={onboardingDialogOpen}
+          handleClose={handleOnboardingDialogClose}
+          showClosestSiteButton={true}
+          handleSelectCity={setSelectedCity}
+          selectedCity={selectedCity}
+          sites={sites}
+          mapRef={mapRef}
+        /> 
+      }
+      
 
       {/*Disabled site creation dialog, only feed the system from spreadsheets*/}
       <CreateSiteDialog
