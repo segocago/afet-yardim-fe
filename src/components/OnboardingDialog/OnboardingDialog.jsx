@@ -21,7 +21,7 @@ const OnboardingDialog = ({open, handleClose, showClosestSiteButton, handleSelec
   }
 
   return (
-    <Dialog disableEscapeKeyDown={selectedCity} open={open} onClose={handleClose}>
+    <Dialog disableEscapeKeyDown={selectedCity != null} open={open} onClose={handleClose}>
       <DialogTitle>
         <div className="title">{selectedCity ? "En Yakın Yardım Alanı" : "İlerlemek İçin Şehir Seçiniz"}</div>
       </DialogTitle>

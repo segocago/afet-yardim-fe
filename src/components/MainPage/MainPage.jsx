@@ -238,8 +238,7 @@ const MainPage = () => {
         longitude={lastClickedLongitude}
         onNewSiteCreated={onNewSiteCreated}
       />
-      <Grid container spacing={1} className="map-legend">
-
+      <Grid style={{paddingLeft: "12px", paddingBottom: "5px"}} container spacing={1} className="map-legend">
         <CardMedia
             component="img"
             sx={{
@@ -247,7 +246,7 @@ const MainPage = () => {
               width: LEGEND_IMAGE_DIMENSION
             }}
             src={humanImage}
-        /> İnsan
+        /> <b>İnsan</b>
         <CardMedia
             component="img"
             sx={{
@@ -255,8 +254,7 @@ const MainPage = () => {
               width: LEGEND_IMAGE_DIMENSION
             }}
             src={materialImage}
-        />Materyal
-
+        /><b>Materyal</b>
         <CardMedia
             component="img"
             sx={{
@@ -264,7 +262,7 @@ const MainPage = () => {
               width: LEGEND_IMAGE_DIMENSION
             }}
             src={foodImage}
-        />Gıda
+        /><b>Gıda</b>
         <CardMedia
             component="img"
             sx={{
@@ -272,8 +270,7 @@ const MainPage = () => {
               width: LEGEND_IMAGE_DIMENSION
             }}
             src={packageImage}
-        />Koli
-
+        /><b>Koli</b>
           <CardMedia
               component="img"
               sx={{
@@ -281,8 +278,7 @@ const MainPage = () => {
                   width: LEGEND_IMAGE_DIMENSION
               }}
               src={noNeedOrClosedImaged}
-          /> Kapalı/Yardım Gerekmiyor
-
+          /><b>Kapalı/Yardım Gerekmiyor</b>
           <CardMedia
               component="img"
               sx={{
@@ -290,8 +286,7 @@ const MainPage = () => {
                   width: LEGEND_IMAGE_DIMENSION
               }}
               src={unknownImage}
-          />Bilgi Yok
-
+          /><b>Bilgi Yok</b>
       </Grid>
     </div>
   );
