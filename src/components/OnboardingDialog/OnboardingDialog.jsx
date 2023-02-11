@@ -4,7 +4,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle, TextField,
+  DialogTitle, Stack, TextField,
 } from "@mui/material";
 import { CITIES } from "../../constants/constants";
 import ClosestHelpSiteButton from '../ClosestHelpSiteButton';
@@ -29,6 +29,13 @@ const OnboardingDialog = ({open, handleClose, showClosestSiteButton, handleSelec
       />}
       <DialogContent>
       {showClosestSiteButton && selectedCity &&
+        <Stack spacing={2}>
+          <p>
+            Şehrinizdeki yardım alanlarıyla ilgili detayları haritada bulabilirsiniz. 
+            Daha detaylı bilgilere ulaşmak için konumların üzerine tıklayabilirsiniz. 
+            Eğer size en yakın yardım merkezini öğrenmek istiyorsanız lütfen aşağıdaki 
+            butonu kullanın.
+          </p>
           <ClosestHelpSiteButton
             sites={sites}
             mapRef={mapRef}
@@ -36,7 +43,8 @@ const OnboardingDialog = ({open, handleClose, showClosestSiteButton, handleSelec
           >
            Bana En Yakın Yardım Alanını Göster
           </ClosestHelpSiteButton>
-        }
+        </Stack>
+      }
       </DialogContent>
       <DialogActions>
         <Button disabled={!selectedCity} onClick={() => handleClose()}>{selectedCity && "Kapat"}</Button>
