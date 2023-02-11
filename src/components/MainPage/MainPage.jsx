@@ -22,6 +22,9 @@ import {
 
 const SCREEN_WIDTH = window.screen.width;
 
+// Move map to a bit north of closest site so that the popup dialog for marker shows correctly
+const LONGITUDE_OFFSET =1.0;
+
 const MainPage = () => {
   const [selectedCity, setSelectedCity] = useState(
     CITIES.find((city) => city.label === "Ankara")
@@ -132,7 +135,7 @@ const MainPage = () => {
         });
 
     mapRef.setView(
-      [closestSite.location.latitude, closestSite.location.longitude],
+      [closestSite.location.latitude, closestSite.location.longitude + LONGITUDE_OFFSET],
       16
     );
     closestSite.markerRef.openPopup();

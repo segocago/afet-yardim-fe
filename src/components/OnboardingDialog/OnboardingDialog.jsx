@@ -29,7 +29,7 @@ class OnboardingDialog extends Component {
         <DialogContent>
             {this.props.showClosestSiteButton &&
               <Button variant="contained" onClick={() => navigator.geolocation.getCurrentPosition(this.onGetUserLocation, this.onFailedToGetUserLocation)}
-              >  EN YAKIN YARDIM GEREKEN ALANI GÖSTER </Button>}
+              > BANA EN YAKIN YARDIM GEREKEN ALANI GÖSTER </Button>}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.props.handleClose()}>Kapat</Button>
