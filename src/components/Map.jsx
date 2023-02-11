@@ -24,9 +24,9 @@ const Map = ({sites, center, addCommentToSite, whenMapReady}) => {
       <MarkerClusterGroup
         chunkedLoading
         showCoverageOnHover={true}
-        maxClusterRadius={100}
+        maxClusterRadius={80}
         spiderfyOnMaxZoom={true}
-        disableClusteringAtZoom={12}
+        disableClusteringAtZoom={14}
         removeOutsideVisibleBounds
       >
         {
