@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./MainPage.css";
 import Map from "../Map";
-import {Autocomplete, TextField, Button, Tooltip, CardMedia, Grid} from "@mui/material";
+import {Autocomplete, TextField, Button, CardMedia, Grid} from "@mui/material";
 import SiteService from "../../services/SiteService";
 import { CITIES } from "../../constants/constants";
 import CreateSiteDialog from "../CreateSiteDialog";
@@ -10,16 +10,8 @@ import { getDistance } from "geolib";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
-  doesSiteNeedAnyHelp,
-  FOOD,
-  getStatusLevelForType,
-  HUMAN_HELP,
-  MATERIAL,
-  NO_NEED_REQUIRED,
-  PACKAGE_STATUS,
-  UNKNOWN
+  doesSiteNeedAnyHelp
 } from "../utils/SiteUtils";
-import L from "leaflet";
 import {foodImage, humanImage, materialImage, noNeedOrClosedImaged, packageImage, unknownImage} from "../img/images";
 
 const SCREEN_WIDTH = window.screen.width;
@@ -27,35 +19,51 @@ const SCREEN_WIDTH = window.screen.width;
 // Move map to a bit north of closest site so that the popup dialog for marker shows correctly
 const LONGITUDE_OFFSET =1.0;
 const LEGEND_IMAGE_DIMENSION = 20;
+const INITIAL_SELECTED_CITY = CITIES.find((city) => city.label === "Ankara");
 
 const MainPage = () => {
-  const [selectedCity, setSelectedCity] = useState(
-    CITIES.find((city) => city.label === "Ankara")
-  );
+  const [selectedCity, setSelectedCity] = useState(null);
   const [sites, setSites] = useState([]);
-  const [centerLocation, setCenterLocation] = useState([39.909442, 32.810491]);
-  const [createSiteDialogOpen, setCreateSiteDialogOpen] = useState(false);
+  const [centerLocation, setCenterLocation] = useState([INITIAL_SELECTED_CITY.latitude, INITIAL_SELECTED_CITY.longitude]);
+  const [setCreateSiteDialogOpen] = useState(false);
   const [onboardingDialogOpen, setOnboardingDialogOpen] = useState(true);
   const [lastClickedLatitude, setLastClickedLatitude] = useState(null);
   const [lastClickedLongitude, setLastClickedLongitude] = useState(null);
   const [minimizeHeader, setMinimizeHeader] = useState(false);
   const [mapRef, setMapRef] = useState(null);
 
+  const setSelectedCityFromLocalStorage = () => {
+    const selectedCityFromLocalStorage = JSON.parse(localStorage.getItem("selectedCity"));
+    selectedCityFromLocalStorage ? setSelectedCity(selectedCityFromLocalStorage) : setSelectedCity(null);
+  }
+  const fetchSitesOfSelectedCity = () => {
+    selectedCity && SiteService.getSites(selectedCity.label).then((res) => {
+      setSites(res.data);
+    });
+  }
   const handleSelectCity = (newValue) => {
     const lat = parseFloat(newValue.latitude);
     const lon = parseFloat(newValue.longitude);
     setSelectedCity(newValue);
-    const center = [lat, lon];
 
+    const center = [lat, lon];
     if (center !== undefined) {
       setCenterLocation(center);
     }
   };
 
   useEffect(() => {
-    SiteService.getSites(selectedCity.label).then((res) => {
-      setSites(res.data);
-    });
+    fetchSitesOfSelectedCity(selectedCity);
+    if (selectedCity) {
+      localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
+      const center = [selectedCity.latitude, selectedCity.longitude];
+      center && setCenterLocation(center);
+    }
+  }, [selectedCity]);
+
+  useEffect(() => {
+    setSelectedCityFromLocalStorage();
+    fetchSitesOfSelectedCity(selectedCity);
   }, []);
 
   const handleCreateSiteDialogOpen = (lat, long) => {
@@ -69,7 +77,12 @@ const MainPage = () => {
     setCreateSiteDialogOpen(false);
   };
 
-  const handleOnboardingDialogClose = () => {
+  const handleOnboardingDialogClose = (event, reason) => {
+    if (!selectedCity && reason === "backdropClick") {
+      return;
+    }
+    fetchSitesOfSelectedCity(selectedCity);
+    setCenterLocation([selectedCity.latitude, selectedCity.longitude]);
     setOnboardingDialogOpen(false);
   };
 
@@ -213,6 +226,8 @@ const MainPage = () => {
         handleClose={handleOnboardingDialogClose}
         handleShowMeClosestSite={handleShowMeClosestSite}
         showClosestSiteButton={true}
+        handleSelectCity={setSelectedCity}
+        selectedCity={selectedCity}
       />
 
       {/*Disabled site creation dialog, only feed the system from spreadsheets*/}

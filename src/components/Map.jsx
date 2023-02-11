@@ -1,16 +1,9 @@
 import React, {useEffect, useState} from 'react'
-import {MapContainer, Marker, Popup, TileLayer, Tooltip, useMap, useMapEvent} from "react-leaflet";
-import {Button, Comment, Form, Header, TextArea} from 'semantic-ui-react'
+import {MapContainer, TileLayer} from "react-leaflet";
 import FilterBox from "./FilterBox";
 import SiteMarker from "./SiteMarker";
 
-
-const MAX_TOOLTIP_SIZE = 10;
-
-//Times are kept in UTC timezone in DB so add 3 hours to it
-const TIME_DIFFERENCE_IN_MILLIS = 3 * 60 * 60 * 1000;
-
-const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMapReady}) => {
+const Map = ({sites, center, addCommentToSite, whenMapReady}) => {
 
   const [mapRef, setMapRef] = useState(null);
 
@@ -19,21 +12,13 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMa
   const handleVerificationChange = (value) => setShowOnlyVerified(value);
 
   useEffect(() => {
-    if(center !== undefined && mapRef !== null){
+    if (center && !center.some(value => value === null || value === undefined) && mapRef) {
       mapRef.setView(center)
     }
   }, [center])
 
-  function MyComponent() {
-    const map = useMapEvent('contextmenu', (e) => {
-      const {lat, lng} = e.latlng;
-      handleCreateSiteDialogOpen(lat, lng);
-    })
-    return null
-  }
-
   return (
-    <MapContainer ref={setMapRef} center={center} zoom={12} maxZoom={15} scrollWheelZoom={true} whenReady={whenMapReady}>
+    <MapContainer ref={setMapRef} center={center} zoom={12} maxZoom={16} minZoom={11} scrollWheelZoom whenReady={whenMapReady}>
     <FilterBox
       showOnlyVerified={showOnlyVerified}
       handleVerificationChange={handleVerificationChange}
@@ -59,7 +44,6 @@ const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMa
             )
           })
       }
-      <MyComponent></MyComponent>
     </MapContainer>
   );
 }
