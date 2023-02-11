@@ -2,6 +2,14 @@ import React, { useState } from "react";
 import { Marker, Popup, Tooltip } from "react-leaflet";
 import { Button, Comment, Form, Header, TextArea } from "semantic-ui-react";
 import L from "leaflet";
+import {
+  FOOD,
+  getStatusLevelForType,
+  HUMAN_HELP,
+  MATERIAL, NEED_REQUIRED, NO_NEED_REQUIRED,
+  PACKAGE_STATUS, UNKNOWN,
+  URGENT_NEED_REQUIRED
+} from "./utils/SiteUtils";
 
 const MAX_TOOLTIP_SIZE = 10;
 
@@ -41,32 +49,8 @@ const UNKNOWN_ICON = new L.icon({
 });
 
 const SiteMarker = ({ site, addCommentToSite }) => {
-  //Status levels
-  const UNKNOWN = "UNKNOWN";
-  const NO_NEED_REQUIRED = "NO_NEED_REQUIRED";
-  const NEED_REQUIRED = "NEED_REQUIRED";
-  const URGENT_NEED_REQUIRED = "URGENT_NEED_REQUIRED";
 
-  //status types
-  const HUMAN_HELP = "HUMAN_HELP";
-  const MATERIAL = "MATERIAL";
-  const FOOD = "FOOD";
-  const PACKAGE_STATUS = "PACKAGE";
 
-  const getStatusLevelForType = (site, siteStatusType) => {
-    if (!site.lastSiteStatuses) {
-      return NO_NEED_REQUIRED;
-    }
-
-    const siteStatus = site.lastSiteStatuses.find(
-      (siteStatus) => siteStatus.siteStatusType === siteStatusType
-    );
-
-    if (!siteStatus) {
-      return UNKNOWN;
-    }
-    return siteStatus.siteStatusLevel;
-  };
 
   const [humanHelp, setHumanHelp] = useState(
     getStatusLevelForType(site, HUMAN_HELP)
@@ -138,25 +122,12 @@ const SiteMarker = ({ site, addCommentToSite }) => {
     }
 
     //No need requireds
-    if (humanNeedLevel === NO_NEED_REQUIRED) {
-      return HUMAN_ICON;
+    if (humanNeedLevel === NO_NEED_REQUIRED &&materialNeedLevel === NO_NEED_REQUIRED
+        && foodNeedLevel === NO_NEED_REQUIRED && packageNeedLevel === NO_NEED_REQUIRED) {
+      return NO_NEED_OR_CLOSED_ICON;
     }
-    if (materialNeedLevel === NO_NEED_REQUIRED) {
-      return MATERIAL_ICON;
-    }
-    if (foodNeedLevel === NO_NEED_REQUIRED) {
-      return FOOD_ICON;
-    }
-    if (packageNeedLevel === NO_NEED_REQUIRED) {
-      return PACKAGE_ICON;
-    }
-
     //Unknown
     return UNKNOWN_ICON;
-
-
-
-
   };
 
   const getNameLabel = (siteType) => {
@@ -187,7 +158,11 @@ const SiteMarker = ({ site, addCommentToSite }) => {
   const getSiteActiveText = (active)=> {
 
     return active ? <span style={{color:"green"}}>AÇIK </span> : <span style={{color:"red"}}>KAPALI </span>
+  }
 
+  const getSiteNameText = (site)=> {
+
+    return site.active ? <span style={{color:"green"}}>{site.name} </span> : <span style={{color:"red"}}>{site.name} </span>
   }
 
   const constructSiteStatuses = () => {
@@ -230,7 +205,7 @@ const SiteMarker = ({ site, addCommentToSite }) => {
         <div className="popup-container-div">
           <div className="popup-text-form">
             <p>
-              <b>{getNameLabel(site.type)}:</b> {site.name}
+              <b>{getNameLabel(site.type)}:</b> {getSiteNameText(site)}
             </p>
             <p>
               <b>Açık/Kapalı:</b> {getSiteActiveText(site.active)}

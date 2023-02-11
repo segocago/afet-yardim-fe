@@ -9,6 +9,16 @@ import OnboardingDialog from "../OnboardingDialog/OnboardingDialog";
 import { getDistance } from "geolib";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import {
+  doesSiteNeedAnyHelp,
+  FOOD,
+  getStatusLevelForType,
+  HUMAN_HELP,
+  MATERIAL,
+  NO_NEED_REQUIRED,
+  PACKAGE_STATUS,
+  UNKNOWN
+} from "../utils/SiteUtils";
 
 const SCREEN_WIDTH = window.screen.width;
 
@@ -92,6 +102,7 @@ const MainPage = () => {
     setMapRef(event.target);
   };
 
+
   const handleShowMeClosestSite = (lat, long) => {
     if (!sites || sites.length === 0) {
       alert("Yardım toplama noktası bulunamadı");
@@ -100,21 +111,26 @@ const MainPage = () => {
     let minDistance = Number.MAX_SAFE_INTEGER;
     let closestSite = sites[0];
 
-    sites.forEach((site) => {
-      if (site.location && site.location.latitude && site.location.longitude) {
-        const distance = getDistance(
-          { latitude: lat, longitude: long },
-          {
-            latitude: site.location.latitude,
-            longitude: site.location.longitude,
+    const helpRequiredSites = sites.filter(site => doesSiteNeedAnyHelp(site));
+    console.log(helpRequiredSites);
+
+    helpRequiredSites.forEach((site) => {
+
+          if (site.location && site.location.latitude && site.location.longitude) {
+            const distance = getDistance(
+              { latitude: lat, longitude: long },
+              {
+                latitude: site.location.latitude,
+                longitude: site.location.longitude,
+              }
+            );
+            if (distance < minDistance) {
+              minDistance = distance;
+              closestSite = site;
+            }
           }
-        );
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestSite = site;
-        }
-      }
-    });
+        });
+
     mapRef.setView(
       [closestSite.location.latitude, closestSite.location.longitude],
       16
@@ -160,7 +176,7 @@ const MainPage = () => {
               onFailedToGetUserLocation
             )
           }
-        > BANA EN YAKIN YARDIM NOKTASINI GÖSTER
+        > EN YAKIN YARDIM GEREKEN ALANI GÖSTER
         </Button>
         {SCREEN_WIDTH < 600 && (
           <div className="minimize-icon-cont">

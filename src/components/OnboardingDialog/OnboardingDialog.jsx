@@ -6,9 +6,6 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
-import AddLocationAltTwoToneIcon from '@mui/icons-material/AddLocationAltTwoTone';
-import InsertCommentTwoToneIcon from '@mui/icons-material/InsertCommentTwoTone';
 import "./OnboardingDialog.css";
 
 
@@ -32,7 +29,7 @@ class OnboardingDialog extends Component {
         <DialogContent>
             {this.props.showClosestSiteButton &&
               <Button variant="contained" onClick={() => navigator.geolocation.getCurrentPosition(this.onGetUserLocation, this.onFailedToGetUserLocation)}
-              >  BANA EN YAKIN YARDIM NOKTASINI GÖSTER </Button>}
+              >  EN YAKIN YARDIM GEREKEN ALANI GÖSTER </Button>}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.props.handleClose()}>Kapat</Button>
