@@ -5,40 +5,18 @@ import { Button, Comment, Form, Header, TextArea } from 'semantic-ui-react';
 import FilterBox from "./FilterBox";
 import SiteMarker from "./SiteMarker";
 
-
-const MAX_TOOLTIP_SIZE = 10;
-
-//Times are kept in UTC timezone in DB so add 3 hours to it
-const TIME_DIFFERENCE_IN_MILLIS = 3 * 60 * 60 * 1000;
-
-const Map = ({handleCreateSiteDialogOpen, sites, center, addCommentToSite,whenMapReady}) => {
+const Map = ({sites, center, addCommentToSite, whenMapReady}) => {
 
   const [mapRef, setMapRef] = useState(null);
 
-  // Filters
-  const [showOnlyVerified, setShowOnlyVerified] = useState(false);
-  const handleVerificationChange = (value) => setShowOnlyVerified(value);
-
   useEffect(() => {
-    if(center !== undefined && mapRef !== null){
+    if (center && !center.some(value => value === null || value === undefined) && mapRef) {
       mapRef.setView(center)
     }
   }, [center])
 
-  function MyComponent() {
-    const map = useMapEvent('contextmenu', (e) => {
-      const {lat, lng} = e.latlng;
-      handleCreateSiteDialogOpen(lat, lng);
-    })
-    return null
-  }
-
   return (
-    <MapContainer ref={setMapRef} center={center} zoom={12} maxZoom={15} scrollWheelZoom={true} whenReady={whenMapReady}>
-    <FilterBox
-      showOnlyVerified={showOnlyVerified}
-      handleVerificationChange={handleVerificationChange}
-    />
+    <MapContainer ref={setMapRef} center={center} zoom={12} maxZoom={15} minZoom={9} scrollWheelZoom whenReady={whenMapReady}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

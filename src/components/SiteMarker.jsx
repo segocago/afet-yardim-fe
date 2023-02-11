@@ -84,7 +84,7 @@ const SiteMarker = ({ site, addCommentToSite }) => {
       return HOUSE_ICON;
     }
 
-    if (!site.active){
+    if (!site.active && site.location.city   !== "İzmir") {
       return NO_NEED_OR_CLOSED_ICON;
     }
 
