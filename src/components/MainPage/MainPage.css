@@ -2,4 +2,39 @@
   display: flex;
   justify-content: space-between;
   padding: 10px;
+  gap: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+  .button-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 3px;
+    padding: 10px 20px;
+    height: 170px;
+    transition: 0.3s height ease-in;
+  }
+  .button-group > button {
+    display: unset;
+  }
+  .button-group-minimize {
+    height: 25px;
+    padding: 0;
+    transition: 0.3s height ease-in;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .button-group-minimize > button {
+    display: none;
+  }
+  .button-group-minimize > .auto-complete-dropdown {
+    display:  none;
+  }
+  .button-group > .minimize-icon-cont  {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
