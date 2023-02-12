@@ -15,7 +15,6 @@ import {
   
 
 const SocialButtons = ({site}) => {
-    console.log(site)
     const shareTitle = `${document.title} | ${site.name} | `;
     const shareUrl = window.location.href;
     const iconSize = 32;
