@@ -213,10 +213,10 @@ const MainPage = () => {
           }
         });
 
+    const latitudeToGo = closestSite.location.latitude;
+    const longitudeToGo = closestSite.location.longitude;
     mapRef.setView(
-      [closestSite.location.latitude, closestSite.location.longitude + LONGITUDE_OFFSET],
-      16
-    );
+      [latitudeToGo,longitudeToGo], 16);
     closestSite.markerRef.openPopup();
     setOnboardingDialogOpen(false);
   };
@@ -329,8 +329,9 @@ const MainPage = () => {
         longitude={lastClickedLongitude}
         onNewSiteCreated={onNewSiteCreated}
       />
-      <Grid style={{paddingLeft: "12px", paddingBottom: "5px"}} container spacing={1} className="map-legend">
-        <CardMedia
+      <Grid style={{padding: (7, 14, 0, 14), backgroundColor: 'rgba(255, 255, 255, 0.3)', display: "flex", justifyContent: "space-between" }} container spacing={1} className="map-legend">
+        <div>
+          <CardMedia
             component="img"
             sx={{
               height: LEGEND_IMAGE_DIMENSION,
@@ -338,7 +339,9 @@ const MainPage = () => {
             }}
             src={humanImage}
         /> <b>İnsan</b>
-        <CardMedia
+        </div>
+
+        <div><CardMedia
             component="img"
             sx={{
               height: LEGEND_IMAGE_DIMENSION,
@@ -346,6 +349,9 @@ const MainPage = () => {
             }}
             src={materialImage}
         /><b>Materyal</b>
+        </div>
+
+        <div>
         <CardMedia
             component="img"
             sx={{
@@ -354,6 +360,9 @@ const MainPage = () => {
             }}
             src={foodImage}
         /><b>Gıda</b>
+        </div>
+        
+        <div>
         <CardMedia
             component="img"
             sx={{
@@ -362,7 +371,10 @@ const MainPage = () => {
             }}
             src={packageImage}
         /><b>Koli</b>
-          <CardMedia
+        </div>
+        
+        <div>
+        <CardMedia
               component="img"
               sx={{
                   height: LEGEND_IMAGE_DIMENSION,
@@ -370,7 +382,10 @@ const MainPage = () => {
               }}
               src={noNeedOrClosedImaged}
           /><b>Kapalı/Yardım Gerekmiyor</b>
-          <CardMedia
+        </div>
+          
+        <div>
+        <CardMedia
               component="img"
               sx={{
                   height: LEGEND_IMAGE_DIMENSION,
@@ -378,6 +393,7 @@ const MainPage = () => {
               }}
               src={unknownImage}
           /><b>Bilgi Yok</b>
+        </div>
       </Grid>
     </div>
   );
