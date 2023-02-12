@@ -18,7 +18,7 @@ import "./MainPage.css";
 
 const SCREEN_WIDTH = window.screen.width;
 
-// Move map to a bit north of closest site so that the popup dialog for marker shows correctlyg
+// Move map to a bit north of closest site so that the popup dialog for marker shows correctly
 const LEGEND_IMAGE_DIMENSION = 20;
 const INITIAL_SELECTED_CITY = CITIES.find((city) => city.label === "Ankara");
 
@@ -140,7 +140,9 @@ const MainPage = () => {
         <ClosestHelpSiteButton
           sites={sites}
           mapRef={mapRef}
-          callback={() => setOnboardingDialogOpen(false)}
+          callback={() =>{
+             setOnboardingDialogOpen(false)
+            }}
         >
           BANA EN YAKIN YARDIM ALANINI GÖSTER
         </ClosestHelpSiteButton>
@@ -171,6 +173,7 @@ const MainPage = () => {
         <OnboardingDialog
           open={onboardingDialogOpen}
           handleClose={handleOnboardingDialogClose}
+          setOnboardingDialogOpen={setOnboardingDialogOpen}
           showClosestSiteButton={true}
           handleSelectCity={setSelectedCity}
           selectedCity={selectedCity}
@@ -185,7 +188,7 @@ const MainPage = () => {
         longitude={lastClickedLongitude}
         onNewSiteCreated={onNewSiteCreated}
       />
-      <Grid style={{padding: (7, 14, 0, 14), backgroundColor: 'rgba(255, 255, 255, 0.3)', display: "flex", justifyContent: "space-between" }} container spacing={1} className="map-legend">
+<Grid style={{padding: (7, 14, 0, 14), backgroundColor: 'rgba(255, 255, 255, 0.3)', display: "flex", justifyContent: "space-between" }} container spacing={1} className="map-legend">
         <div>
           <CardMedia
             component="img"
@@ -217,7 +220,7 @@ const MainPage = () => {
             src={foodImage}
         /><b>Gıda</b>
         </div>
-        
+
         <div>
         <CardMedia
             component="img"
@@ -228,7 +231,7 @@ const MainPage = () => {
             src={packageImage}
         /><b>Koli</b>
         </div>
-        
+
         <div>
         <CardMedia
               component="img"
@@ -239,7 +242,7 @@ const MainPage = () => {
               src={noNeedOrClosedImaged}
           /><b>Kapalı/Yardım Gerekmiyor</b>
         </div>
-          
+
         <div>
         <CardMedia
               component="img"

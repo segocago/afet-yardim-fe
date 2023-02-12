@@ -10,7 +10,7 @@ import { CITIES } from "../../constants/constants";
 import ClosestHelpSiteButton from '../ClosestHelpSiteButton';
 import "./OnboardingDialog.css";
 
-const OnboardingDialog = ({open, handleClose, showClosestSiteButton, handleSelectCity, selectedCity, sites, mapRef}) => {
+const OnboardingDialog = ({open, handleClose, setOnboardingDialogOpen, showClosestSiteButton, handleSelectCity, selectedCity, sites, mapRef}) => {
 
   return (
     <Dialog disableEscapeKeyDown={selectedCity != null} open={open} onClose={handleClose}>
@@ -39,7 +39,7 @@ const OnboardingDialog = ({open, handleClose, showClosestSiteButton, handleSelec
           <ClosestHelpSiteButton
             sites={sites}
             mapRef={mapRef}
-            callback={() => handleClose()}
+            callback={() => setOnboardingDialogOpen(false)}
           >
            Bana En Yakın Yardım Alanını Göster
           </ClosestHelpSiteButton>
