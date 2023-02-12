@@ -3,11 +3,12 @@ import { Marker, Popup, Tooltip } from "react-leaflet";
 import { Button, Comment, Form, Header, TextArea } from "semantic-ui-react";
 import L from "leaflet";
 import {
+  ACTIVE_STATUS,
   FOOD,
   getStatusLevelForType,
   HUMAN_HELP,
   MATERIAL, NEED_REQUIRED, NO_NEED_REQUIRED,
-  PACKAGE_STATUS, UNKNOWN,
+  PACKAGE_STATUS, UNKNOWN_LEVEL,
   URGENT_NEED_REQUIRED
 } from "./utils/SiteUtils";
 
@@ -84,8 +85,11 @@ const SiteMarker = ({ site, addCommentToSite }) => {
       return HOUSE_ICON;
     }
 
-    if (!site.active && site.location.city   !== "İzmir") {
+    if(site.activeStatus ===  ACTIVE_STATUS.NOT_ACTIVE){
       return NO_NEED_OR_CLOSED_ICON;
+    }
+    if(site.activeStatus === ACTIVE_STATUS.UNKNOWN_ACTIVITY){
+      return UNKNOWN_ICON;
     }
 
     const humanNeedLevel = getStatusLevelForType(site, HUMAN_HELP);
@@ -142,11 +146,11 @@ const SiteMarker = ({ site, addCommentToSite }) => {
 
   const getTextForSiteStatusLevel = (siteStatusLevel) => {
     switch (siteStatusLevel){
-      case UNKNOWN: return  <span style={{color:"gray"}}>Bilinmiyor </span>
-      case NO_NEED_REQUIRED: return  <span style={{color:"green"}}>Yok </span>;
-      case NEED_REQUIRED: return <span style={{color:"blue"}}>Var </span>;
-      case URGENT_NEED_REQUIRED:  return <span style={{color:"red"}}>Acil var </span>
-      default: return  <span style="color:green">Yok</span>;
+      case UNKNOWN_LEVEL: return  <span style={{color:"gray"}}>Bilinmiyor </span>
+      case NO_NEED_REQUIRED: return  <span style={{color:"red"}}>YOK </span>;
+      case NEED_REQUIRED: return <span style={{color:"green"}}>VAR </span>;
+      case URGENT_NEED_REQUIRED:  return <span style={{color:"green"}}>ACİL VAR </span>
+      default: return  <span style="color:green">Bilinmiyor</span>;
     }
   };
 
@@ -155,14 +159,27 @@ const SiteMarker = ({ site, addCommentToSite }) => {
     return getTextForSiteStatusLevel(statusLevel);
   };
 
-  const getSiteActiveText = (active)=> {
+  const getSiteActiveText = (activeStatus)=> {
 
-    return active ? <span style={{color:"green"}}>AÇIK </span> : <span style={{color:"red"}}>KAPALI </span>
+    if(activeStatus === ACTIVE_STATUS.ACTIVE){
+      return <span style={{color:"green"}}>AÇIK </span>;
+    }
+    if(activeStatus === ACTIVE_STATUS.NOT_ACTIVE){
+      <span style={{color:"red"}}>KAPALI </span>
+    }
+
+    return <span style={{color:"gray"}}>BİLİNMİYOR </span>
   }
 
   const getSiteNameText = (site)=> {
 
-    return site.active ? <span style={{color:"green"}}>{site.name} </span> : <span style={{color:"red"}}>{site.name} </span>
+    let nameColor = "gray";
+    if(site.activeStatus === ACTIVE_STATUS.ACTIVE){
+      nameColor = "green";
+    }else if (site.activeStatus === ACTIVE_STATUS.NOT_ACTIVE){
+      nameColor = "red";
+    }
+    return <span style={{color: nameColor}}>{site.name} </span>
   }
 
   const constructSiteStatuses = () => {
@@ -170,19 +187,19 @@ const SiteMarker = ({ site, addCommentToSite }) => {
 
     siteStatuses.push( {
       siteStatusType : HUMAN_HELP,
-      siteStatusLevel: humanHelp ? humanHelp : UNKNOWN
+      siteStatusLevel: humanHelp ? humanHelp : UNKNOWN_LEVEL
     })
     siteStatuses.push( {
       siteStatusType : MATERIAL,
-      siteStatusLevel: material ? material : UNKNOWN
+      siteStatusLevel: material ? material : UNKNOWN_LEVEL
     })
     siteStatuses.push( {
       siteStatusType : FOOD,
-      siteStatusLevel: food ? food : UNKNOWN
+      siteStatusLevel: food ? food : UNKNOWN_LEVEL
     })
     siteStatuses.push( {
       siteStatusType : PACKAGE_STATUS,
-      siteStatusLevel: packageStatus ? packageStatus : UNKNOWN
+      siteStatusLevel: packageStatus ? packageStatus : UNKNOWN_LEVEL
     })
     return siteStatuses;
   };
@@ -208,7 +225,7 @@ const SiteMarker = ({ site, addCommentToSite }) => {
               <b>{getNameLabel(site.type)}:</b> {getSiteNameText(site)}
             </p>
             <p>
-              <b>Açık/Kapalı:</b> {getSiteActiveText(site.active)}
+              <b>Açık/Kapalı:</b> {getSiteActiveText(site.activeStatus)}
             </p>
             <p>
               <b>Şehir:</b> {site.location.city}

@@ -1,12 +1,10 @@
-import React, {useEffect, useState} from 'react'
-import { ClickAwayListener, Stack, Typography } from '@mui/material'
-import { Button } from '@mui/material'
-import { Grid } from '@mui/material'
 import CheckIcon from '@mui/icons-material/Check';
-import HomeIcon from '@mui/icons-material/Home';
-import { borderRadius } from '@mui/system';
-import Checkbox from '@mui/material/Checkbox';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import HomeIcon from '@mui/icons-material/Home';
+import { Button, ClickAwayListener, Grid, Stack, Typography } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import { borderRadius } from '@mui/system';
+import React, { useEffect, useState } from 'react';
 
 
 const FilterBox = ({showOnlyVerified, handleVerificationChange}) => {
@@ -28,7 +26,7 @@ const FilterBox = ({showOnlyVerified, handleVerificationChange}) => {
               sx={{
                 p: 1,
                 marginLeft: "2px",
-                top: "210px",
+                top: "250px",
                 position: "fixed",
                 zIndex: "9999",
               }}
