@@ -22,7 +22,6 @@ const INITIAL_SELECTED_CITY = CITIES.find((city) => city.label === "Ankara");
 
 const MainPage = () => {
   const location = useGeoLocation();
-  console.log(location)
   const [selectedCity, setSelectedCity] = useState(null);
   const [sites, setSites] = useState([]);
   const [centerLocation, setCenterLocation] = useState(location.coordinates && location.loaded ? [location.coordinates.lat, location.coordinates.lng] : [INITIAL_SELECTED_CITY.latitude, INITIAL_SELECTED_CITY.longitude]);
@@ -55,6 +54,9 @@ const MainPage = () => {
   useEffect(() => {
     if (location.coordinates && location.loaded) {
       setCenterLocation([location.coordinates.lat, location.coordinates.lng]);
+    } 
+    if (location.error) {
+      alert("En yakın yardım alanını bulabilmek için uygulamaya konum erişim izni vermeniz gerekiyor.");
     }
   }, [location]);
   

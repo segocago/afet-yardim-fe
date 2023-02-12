@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import {MapContainer, TileLayer, Marker} from "react-leaflet";
+import {MapContainer, TileLayer, Marker, Tooltip} from "react-leaflet";
 import SiteMarker from "./SiteMarker";
 import L from "leaflet";
 
@@ -51,7 +51,13 @@ const Map = ({sites, userLocation, center, addCommentToSite, whenMapReady}) => {
                     userLocation.coordinates.lat,
                     userLocation.coordinates.lng,
                   ]}
-                ></Marker>
+                >
+                  <Tooltip permanent>
+                    <span>
+                      <strong>Şuan Buradasınız</strong>
+                    </span>
+                  </Tooltip>
+                </Marker>
               )}
       {
         sites.filter(site => site.location && site.location.latitude && site.location.longitude)
