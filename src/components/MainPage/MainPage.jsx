@@ -16,8 +16,6 @@ import {foodImage, humanImage, materialImage, noNeedOrClosedImaged, packageImage
 
 const SCREEN_WIDTH = window.screen.width;
 
-// Move map to a bit north of closest site so that the popup dialog for marker shows correctly
-const LONGITUDE_OFFSET =1.0;
 const LEGEND_IMAGE_DIMENSION = 20;
 const INITIAL_SELECTED_CITY = CITIES.find((city) => city.label === "Ankara");
 
@@ -148,10 +146,10 @@ const MainPage = () => {
           }
         });
 
+    const latitudeToGo = closestSite.location.latitude;
+    const longitudeToGo = closestSite.location.longitude;
     mapRef.setView(
-      [closestSite.location.latitude, closestSite.location.longitude + LONGITUDE_OFFSET],
-      16
-    );
+      [latitudeToGo,longitudeToGo], 16);
     closestSite.markerRef.openPopup();
     setOnboardingDialogOpen(false);
   };
