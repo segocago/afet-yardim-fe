@@ -15,6 +15,7 @@
     "bootstrap": "^4.5.0",
     "geolib": "^3.3.3",
     "leaflet": "^1.9.3",
+    "query-string": "^8.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-leaflet": "^4.2.0",

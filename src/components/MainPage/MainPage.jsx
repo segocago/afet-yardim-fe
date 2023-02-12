@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from "react";
-import "./MainPage.css";
-import Map from "../Map";
-import {Autocomplete, TextField, Button, CardMedia, Grid} from "@mui/material";
-import SiteService from "../../services/SiteService";
-import { CITIES } from "../../constants/constants";
-import CreateSiteDialog from "../CreateSiteDialog";
-import OnboardingDialog from "../OnboardingDialog/OnboardingDialog";
-import { getDistance } from "geolib";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { Autocomplete, Button, CardMedia, Grid, TextField } from "@mui/material";
+import { getDistance } from "geolib";
+import queryString from 'query-string';
+import React, { useEffect, useState } from "react";
+import { CITIES } from "../../constants/constants";
+import SiteService from "../../services/SiteService";
+import CreateSiteDialog from "../CreateSiteDialog";
+import Map from "../Map";
+import OnboardingDialog from "../OnboardingDialog/OnboardingDialog";
+import { foodImage, humanImage, materialImage, noNeedOrClosedImaged, packageImage, unknownImage } from "../img/images";
 import {
   doesSiteNeedAnyHelp
 } from "../utils/SiteUtils";
-import {foodImage, humanImage, materialImage, noNeedOrClosedImaged, packageImage, unknownImage} from "../img/images";
+import "./MainPage.css";
 
 const SCREEN_WIDTH = window.screen.width;
 
@@ -22,11 +23,19 @@ const LEGEND_IMAGE_DIMENSION = 20;
 const INITIAL_SELECTED_CITY = CITIES.find((city) => city.label === "Ankara");
 
 const MainPage = () => {
+  /*
+    Currently the supported queries are 'city' and 'siteId'. These information are enough
+    to focus on a specific pin. In the future, new queries such as address, district, etc. 
+    can be added. 
+  */
+  const parsedQuery = queryString.parse(window.location.search)
+  const skipOnboarding = parsedQuery.city || parsedQuery.siteId 
+
   const [selectedCity, setSelectedCity] = useState(null);
   const [sites, setSites] = useState([]);
   const [centerLocation, setCenterLocation] = useState([INITIAL_SELECTED_CITY.latitude, INITIAL_SELECTED_CITY.longitude]);
   const [setCreateSiteDialogOpen] = useState(false);
-  const [onboardingDialogOpen, setOnboardingDialogOpen] = useState(true);
+  const [onboardingDialogOpen, setOnboardingDialogOpen] = useState(!skipOnboarding);
   const [lastClickedLatitude, setLastClickedLatitude] = useState(null);
   const [lastClickedLongitude, setLastClickedLongitude] = useState(null);
   const [minimizeHeader, setMinimizeHeader] = useState(false);
@@ -35,36 +44,45 @@ const MainPage = () => {
   const setSelectedCityFromLocalStorage = () => {
     const selectedCityFromLocalStorage = JSON.parse(localStorage.getItem("selectedCity"));
     selectedCityFromLocalStorage ? setSelectedCity(selectedCityFromLocalStorage) : setSelectedCity(null);
+    return selectedCityFromLocalStorage
   }
-  const fetchSitesOfSelectedCity = () => {
-    selectedCity && SiteService.getSites(selectedCity.label).then((res) => {
-      setSites(res.data);
-    });
-  }
-  const handleSelectCity = (newValue) => {
-    const lat = parseFloat(newValue.latitude);
-    const lon = parseFloat(newValue.longitude);
-    setSelectedCity(newValue);
-
-    const center = [lat, lon];
-    if (center !== undefined) {
-      setCenterLocation(center);
-    }
+  const fetchSitesOfSelectedCity = async (selectedCity) => {
+    const res = await SiteService.getSites(selectedCity.label)
+    setSites(res.data);
+    return res.data
   };
 
-  useEffect(() => {
+  const handleNormalInit = () => {
+    const selectedCity = setSelectedCityFromLocalStorage();
     fetchSitesOfSelectedCity(selectedCity);
-    if (selectedCity) {
-      localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
-      const center = [selectedCity.latitude, selectedCity.longitude];
-      center && setCenterLocation(center);
+    window.history.replaceState(null, "", "/")
+  }
+  
+  useEffect(() => {
+    if (!skipOnboarding) {
+      handleNormalInit()
     }
-  }, [selectedCity]);
-
-  useEffect(() => {
-    setSelectedCityFromLocalStorage();
-    fetchSitesOfSelectedCity(selectedCity);
   }, []);
+  
+  const handleSelectCity = async (newValue) => {
+    window.history.replaceState(null, "", `?city=${newValue.label}`)
+    if (newValue) {
+      localStorage.setItem("selectedCity", JSON.stringify(newValue));
+      fetchSitesOfSelectedCity(newValue)
+      
+      const lat = parseFloat(newValue.latitude);
+      const lon = parseFloat(newValue.longitude);
+      setSelectedCity(newValue);
+  
+      const center = [lat, lon];
+      if (center[0] && center[1]) {
+        setCenterLocation(center);
+      } 
+      else {
+        alert('Invalid coordinates');
+      }
+    }
+  };
 
   const handleCreateSiteDialogOpen = (lat, long) => {
     setCreateSiteDialogOpen(true);
@@ -118,6 +136,41 @@ const MainPage = () => {
 
   const whenMapReady = (event) => {
     setMapRef(event.target);
+    
+    const handleQueryRedirect = async() => {
+      const cityName = parsedQuery.city
+      const city = CITIES.find((c) => c.label === cityName)
+      console.log(city)
+      setSelectedCity(city)
+      if (!city) {
+        alert("Şehir ismi yanlış")
+        handleNormalInit()
+      }
+
+      // If the city is different than the selected city, fetch the sites
+      const sites = await fetchSitesOfSelectedCity(city)
+      console.log(sites)
+      setSites(sites)
+
+      const site = sites.find((s) => s.id === Number(parsedQuery.siteId))
+      if (!site) {
+        alert("Yardim alani bulunamadı")
+        handleNormalInit()
+      }
+
+      // If zooming in is disabled, the site cannot find the reference to the marker due to clustering
+      // Therefore, we directly zoom in to the location of the sit
+      event.target.setView([site.location.latitude, site.location.longitude], 15)
+      // Markers are not loaded yet, we might need to wait a bit. I couldn't find a better solution yet.
+      // If there is an event that fires when a marker is rendered, than we can use it.
+      setTimeout(() => {
+        site.markerRef.openPopup()
+      }, 500)
+    }
+
+    if (skipOnboarding) {
+      handleQueryRedirect()
+    }
   };
 
 
@@ -218,7 +271,7 @@ const MainPage = () => {
         center={centerLocation}
         addCommentToSite={addCommentToSite}
         handleCreateSiteDialogOpen={handleCreateSiteDialogOpen}
-      ></Map>
+      />
       <OnboardingDialog
         open={onboardingDialogOpen}
         handleClose={handleOnboardingDialogClose}
