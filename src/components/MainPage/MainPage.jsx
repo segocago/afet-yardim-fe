@@ -140,7 +140,9 @@ const MainPage = () => {
         <ClosestHelpSiteButton
           sites={sites}
           mapRef={mapRef}
-          callback={() => setOnboardingDialogOpen(false)}
+          callback={() =>{
+             setOnboardingDialogOpen(false)
+            }}
         >
           BANA EN YAKIN YARDIM ALANINI GÖSTER
         </ClosestHelpSiteButton>
@@ -171,6 +173,7 @@ const MainPage = () => {
         <OnboardingDialog
           open={onboardingDialogOpen}
           handleClose={handleOnboardingDialogClose}
+          setOnboardingDialogOpen={setOnboardingDialogOpen}
           showClosestSiteButton={true}
           handleSelectCity={setSelectedCity}
           selectedCity={selectedCity}
