@@ -12,6 +12,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
   doesSiteNeedAnyHelp
 } from "../utils/SiteUtils";
+import useGeoLocation from "../../hooks/useGeoLocation";
 import {foodImage, humanImage, materialImage, noNeedOrClosedImaged, packageImage, unknownImage} from "../img/images";
 
 const SCREEN_WIDTH = window.screen.width;
@@ -20,9 +21,11 @@ const LEGEND_IMAGE_DIMENSION = 20;
 const INITIAL_SELECTED_CITY = CITIES.find((city) => city.label === "Ankara");
 
 const MainPage = () => {
+  const location = useGeoLocation();
+  console.log(location)
   const [selectedCity, setSelectedCity] = useState(null);
   const [sites, setSites] = useState([]);
-  const [centerLocation, setCenterLocation] = useState([INITIAL_SELECTED_CITY.latitude, INITIAL_SELECTED_CITY.longitude]);
+  const [centerLocation, setCenterLocation] = useState(location.coordinates && location.loaded ? [location.coordinates.lat, location.coordinates.lng] : [INITIAL_SELECTED_CITY.latitude, INITIAL_SELECTED_CITY.longitude]);
   const [setCreateSiteDialogOpen] = useState(false);
   const [onboardingDialogOpen, setOnboardingDialogOpen] = useState(true);
   const [lastClickedLatitude, setLastClickedLatitude] = useState(null);
@@ -49,7 +52,12 @@ const MainPage = () => {
       setCenterLocation(center);
     }
   };
-
+  useEffect(() => {
+    if (location.coordinates && location.loaded) {
+      setCenterLocation([location.coordinates.lat, location.coordinates.lng]);
+    }
+  }, [location]);
+  
   useEffect(() => {
     fetchSitesOfSelectedCity(selectedCity);
     if (selectedCity) {
@@ -213,6 +221,7 @@ const MainPage = () => {
       <Map
         whenMapReady={whenMapReady}
         sites={sites}
+        userLocation={location}
         center={centerLocation}
         addCommentToSite={addCommentToSite}
         handleCreateSiteDialogOpen={handleCreateSiteDialogOpen}
