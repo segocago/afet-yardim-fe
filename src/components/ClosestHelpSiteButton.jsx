@@ -22,7 +22,7 @@ const ClosestHelpSiteButton = ({ sites, mapRef, callback, children }) => {
             );
             setTimeout(() => {
                 closestSite.markerRef.openPopup();
-            }, 250)
+            }, 500)
             callback();
             setState("waiting")
         }
