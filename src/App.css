@@ -56,6 +56,8 @@
 .site-comments {
   max-height: 30vh;
   overflow: scroll;
+  width: 80vw ; /* This must be same as popup-container-div*/
+  max-width: 80vw !important; /* This must be same as popup-container-div*/;
 }
 
 .popup-container-div {
@@ -66,7 +68,29 @@
 
 }
 
+.map-legend{
+  margin-bottom: 2px;
+  right: 0px;
+  bottom: 0px;
+  position: fixed;
+  zIndex: 9999;
+}
+
 
 .leaflet-popup-content {
   width: 80vw !important; /* This must be same as popup-container-div*/
+}
+
+@media only screen and (max-width: 600px) {
+  .popup-container-div > .popup-text-form > .need-help-cont {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+  }
+  .popup-container-div > .popup-text-form > .need-help-cont > .need-help-item {
+    display: flex;
+   align-items: center;
+   gap: 3px
+  }
 }

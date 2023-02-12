@@ -1,61 +1,50 @@
-import React, { Component } from "react";
+import React from "react";
 import {
+  Autocomplete,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
+  DialogTitle, TextField,
 } from "@mui/material";
-import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
-import AddLocationAltTwoToneIcon from '@mui/icons-material/AddLocationAltTwoTone';
-import InsertCommentTwoToneIcon from '@mui/icons-material/InsertCommentTwoTone';
+import SendIcon from '@mui/icons-material/Send';
 import "./OnboardingDialog.css";
+import {CITIES} from "../../constants/constants";
 
-
-class OnboardingDialog extends Component {
-
-  onGetUserLocation = (position) => {
-    this.props.handleShowMeClosestSite(position.coords.latitude,position.coords.longitude);
+const OnboardingDialog = ({open, handleClose, showClosestSiteButton, handleSelectCity, selectedCity,handleShowMeClosestSite}) => {
+  const onGetUserLocation = (position) => {
+    handleShowMeClosestSite(position.coords.latitude, position.coords.longitude);
   }
 
-  onFailedToGetUserLocation = (error) => {
-
+  const onFailedToGetUserLocation = (error) => {
     alert("En yakın yardım alanını bulabilmek için uygulamaya konum erişim izni vermeniz gerekiyor.")
   }
 
-  render() {
-    return (
-      <Dialog open={this.props.open} onClose={this.props.handleClose}>
-        <DialogTitle>
-          <div className="title">Nasıl Kullanılır</div>
-        </DialogTitle>
-        <DialogContent>
-          <div className="desc-text">
-            <InsertCommentTwoToneIcon></InsertCommentTwoToneIcon> Haritada işaretli olan pin noktalarına tıklayarak son yardım noktası
-            hakkında bilgi alabilir, güncel durumu hakkında yeni not
-            girebilirsiniz.
-          </div>
-          <br />
-          <div className="desc-text">
-            <AddLocationAltTwoToneIcon></AddLocationAltTwoToneIcon>
-            <b>Haritaya yeni yardım noktası eklemek için bilgisayarda sağ tıklayabilir, mobil
-              cihazlar için ise ekrana basılı tutabilirsiniz.</b>
-          </div>
-          <br />
-          <div className="desc-text">
-            <WarningTwoToneIcon> </WarningTwoToneIcon>Yardım alanlarını görmek istediğiniz ili sol üstteki menüden seçin.
-          </div>
-          <br />
-          {this.props.showClosestSiteButton &&
-              <Button onClick={() => navigator.geolocation.getCurrentPosition(this.onGetUserLocation, this.onFailedToGetUserLocation)}
-              >Bana en yakın yardım noktasını göster</Button>}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.props.handleClose()}>Anladım</Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
+  return (
+    <Dialog disableEscapeKeyDown={selectedCity != null} open={open} onClose={handleClose}>
+      <DialogTitle>
+        <div className="title">{selectedCity ? "En Yakın Yardım Alanı" : "İlerlemek İçin Şehir Seçiniz"}</div>
+      </DialogTitle>
+      {!selectedCity && <Autocomplete
+          className="auto-complete-dropdown"
+          style={{width: "100%"}}
+          options={CITIES}
+          renderInput={(params) => <TextField {...params} label="Şehir"/>}
+          onChange={(event, value) => {
+            handleSelectCity(value);
+          }}
+          value={selectedCity}
+      />}
+      <DialogContent>
+          {showClosestSiteButton && selectedCity &&
+            <Button startIcon={<SendIcon/>} variant="contained" onClick={() => navigator.geolocation.getCurrentPosition(onGetUserLocation, onFailedToGetUserLocation)}
+            > Bana En Yakın Yardım Alanını Göster</Button>}
+      </DialogContent>
+      <DialogActions>
+        <Button disabled={!selectedCity} onClick={() => handleClose()}>{selectedCity && "Kapat"}</Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
 export default OnboardingDialog;

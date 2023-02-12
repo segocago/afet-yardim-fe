@@ -1,40 +1,70 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./MainPage.css";
 import Map from "../Map";
-import { Autocomplete, TextField, Button, Tooltip } from "@mui/material";
+import {Autocomplete, TextField, Button, CardMedia, Grid} from "@mui/material";
 import SiteService from "../../services/SiteService";
 import { CITIES } from "../../constants/constants";
 import CreateSiteDialog from "../CreateSiteDialog";
 import OnboardingDialog from "../OnboardingDialog/OnboardingDialog";
-import {getDistance} from "geolib";
+import { getDistance } from "geolib";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import {
+  doesSiteNeedAnyHelp
+} from "../utils/SiteUtils";
+import {foodImage, humanImage, materialImage, noNeedOrClosedImaged, packageImage, unknownImage} from "../img/images";
+
+const SCREEN_WIDTH = window.screen.width;
+
+// Move map to a bit north of closest site so that the popup dialog for marker shows correctly
+const LONGITUDE_OFFSET =1.0;
+const LEGEND_IMAGE_DIMENSION = 20;
+const INITIAL_SELECTED_CITY = CITIES.find((city) => city.label === "Ankara");
 
 const MainPage = () => {
-    const [selectedCity, setSelectedCity] = useState(CITIES.find((city) => city.label === "Ankara"));
-    const [sites, setSites] = useState([]);
-    const [centerLocation, setCenterLocation] = useState([39.909442, 32.810491]);
-    const [createSiteDialogOpen, setCreateSiteDialogOpen] = useState(false);
-    const [onboardingDialogOpen, setOnboardingDialogOpen] = useState(true);
-    const [lastClickedLatitude, setLastClickedLatitude] = useState(null);
-    const [lastClickedLongitude, setLastClickedLongitude] = useState(null);
-    const [mapRef, setMapRef] = useState(null);
-  
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [sites, setSites] = useState([]);
+  const [centerLocation, setCenterLocation] = useState([INITIAL_SELECTED_CITY.latitude, INITIAL_SELECTED_CITY.longitude]);
+  const [setCreateSiteDialogOpen] = useState(false);
+  const [onboardingDialogOpen, setOnboardingDialogOpen] = useState(true);
+  const [lastClickedLatitude, setLastClickedLatitude] = useState(null);
+  const [lastClickedLongitude, setLastClickedLongitude] = useState(null);
+  const [minimizeHeader, setMinimizeHeader] = useState(false);
+  const [mapRef, setMapRef] = useState(null);
+
+  const setSelectedCityFromLocalStorage = () => {
+    const selectedCityFromLocalStorage = JSON.parse(localStorage.getItem("selectedCity"));
+    selectedCityFromLocalStorage ? setSelectedCity(selectedCityFromLocalStorage) : setSelectedCity(null);
+  }
+  const fetchSitesOfSelectedCity = () => {
+    selectedCity && SiteService.getSites(selectedCity.label).then((res) => {
+      setSites(res.data);
+    });
+  }
   const handleSelectCity = (newValue) => {
     const lat = parseFloat(newValue.latitude);
     const lon = parseFloat(newValue.longitude);
     setSelectedCity(newValue);
-    const center = [lat, lon]
 
+    const center = [lat, lon];
     if (center !== undefined) {
       setCenterLocation(center);
     }
-  }
-  
-  useEffect(() => {
-    SiteService.getSites(selectedCity.label).then((res) => {
-      setSites(res.data);
-    });
-  }, []);
+  };
 
+  useEffect(() => {
+    fetchSitesOfSelectedCity(selectedCity);
+    if (selectedCity) {
+      localStorage.setItem("selectedCity", JSON.stringify(selectedCity));
+      const center = [selectedCity.latitude, selectedCity.longitude];
+      center && setCenterLocation(center);
+    }
+  }, [selectedCity]);
+
+  useEffect(() => {
+    setSelectedCityFromLocalStorage();
+    fetchSitesOfSelectedCity(selectedCity);
+  }, []);
 
   const handleCreateSiteDialogOpen = (lat, long) => {
     setCreateSiteDialogOpen(true);
@@ -43,11 +73,15 @@ const MainPage = () => {
   };
 
   const handleCreateSiteDialogClose = (formValues) => {
-    console.log(formValues);
     setCreateSiteDialogOpen(false);
   };
 
-  const handleOnboardingDialogClose = () => {
+  const handleOnboardingDialogClose = (event, reason) => {
+    if (!selectedCity && reason === "backdropClick") {
+      return;
+    }
+    fetchSitesOfSelectedCity(selectedCity);
+    setCenterLocation([selectedCity.latitude, selectedCity.longitude]);
     setOnboardingDialogOpen(false);
   };
 
@@ -59,15 +93,18 @@ const MainPage = () => {
     event.preventDefault();
     let comment = {};
 
-    if(event.target[0].value === undefined || event.target[0].value === null || event.target[0].value.trim().length === 0){
-      alert("Boş yorum eklenemenez.")
+    if (
+      event.target[0].value === undefined ||
+      event.target[0].value === null ||
+      event.target[0].value.trim().length === 0
+    ) {
+      alert("Boş yorum eklenemenez.");
       return;
     }
 
     comment.update = event.target[0].value;
     comment.siteStatuses = siteStatuses;
 
-    const { sites } = this.state;
     SiteService.addCommentToSite(siteId, comment).then((res) => {
       let updatedSites = sites.map((site) => {
         if (site.id === siteId) {
@@ -78,13 +115,13 @@ const MainPage = () => {
       setSites(updatedSites);
     });
   };
-  
+
   const whenMapReady = (event) => {
     setMapRef(event.target);
-  }
+  };
 
-  const handleShowMeClosestSite = (lat,long) => {
 
+  const handleShowMeClosestSite = (lat, long) => {
     if (!sites || sites.length === 0) {
       alert("Yardım toplama noktası bulunamadı");
       return;
@@ -92,37 +129,40 @@ const MainPage = () => {
     let minDistance = Number.MAX_SAFE_INTEGER;
     let closestSite = sites[0];
 
-    sites.forEach((site) => {
-      if (site.location && site.location.latitude && site.location.longitude) {
-        const distance = getDistance(
-          { latitude: lat, longitude: long },
-          {
-            latitude: site.location.latitude,
-            longitude: site.location.longitude,
+    const helpRequiredSites = sites.filter(site => doesSiteNeedAnyHelp(site));
+
+    helpRequiredSites.forEach((site) => {
+
+          if (site.location && site.location.latitude && site.location.longitude) {
+            const distance = getDistance(
+              { latitude: lat, longitude: long },
+              {
+                latitude: site.location.latitude,
+                longitude: site.location.longitude,
+              }
+            );
+            if (distance < minDistance) {
+              minDistance = distance;
+              closestSite = site;
+            }
           }
-        );
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestSite = site;
-        }
-      }
-    });
+        });
+
     mapRef.setView(
-      [closestSite.location.latitude, closestSite.location.longitude],
+      [closestSite.location.latitude, closestSite.location.longitude + LONGITUDE_OFFSET],
       16
     );
     closestSite.markerRef.openPopup();
     setOnboardingDialogOpen(false);
-  }
-  
+  };
+
   const onGetUserLocation = (position) => {
-    this.props.handleShowMeClosestSite(
+    handleShowMeClosestSite(
       position.coords.latitude,
       position.coords.longitude
     );
   };
 
-  
   const onFailedToGetUserLocation = (error) => {
     alert(
       "En yakın yardım alanını bulabilmek için uygulamaya konum erişim izni vermeniz gerekiyor."
@@ -131,13 +171,18 @@ const MainPage = () => {
 
   return (
     <div>
-      <div className="button-group">
+      <div
+        className={minimizeHeader ? "button-group-minimize" : "button-group"}
+      >
         <Autocomplete
-          style={{ marginTop: 15, width: "30%" }}
+          className="auto-complete-dropdown"
+          style={{ width: "100%", marginRight: "15px" }}
           disablePortal
           options={CITIES}
           renderInput={(params) => <TextField {...params} label="Şehir" />}
-          onChange={handleSelectCity}
+          onChange={(event, value) => {
+            handleSelectCity(value);
+          }}
           value={selectedCity}
         />
         <Button
@@ -148,12 +193,23 @@ const MainPage = () => {
               onFailedToGetUserLocation
             )
           }
-        >
-          BANA EN YAKIN YARDIM NOKTASINI GÖSTER
+        > EN YAKIN YARDIM GEREKEN ALANI GÖSTER
         </Button>
-        <Tooltip title="Haritaya sağ tıklayarak veya mobil cihazlarda ekrana basılı tutarak yeni yardım noktası ekleyebilirsiniz">
-          <Button variant="contained">YENİ YARDIM NOKTASI EKLE</Button>
-        </Tooltip>
+        {SCREEN_WIDTH < 600 && (
+          <div className="minimize-icon-cont">
+            {!minimizeHeader ? (
+              <KeyboardArrowUpIcon
+                fontSize="large"
+                onClick={() => setMinimizeHeader(true)}
+              />
+            ) : (
+              <KeyboardArrowDownIcon
+                fontSize="large"
+                onClick={() => setMinimizeHeader(false)}
+              />
+            )}
+          </div>
+        )}
       </div>
 
       <Map
@@ -168,16 +224,70 @@ const MainPage = () => {
         handleClose={handleOnboardingDialogClose}
         handleShowMeClosestSite={handleShowMeClosestSite}
         showClosestSiteButton={true}
+        handleSelectCity={setSelectedCity}
+        selectedCity={selectedCity}
       />
+
+      {/*Disabled site creation dialog, only feed the system from spreadsheets*/}
       <CreateSiteDialog
-        open={createSiteDialogOpen}
+        open={false}
         handleClose={handleCreateSiteDialogClose}
         latitude={lastClickedLatitude}
         longitude={lastClickedLongitude}
         onNewSiteCreated={onNewSiteCreated}
       />
+      <Grid style={{paddingLeft: "12px", paddingBottom: "5px"}} container spacing={1} className="map-legend">
+        <CardMedia
+            component="img"
+            sx={{
+              height: LEGEND_IMAGE_DIMENSION,
+              width: LEGEND_IMAGE_DIMENSION
+            }}
+            src={humanImage}
+        /> <b>İnsan</b>
+        <CardMedia
+            component="img"
+            sx={{
+              height: LEGEND_IMAGE_DIMENSION,
+              width: LEGEND_IMAGE_DIMENSION
+            }}
+            src={materialImage}
+        /><b>Materyal</b>
+        <CardMedia
+            component="img"
+            sx={{
+              height: LEGEND_IMAGE_DIMENSION,
+              width: LEGEND_IMAGE_DIMENSION
+            }}
+            src={foodImage}
+        /><b>Gıda</b>
+        <CardMedia
+            component="img"
+            sx={{
+              height: LEGEND_IMAGE_DIMENSION,
+              width: LEGEND_IMAGE_DIMENSION
+            }}
+            src={packageImage}
+        /><b>Koli</b>
+          <CardMedia
+              component="img"
+              sx={{
+                  height: LEGEND_IMAGE_DIMENSION,
+                  width: LEGEND_IMAGE_DIMENSION
+              }}
+              src={noNeedOrClosedImaged}
+          /><b>Kapalı/Yardım Gerekmiyor</b>
+          <CardMedia
+              component="img"
+              sx={{
+                  height: LEGEND_IMAGE_DIMENSION,
+                  width: LEGEND_IMAGE_DIMENSION
+              }}
+              src={unknownImage}
+          /><b>Bilgi Yok</b>
+      </Grid>
     </div>
   );
-}
+};
 
 export default MainPage;
