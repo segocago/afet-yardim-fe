@@ -1,11 +1,13 @@
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Alert, Autocomplete, Button, CardMedia, Grid, Snackbar, TextField } from "@mui/material";
-import { getDistance } from "geolib";
 import queryString from 'query-string';
+import { LoadingButton } from "@mui/lab";
+import { getDistance } from "geolib";
 import React, { useEffect, useState } from "react";
 import { CITIES } from "../../constants/constants";
 import SiteService from "../../services/SiteService";
+import ClosestHelpSiteButton from "../ClosestHelpSiteButton";
 import CreateSiteDialog from "../CreateSiteDialog";
 import Map from "../Map";
 import OnboardingDialog from "../OnboardingDialog/OnboardingDialog";
@@ -18,7 +20,6 @@ import "./MainPage.css";
 const SCREEN_WIDTH = window.screen.width;
 
 // Move map to a bit north of closest site so that the popup dialog for marker shows correctly
-const LONGITUDE_OFFSET =1.0;
 const LEGEND_IMAGE_DIMENSION = 20;
 const INITIAL_SELECTED_CITY = CITIES.find((city) => city.label === "Ankara");
 
@@ -185,7 +186,6 @@ const MainPage = () => {
     }
   };
 
-
   const handleShowMeClosestSite = (lat, long) => {
     if (!sites || sites.length === 0) {
       setErrMsg("En yakın yardım toplama noktası bulunamadı");
@@ -241,7 +241,7 @@ const MainPage = () => {
 
     setErrMsg(null)
   }
-
+  
   return (
     <div>
       <div
@@ -281,16 +281,13 @@ const MainPage = () => {
           }}
           value={selectedCity}
         />
-        <Button
-          variant="contained"
-          onClick={() =>
-            navigator.geolocation.getCurrentPosition(
-              onGetUserLocation,
-              onFailedToGetUserLocation
-            )
-          }
-        > EN YAKIN YARDIM GEREKEN ALANI GÖSTER
-        </Button>
+        <ClosestHelpSiteButton
+          sites={sites}
+          mapRef={mapRef}
+          callback={() => setOnboardingDialogOpen(false)}
+        >
+          BANA EN YAKIN YARDIM ALANINI GÖSTER
+        </ClosestHelpSiteButton>
         {SCREEN_WIDTH < 600 && (
           <div className="minimize-icon-cont">
             {!minimizeHeader ? (
