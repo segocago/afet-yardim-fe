@@ -1,6 +1,6 @@
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { Autocomplete, Button, CardMedia, Grid, TextField } from "@mui/material";
+import { Alert, Autocomplete, Button, CardMedia, Grid, Snackbar, TextField } from "@mui/material";
 import { getDistance } from "geolib";
 import queryString from 'query-string';
 import React, { useEffect, useState } from "react";
@@ -40,6 +40,7 @@ const MainPage = () => {
   const [lastClickedLongitude, setLastClickedLongitude] = useState(null);
   const [minimizeHeader, setMinimizeHeader] = useState(false);
   const [mapRef, setMapRef] = useState(null);
+  const [errMsg, setErrMsg] = useState(null)
 
   const setSelectedCityFromLocalStorage = () => {
     const selectedCityFromLocalStorage = JSON.parse(localStorage.getItem("selectedCity"));
@@ -55,7 +56,7 @@ const MainPage = () => {
   const handleNormalInit = () => {
     const selectedCity = setSelectedCityFromLocalStorage();
     fetchSitesOfSelectedCity(selectedCity);
-    window.history.replaceState(null, "", "/")
+    window.history.replaceState(null, "", `/?city=${selectedCity.label}`)
   }
   
   useEffect(() => {
@@ -79,7 +80,7 @@ const MainPage = () => {
         setCenterLocation(center);
       } 
       else {
-        alert('Invalid coordinates');
+        setErrMsg(`${newValue.label} şehrinin koordinatlarında bir sorun var.`)
       }
     }
   };
@@ -116,7 +117,7 @@ const MainPage = () => {
       event.target[0].value === null ||
       event.target[0].value.trim().length === 0
     ) {
-      alert("Boş yorum eklenemenez.");
+      setErrMsg("Boş yorum eklenemenez.");
       return;
     }
 
@@ -143,40 +144,51 @@ const MainPage = () => {
       console.log(city)
       setSelectedCity(city)
       if (!city) {
-        alert("Şehir ismi yanlış")
+        setErrMsg(`Şehir ismi yanlış: '${cityName}' bulunamadı. ${INITIAL_SELECTED_CITY.label}'a yönlendiriliyorsunuz`)
         handleNormalInit()
+        return
       }
 
-      // If the city is different than the selected city, fetch the sites
-      const sites = await fetchSitesOfSelectedCity(city)
-      console.log(sites)
-      setSites(sites)
-
-      const site = sites.find((s) => s.id === Number(parsedQuery.siteId))
-      if (!site) {
-        alert("Yardim alani bulunamadı")
+      // If the query only includes the city
+      if (parsedQuery.siteId) {
+        const sites = await fetchSitesOfSelectedCity(city)
+        console.log(sites)
+        setSites(sites)
+  
+        const site = sites.find((s) => s.id === Number(parsedQuery.siteId))
+        if (!site) {
+          setErrMsg("Yardim alani bulunamadı")
+          handleNormalInit()
+          return
+        }
+        // If zooming in is disabled, the site cannot find the reference to the marker due to clustering
+        // Therefore, we directly zoom in to the location of the sit
+        event.target.setView([site.location.latitude, site.location.longitude], 15)
+        // Markers are not loaded yet, we might need to wait a bit. I couldn't find a better solution yet.
+        // If there is an event that fires when a marker is rendered, than we can use it.
+        setTimeout(() => {
+          site.markerRef.openPopup()
+        }, 500)
+      }
+      else {
         handleNormalInit()
+        event.target.setView([city.latitude, city.longitude], 12)
       }
 
-      // If zooming in is disabled, the site cannot find the reference to the marker due to clustering
-      // Therefore, we directly zoom in to the location of the sit
-      event.target.setView([site.location.latitude, site.location.longitude], 15)
-      // Markers are not loaded yet, we might need to wait a bit. I couldn't find a better solution yet.
-      // If there is an event that fires when a marker is rendered, than we can use it.
-      setTimeout(() => {
-        site.markerRef.openPopup()
-      }, 500)
     }
 
     if (skipOnboarding) {
       handleQueryRedirect()
+    }
+    else {
+      event.target.setView([INITIAL_SELECTED_CITY.latitude, INITIAL_SELECTED_CITY.longitude], 12)
     }
   };
 
 
   const handleShowMeClosestSite = (lat, long) => {
     if (!sites || sites.length === 0) {
-      alert("Yardım toplama noktası bulunamadı");
+      setErrMsg("En yakın yardım toplama noktası bulunamadı");
       return;
     }
     let minDistance = Number.MAX_SAFE_INTEGER;
@@ -217,16 +229,47 @@ const MainPage = () => {
   };
 
   const onFailedToGetUserLocation = (error) => {
-    alert(
+    setErrMsg(
       "En yakın yardım alanını bulabilmek için uygulamaya konum erişim izni vermeniz gerekiyor."
     );
   };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setErrMsg(null)
+  }
 
   return (
     <div>
       <div
         className={minimizeHeader ? "button-group-minimize" : "button-group"}
       >
+        <Snackbar
+        anchorOrigin={{
+          horizontal: "center",
+          vertical: "top"          
+        }}
+          open={errMsg !== null}
+          autoHideDuration={10000}
+          onClose={handleSnackbarClose}
+          sx={{
+            width: 400,
+          }}
+        >
+          <Alert
+            severity="error"
+            onClose={handleSnackbarClose}
+            sx={{
+              width: "100%",
+              fontSize: 18
+            }}
+          >
+            {errMsg}
+          </Alert>
+        </Snackbar>
         <Autocomplete
           className="auto-complete-dropdown"
           style={{ width: "100%", marginRight: "15px" }}
