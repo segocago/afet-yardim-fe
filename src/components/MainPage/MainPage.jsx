@@ -168,9 +168,7 @@ const MainPage = () => {
         addCommentToSite={addCommentToSite}
         handleCreateSiteDialogOpen={handleCreateSiteDialogOpen}
       ></Map>
-      {
-        sites.length !== 0 && 
-          <OnboardingDialog
+        <OnboardingDialog
           open={onboardingDialogOpen}
           handleClose={handleOnboardingDialogClose}
           showClosestSiteButton={true}
@@ -179,9 +177,6 @@ const MainPage = () => {
           sites={sites}
           mapRef={mapRef}
         /> 
-      }
-      
-
       {/*Disabled site creation dialog, only feed the system from spreadsheets*/}
       <CreateSiteDialog
         open={false}
