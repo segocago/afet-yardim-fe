@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMap, useMapEvent } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import { Button, Comment, Form, Header, TextArea } from 'semantic-ui-react';
-import FilterBox from "./FilterBox";
 import SiteMarker from "./SiteMarker";
 
 const Map = ({sites, center, addCommentToSite, whenMapReady}) => {
@@ -30,16 +28,7 @@ const Map = ({sites, center, addCommentToSite, whenMapReady}) => {
         removeOutsideVisibleBounds
       >
         {
-          sites.filter(
-            (site) => {
-              let valid_sites = site.location && site.location.latitude && site.location.longitude
-              
-              // Apply filters
-              if (showOnlyVerified) {
-                valid_sites = valid_sites && site.verified
-              }
-              return valid_sites
-            })
+          sites.filter(site => site.location && site.location.latitude && site.location.longitude)
             .map(site => {
               return (
                 <SiteMarker site={site} addCommentToSite={addCommentToSite}></SiteMarker>
@@ -47,7 +36,6 @@ const Map = ({sites, center, addCommentToSite, whenMapReady}) => {
             })
         }
       </MarkerClusterGroup>
-      <MyComponent></MyComponent>
     </MapContainer>
   );
 }
