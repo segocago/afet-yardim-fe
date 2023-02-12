@@ -36,6 +36,10 @@ const OnboardingDialog = ({open, handleClose, showClosestSiteButton, handleSelec
           value={selectedCity}
       />}
       <DialogContent>
+          Haritadaki veriler seçilen illerdeki yardım organizasyon gruplarının kullandıkları spreadsheetlerden güncellenmektedir.
+          Bu organizasyonlardaki arkadaşlar ellerinden geldikçe çok güncelleme girmeye çalışsalarda her lokasyon için her zaman güncel veri bulunmayabilir.
+          <b> Gitmeyi düşündüğünüz lokasyonun son güncellenme tarihini kontrol etmeyi unutmayın.</b>
+          <br></br>
           {showClosestSiteButton && selectedCity &&
             <Button startIcon={<SendIcon/>} variant="contained" onClick={() => navigator.geolocation.getCurrentPosition(onGetUserLocation, onFailedToGetUserLocation)}
             > Bana En Yakın Yardım Alanını Göster</Button>}
