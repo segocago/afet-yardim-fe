@@ -1,24 +1,16 @@
-import React from "react";
 import {
   Autocomplete,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle, TextField,
+  DialogTitle, Stack, TextField,
 } from "@mui/material";
-import SendIcon from '@mui/icons-material/Send';
+import { CITIES } from "../../constants/constants";
+import ClosestHelpSiteButton from '../ClosestHelpSiteButton';
 import "./OnboardingDialog.css";
-import {CITIES} from "../../constants/constants";
 
-const OnboardingDialog = ({open, handleClose, showClosestSiteButton, handleSelectCity, selectedCity,handleShowMeClosestSite}) => {
-  const onGetUserLocation = (position) => {
-    handleShowMeClosestSite(position.coords.latitude, position.coords.longitude);
-  }
-
-  const onFailedToGetUserLocation = (error) => {
-    alert("En yakın yardım alanını bulabilmek için uygulamaya konum erişim izni vermeniz gerekiyor.")
-  }
+const OnboardingDialog = ({open, handleClose, showClosestSiteButton, handleSelectCity, selectedCity, sites, mapRef}) => {
 
   return (
     <Dialog disableEscapeKeyDown={selectedCity != null} open={open} onClose={handleClose}>
@@ -36,9 +28,23 @@ const OnboardingDialog = ({open, handleClose, showClosestSiteButton, handleSelec
           value={selectedCity}
       />}
       <DialogContent>
-          {showClosestSiteButton && selectedCity &&
-            <Button startIcon={<SendIcon/>} variant="contained" onClick={() => navigator.geolocation.getCurrentPosition(onGetUserLocation, onFailedToGetUserLocation)}
-            > Bana En Yakın Yardım Alanını Göster</Button>}
+      {showClosestSiteButton && selectedCity &&
+        <Stack spacing={2}>
+          <p>
+            Şehrinizdeki yardım alanlarıyla ilgili detayları haritada bulabilirsiniz. 
+            Daha detaylı bilgilere ulaşmak için konumların üzerine tıklayabilirsiniz. 
+            Eğer size en yakın yardım merkezini öğrenmek istiyorsanız lütfen aşağıdaki 
+            butonu kullanın.
+          </p>
+          <ClosestHelpSiteButton
+            sites={sites}
+            mapRef={mapRef}
+            callback={() => handleClose()}
+          >
+           Bana En Yakın Yardım Alanını Göster
+          </ClosestHelpSiteButton>
+        </Stack>
+      }
       </DialogContent>
       <DialogActions>
         <Button disabled={!selectedCity} onClick={() => handleClose()}>{selectedCity && "Kapat"}</Button>
