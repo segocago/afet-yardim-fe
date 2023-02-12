@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react'
-import {MapContainer, TileLayer} from "react-leaflet";
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer } from "react-leaflet";
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import SiteMarker from "./SiteMarker";
 
 const Map = ({sites, center, addCommentToSite, whenMapReady}) => {
@@ -18,14 +19,23 @@ const Map = ({sites, center, addCommentToSite, whenMapReady}) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {
-        sites.filter(site => site.location && site.location.latitude && site.location.longitude)
-          .map(site => {
-            return (
-              <SiteMarker site={site} addCommentToSite={addCommentToSite}></SiteMarker>
-            )
-          })
-      }
+      <MarkerClusterGroup
+        chunkedLoading
+        showCoverageOnHover={true}
+        maxClusterRadius={80}
+        spiderfyOnMaxZoom={true}
+        disableClusteringAtZoom={14}
+        removeOutsideVisibleBounds
+      >
+        {
+          sites.filter(site => site.location && site.location.latitude && site.location.longitude)
+            .map(site => {
+              return (
+                <SiteMarker site={site} addCommentToSite={addCommentToSite}></SiteMarker>
+              )
+            })
+        }
+      </MarkerClusterGroup>
     </MapContainer>
   );
 }
