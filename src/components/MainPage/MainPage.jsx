@@ -234,7 +234,7 @@ const MainPage = () => {
         longitude={lastClickedLongitude}
         onNewSiteCreated={onNewSiteCreated}
       />
-      <Grid style={{padding: (7, 14, 0, 14), backgroundColor: 'rgba(255, 255, 255, 0.5)', display: "flex", justifyContent: "space-between" }} container spacing={1} className="map-legend">
+      <Grid style={{padding: (7, 14, 0, 14), backgroundColor: 'rgba(255, 255, 255, 0.3)', display: "flex", justifyContent: "space-between" }} container spacing={1} className="map-legend">
         <div>
           <CardMedia
             component="img"
