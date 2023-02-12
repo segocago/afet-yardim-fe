@@ -311,16 +311,16 @@ const MainPage = () => {
         center={centerLocation}
         addCommentToSite={addCommentToSite}
         handleCreateSiteDialogOpen={handleCreateSiteDialogOpen}
-      />
-      <OnboardingDialog
-        open={onboardingDialogOpen}
-        handleClose={handleOnboardingDialogClose}
-        handleShowMeClosestSite={handleShowMeClosestSite}
-        showClosestSiteButton={true}
-        handleSelectCity={setSelectedCity}
-        selectedCity={selectedCity}
-      />
-
+      ></Map>
+        <OnboardingDialog
+          open={onboardingDialogOpen}
+          handleClose={handleOnboardingDialogClose}
+          showClosestSiteButton={true}
+          handleSelectCity={setSelectedCity}
+          selectedCity={selectedCity}
+          sites={sites}
+          mapRef={mapRef}
+        /> 
       {/*Disabled site creation dialog, only feed the system from spreadsheets*/}
       <CreateSiteDialog
         open={false}
