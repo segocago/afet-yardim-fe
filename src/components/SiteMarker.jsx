@@ -51,8 +51,6 @@ const UNKNOWN_ICON = new L.icon({
 
 const SiteMarker = ({ site, addCommentToSite }) => {
 
-
-
   const [humanHelp, setHumanHelp] = useState(
     getStatusLevelForType(site, HUMAN_HELP)
   );
@@ -68,7 +66,9 @@ const SiteMarker = ({ site, addCommentToSite }) => {
     const date = new Date(
       new Date(dateString).getTime() + TIME_DIFFERENCE_IN_MILLIS
     );
-    return date.toLocaleString();
+    // Show the date in 24-hour format.
+    var options = {hour12: false}
+    return date.toLocaleString('tr-TR', options);
   };
 
   const generateGoogleMapsLinkForSite = (site) => {
@@ -228,40 +228,40 @@ const SiteMarker = ({ site, addCommentToSite }) => {
               <b>Açık/Kapalı:</b> {getSiteActiveText(site.activeStatus)}
             </p>
             <p>
-              <b>Şehir:</b> {site.location.city}
+              <b>Şehir: </b> {site.location.city}
             </p>
             <p>
-              <b>İlçe:</b> {site.location.district}
+              <b>İlçe: </b> {site.location.district}
             </p>
             <p>
-              <b>Adres:</b> {site.location.additionalAddress}
+              <b>Adres: </b> {site.location.additionalAddress}
             </p>
             <p>
               <b>{getOrganizerLabel(site.type)}:</b> {site.organizer}
             </p>
             <p>
-              <b>Açıklama:</b> {site.description}
+              <b>Açıklama: </b> {site.description}
             </p>
             <p>
-              <b>İletişim Bilgileri:</b>
+              <b>İletişim Bilgileri: </b>
               {site.contactInformation == ""
                 ? "Bilinmiyor"
                 : site.contactInformation}
             </p>
             <div className="need-help-cont">
               <div className="need-help-item">
-                <b>İnsan İhtiyacı:</b>
+                <b>İnsan İhtiyacı: </b>
                 {getStatusLevelTextForType(site, HUMAN_HELP)}
               </div>
               <div className="need-help-item">
-                <b>Materyal İhtiyacı:</b>
+                <b>Materyal İhtiyacı: </b>
                 {getStatusLevelTextForType(site, MATERIAL)}
               </div>
               <div className="need-help-item">
-                <b>Gıda İhtiyacı:</b> {getStatusLevelTextForType(site, FOOD)}
+                <b>Gıda İhtiyacı: </b> {getStatusLevelTextForType(site, FOOD)}
               </div>
               <div className="need-help-item">
-                <b>Koli İhtiyacı:</b>
+                <b>Koli İhtiyacı: </b>
                 {getStatusLevelTextForType(site, PACKAGE_STATUS)}
               </div>
             </div>
