@@ -12,7 +12,6 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
   doesSiteNeedAnyHelp
 } from "../utils/SiteUtils";
-import useGeoLocation from "../../hooks/useGeoLocation";
 import {foodImage, humanImage, materialImage, noNeedOrClosedImaged, packageImage, unknownImage} from "../img/images";
 
 const SCREEN_WIDTH = window.screen.width;
@@ -21,10 +20,10 @@ const LEGEND_IMAGE_DIMENSION = 20;
 const INITIAL_SELECTED_CITY = CITIES.find((city) => city.label === "Ankara");
 
 const MainPage = () => {
-  const location = useGeoLocation();
+  const [userLocation, setUserLocation] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
   const [sites, setSites] = useState([]);
-  const [centerLocation, setCenterLocation] = useState(location.coordinates && location.loaded ? [location.coordinates.lat, location.coordinates.lng] : [INITIAL_SELECTED_CITY.latitude, INITIAL_SELECTED_CITY.longitude]);
+  const [centerLocation, setCenterLocation] = useState([INITIAL_SELECTED_CITY.latitude, INITIAL_SELECTED_CITY.longitude]);
   const [setCreateSiteDialogOpen] = useState(false);
   const [onboardingDialogOpen, setOnboardingDialogOpen] = useState(true);
   const [lastClickedLatitude, setLastClickedLatitude] = useState(null);
@@ -51,14 +50,6 @@ const MainPage = () => {
       setCenterLocation(center);
     }
   };
-  useEffect(() => {
-    if (location.coordinates && location.loaded) {
-      setCenterLocation([location.coordinates.lat, location.coordinates.lng]);
-    } 
-    if (location.error) {
-      alert("En yakın yardım alanını bulabilmek için uygulamaya konum erişim izni vermeniz gerekiyor.");
-    }
-  }, [location]);
   
   useEffect(() => {
     fetchSitesOfSelectedCity(selectedCity);
@@ -164,6 +155,13 @@ const MainPage = () => {
     setOnboardingDialogOpen(false);
   };
 
+  const onSetUserLocation = (position) => {
+    setUserLocation([      
+      position.coords.latitude,
+      position.coords.longitude
+    ]);
+  };
+
   const onGetUserLocation = (position) => {
     handleShowMeClosestSite(
       position.coords.latitude,
@@ -176,6 +174,16 @@ const MainPage = () => {
       "En yakın yardım alanını bulabilmek için uygulamaya konum erişim izni vermeniz gerekiyor."
     );
   };
+
+  useEffect(() => {
+    if (userLocation.length === 0 ) {
+      navigator.geolocation.getCurrentPosition(
+        onSetUserLocation,
+        onFailedToGetUserLocation
+      );
+    }
+  }, [userLocation]);
+
 
   return (
     <div>
@@ -223,8 +231,8 @@ const MainPage = () => {
       <Map
         whenMapReady={whenMapReady}
         sites={sites}
-        userLocation={location}
-        center={centerLocation}
+        userLocation={userLocation}
+        center={userLocation.length !== 0 && selectedCity === null ? userLocation : centerLocation}
         addCommentToSite={addCommentToSite}
         handleCreateSiteDialogOpen={handleCreateSiteDialogOpen}
       ></Map>
