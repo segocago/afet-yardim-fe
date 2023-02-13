@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Marker, Popup, Tooltip } from "react-leaflet";
-import { Button, Comment, Form, Header, TextArea } from "semantic-ui-react";
+import { Button, Comment, Form, GridColumn, Header, TextArea } from "semantic-ui-react";
 import L from "leaflet";
+import SocialButtons from "./Social/SocialButtons";
+
 import {
   ACTIVE_STATUS,
   FOOD,
@@ -247,7 +249,7 @@ const SiteMarker = ({ site, addCommentToSite }) => {
               {site.contactInformation == ""
                 ? "Bilinmiyor"
                 : site.contactInformation}
-            </p>
+            </p>      
             <div className="need-help-cont">
               <div className="need-help-item">
                 <b>İnsan İhtiyacı:</b>
@@ -265,13 +267,27 @@ const SiteMarker = ({ site, addCommentToSite }) => {
                 {getStatusLevelTextForType(site, PACKAGE_STATUS)}
               </div>
             </div>
-            <Button>
-              <a href={generateGoogleMapsLinkForSite(site)} target="_blank">
-                Bu Alana Yol Tarifi Al
-              </a>
-            </Button>
+            <hr></hr>
+            <div>
+              <GridColumn>
+                <Button>
+                <a href={generateGoogleMapsLinkForSite(site)} target="_blank">
+                  Bu Alana Yol Tarifi Al
+                </a>
+              </Button>                
+              </GridColumn>
+              <br></br>
+              <GridColumn>
+              <p>
+                <b>Sosyal Medyada Paylaş</b>
+                <SocialButtons
+                site={site}
+                />
+              </p>
+              </GridColumn>
+            </div>                  
           </div>
-
+          <hr></hr>
           <Comment.Group className={"site-comments"}>
             <Header as="h5" dividing>
               Güncellemeler
