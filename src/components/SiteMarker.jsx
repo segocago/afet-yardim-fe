@@ -68,7 +68,8 @@ const SiteMarker = ({ site, addCommentToSite }) => {
     const date = new Date(
       new Date(dateString).getTime() + TIME_DIFFERENCE_IN_MILLIS
     );
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',   hour: 'numeric',
+      minute: 'numeric' };
     return date.toLocaleDateString('tr-TR', options);
   };
 
