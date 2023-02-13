@@ -314,7 +314,9 @@ const MainPage = () => {
         <ClosestHelpSiteButton
           sites={sites}
           mapRef={mapRef}
-          callback={() => setOnboardingDialogOpen(false)}
+          callback={() =>{
+             setOnboardingDialogOpen(false)
+            }}
         >
           BANA EN YAKIN YARDIM ALANINI GÖSTER
         </ClosestHelpSiteButton>
@@ -350,7 +352,6 @@ const MainPage = () => {
         handleSelectCity={handleSetSelectedCity}
         selectedCity={selectedCity}
       />
-
       {/*Disabled site creation dialog, only feed the system from spreadsheets*/}
       <CreateSiteDialog
         open={false}
@@ -359,7 +360,7 @@ const MainPage = () => {
         longitude={lastClickedLongitude}
         onNewSiteCreated={onNewSiteCreated}
       />
-      <Grid style={{padding: (7, 14, 0, 14), backgroundColor: 'rgba(255, 255, 255, 0.3)', display: "flex", justifyContent: "space-between" }} container spacing={1} className="map-legend">
+<Grid style={{padding: (7, 14, 0, 14), backgroundColor: 'rgba(255, 255, 255, 0.3)', display: "flex", justifyContent: "space-between" }} container spacing={1} className="map-legend">
         <div>
           <CardMedia
             component="img"
@@ -391,7 +392,7 @@ const MainPage = () => {
             src={foodImage}
         /><b>Gıda</b>
         </div>
-        
+
         <div>
         <CardMedia
             component="img"
@@ -402,7 +403,7 @@ const MainPage = () => {
             src={packageImage}
         /><b>Koli</b>
         </div>
-        
+
         <div>
         <CardMedia
               component="img"
@@ -413,7 +414,7 @@ const MainPage = () => {
               src={noNeedOrClosedImaged}
           /><b>Kapalı/Yardım Gerekmiyor</b>
         </div>
-          
+
         <div>
         <CardMedia
               component="img"
