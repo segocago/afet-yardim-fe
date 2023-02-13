@@ -44,13 +44,10 @@ const Map = ({sites, userLocation, center, addCommentToSite, whenMapReady}) => {
             })
         }
       </MarkerClusterGroup>
-      {userLocation.loaded && !userLocation.error && (
+      {userLocation.length !== 0  && (
                 <Marker
                   icon={markerIcon}
-                  position={[
-                    userLocation.coordinates.lat,
-                    userLocation.coordinates.lng,
-                  ]}
+                  position={userLocation}
                 >
                   <Tooltip permanent>
                     <span>
