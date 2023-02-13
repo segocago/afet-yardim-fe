@@ -42,9 +42,17 @@ const MainPage = () => {
   const [mapRef, setMapRef] = useState(null);
   const [errMsg, setErrMsg] = useState(null)
 
+  const handleSetSelectedCity = (newCity) => {
+    if (newCity) {
+      window.history.replaceState(null, '', `?city=${newCity.label}`)
+      setSelectedCity(newCity)
+      localStorage.setItem("selectedCity", JSON.stringify(newCity))
+    }
+  }
+ 
   const setSelectedCityFromLocalStorage = () => {
     const selectedCityFromLocalStorage = JSON.parse(localStorage.getItem("selectedCity"));
-    selectedCityFromLocalStorage ? setSelectedCity(selectedCityFromLocalStorage) : setSelectedCity(null);
+    selectedCityFromLocalStorage ? handleSetSelectedCity(selectedCityFromLocalStorage) : handleSetSelectedCity(null);
     return selectedCityFromLocalStorage
   }
   const fetchSitesOfSelectedCity = async (selectedCity) => {
@@ -53,15 +61,28 @@ const MainPage = () => {
     return res.data
   };
 
-  const handleNormalInit = () => {
-    const selectedCity = setSelectedCityFromLocalStorage();
+  const handleInitFromLocalStorage = () => {
+    const selectedCity = setSelectedCityFromLocalStorage()
+    if (selectedCity) {
+      fetchSitesOfSelectedCity(selectedCity);
+      window.history.replaceState(null, "", `/?city=${selectedCity.label}`)
+    }
+  }
+
+  const handleInitFromSelectedCity = (selectedCity) => {
     fetchSitesOfSelectedCity(selectedCity);
     window.history.replaceState(null, "", `/?city=${selectedCity.label}`)
+  }
+
+  const handleInitFromSelectedCityAndSiteId = (selectedCity, siteId) => {
+    console.log('here')
+    fetchSitesOfSelectedCity(selectedCity);
+    window.history.replaceState(null, "", `/?city=${selectedCity.label}&siteId=${siteId}`)
   }
   
   useEffect(() => {
     if (!skipOnboarding) {
-      handleNormalInit()
+      handleInitFromLocalStorage()
     }
   }, []);
   
@@ -73,7 +94,7 @@ const MainPage = () => {
       
       const lat = parseFloat(newValue.latitude);
       const lon = parseFloat(newValue.longitude);
-      setSelectedCity(newValue);
+      handleSetSelectedCity(newValue);
   
       const center = [lat, lon];
       if (center[0] && center[1]) {
@@ -141,40 +162,49 @@ const MainPage = () => {
     const handleQueryRedirect = async() => {
       const cityName = parsedQuery.city
       const city = CITIES.find((c) => c.label === cityName)
-      console.log(city)
-      setSelectedCity(city)
       if (!city) {
-        setErrMsg(`Şehir ismi yanlış: '${cityName}' bulunamadı. ${INITIAL_SELECTED_CITY.label}'a yönlendiriliyorsunuz`)
-        handleNormalInit()
+        setErrMsg(`Şehir ismi yanlış: '${cityName}' bulunamadı.`)
+        handleInitFromLocalStorage()
         return
       }
 
-      // If the query only includes the city
-      if (parsedQuery.siteId) {
-        const sites = await fetchSitesOfSelectedCity(city)
-        console.log(sites)
-        setSites(sites)
-  
-        const site = sites.find((s) => s.id === Number(parsedQuery.siteId))
-        if (!site) {
-          setErrMsg("Yardim alani bulunamadı")
-          handleNormalInit()
-          return
-        }
-        // If zooming in is disabled, the site cannot find the reference to the marker due to clustering
-        // Therefore, we directly zoom in to the location of the sit
-        event.target.setView([site.location.latitude, site.location.longitude], 15)
-        // Markers are not loaded yet, we might need to wait a bit. I couldn't find a better solution yet.
-        // If there is an event that fires when a marker is rendered, than we can use it.
-        setTimeout(() => {
-          site.markerRef.openPopup()
-        }, 500)
-      }
-      else {
-        handleNormalInit()
+      setSelectedCity(city) 
+      localStorage.setItem("selectedCity", JSON.stringify(city));
+
+      // If the query only includes the city but not the siteId
+      if (!parsedQuery.siteId) {
+        handleInitFromSelectedCity(city)
         event.target.setView([city.latitude, city.longitude], 12)
+        return
       }
 
+      let newSites;
+      // If the city is not changed, do not fetch again, use the existing sites
+      if (cityName === selectedCity?.label && sites && sites.length !== 0 && sites[0] && sites[0].location.city === cityName) {
+        newSites = [...sites]
+      }
+      // A new city 
+      else {
+        newSites = await fetchSitesOfSelectedCity(city)
+        setSites(newSites)
+      }
+
+
+      const site = newSites.find((s) => s.id === Number(parsedQuery.siteId))
+      if (!site) {
+        setErrMsg("Yardim alani bulunamadı")
+        handleInitFromSelectedCity(city)
+        return
+      }
+      // If zooming in is disabled, the site cannot find the reference to the marker due to clustering
+      // Therefore, we directly zoom in to the location of the sit
+      event.target.setView([site.location.latitude, site.location.longitude], 15)
+      // Markers are not loaded yet, we might need to wait a bit. I couldn't find a better solution yet.
+      // If there is an event that fires when a marker is rendered, than we can use it.
+      handleInitFromSelectedCityAndSiteId(city, site.id)
+      setTimeout(() => {
+        site?.markerRef?.openPopup()
+      }, 500)
     }
 
     if (skipOnboarding) {
@@ -320,7 +350,7 @@ const MainPage = () => {
         handleClose={handleOnboardingDialogClose}
         handleShowMeClosestSite={handleShowMeClosestSite}
         showClosestSiteButton={true}
-        handleSelectCity={setSelectedCity}
+        handleSelectCity={handleSetSelectedCity}
         selectedCity={selectedCity}
       />
 
