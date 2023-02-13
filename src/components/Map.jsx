@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer } from "react-leaflet";
 import MarkerClusterGroup from 'react-leaflet-cluster';
+import {MapContainer, TileLayer, Marker, Tooltip} from "react-leaflet";
 import SiteMarker from "./SiteMarker";
+import L from "leaflet";
 
-const Map = ({sites, center, addCommentToSite, whenMapReady}) => {
+const markerIcon = new L.Icon({
+  iconUrl: require("./img/marker.png"),
+  iconSize: [40, 40],
+  iconAnchor: [17, 46], //[left/right, top/bottom]
+  popupAnchor: [0, -46], //[left/right, top/bottom]
+});
+
+const Map = ({sites, userLocation, center, addCommentToSite, whenMapReady}) => {
 
   const [mapRef, setMapRef] = useState(null);
 
@@ -36,6 +44,26 @@ const Map = ({sites, center, addCommentToSite, whenMapReady}) => {
             })
         }
       </MarkerClusterGroup>
+      {userLocation.length !== 0  && (
+                <Marker
+                  icon={markerIcon}
+                  position={userLocation}
+                >
+                  <Tooltip permanent>
+                    <span>
+                      <strong>Şuan Buradasınız</strong>
+                    </span>
+                  </Tooltip>
+                </Marker>
+              )}
+      {
+        sites.filter(site => site.location && site.location.latitude && site.location.longitude)
+          .map(site => {
+            return (
+              <SiteMarker site={site} addCommentToSite={addCommentToSite}></SiteMarker>
+            )
+          })
+      }
     </MapContainer>
   );
 }

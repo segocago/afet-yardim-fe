@@ -20,6 +20,7 @@ const LEGEND_IMAGE_DIMENSION = 20;
 const INITIAL_SELECTED_CITY = CITIES.find((city) => city.label === "Ankara");
 
 const MainPage = () => {
+  const [userLocation, setUserLocation] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
   const [sites, setSites] = useState([]);
   const [centerLocation, setCenterLocation] = useState([INITIAL_SELECTED_CITY.latitude, INITIAL_SELECTED_CITY.longitude]);
@@ -49,7 +50,7 @@ const MainPage = () => {
       setCenterLocation(center);
     }
   };
-
+  
   useEffect(() => {
     fetchSitesOfSelectedCity(selectedCity);
     if (selectedCity) {
@@ -154,6 +155,13 @@ const MainPage = () => {
     setOnboardingDialogOpen(false);
   };
 
+  const onSetUserLocation = (position) => {
+    setUserLocation([      
+      position.coords.latitude,
+      position.coords.longitude
+    ]);
+  };
+
   const onGetUserLocation = (position) => {
     handleShowMeClosestSite(
       position.coords.latitude,
@@ -166,6 +174,16 @@ const MainPage = () => {
       "En yakın yardım alanını bulabilmek için uygulamaya konum erişim izni vermeniz gerekiyor."
     );
   };
+
+  useEffect(() => {
+    if (userLocation.length === 0 ) {
+      navigator.geolocation.getCurrentPosition(
+        onSetUserLocation,
+        onFailedToGetUserLocation
+      );
+    }
+  }, [userLocation]);
+
 
   return (
     <div>
@@ -213,7 +231,8 @@ const MainPage = () => {
       <Map
         whenMapReady={whenMapReady}
         sites={sites}
-        center={centerLocation}
+        userLocation={userLocation}
+        center={userLocation.length !== 0 && selectedCity === null ? userLocation : centerLocation}
         addCommentToSite={addCommentToSite}
         handleCreateSiteDialogOpen={handleCreateSiteDialogOpen}
       ></Map>
