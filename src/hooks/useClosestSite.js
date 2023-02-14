@@ -27,10 +27,9 @@ const useClosestSite = (sites) => {
     }
 
     const onFailedToGetUserLocation = (e) => {
-        console.log(e)
         setState('error')
         if (e.code === 1) {
-            setErrMsg("Konum verisine ulaşımı engellediğiniz için isteğinizi yerine getiremiyoruz. İsterseniz konum verilerine erişimi arama barının sol kısmına kalan konum simgesine tıklayarak açabilirsiniz.")
+            setErrMsg("Konum verisine ulaşımı engellediğiniz için isteğinizi yerine getiremiyoruz. Bu seçenekle devam etmek için konumunuzu açmanız ve konum izni vermeniz gerekmekte.")
         }
         else if (e.code === 2) {
             setErrMsg("Şu anda konum verilerinize ulaşamıyoruz. Lütfen daha sonra tekrar deneyin.")

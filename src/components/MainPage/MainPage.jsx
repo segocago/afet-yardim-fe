@@ -45,7 +45,7 @@ const MainPage = () => {
 
   const handleSetSelectedCity = (newCity) => {
     if (newCity) {
-      window.history.replaceState(null, '', `?city=${newCity.label}`)
+      window.history.pushState(null, '', `?city=${newCity.label}`)
       setSelectedCity(newCity)
       localStorage.setItem("selectedCity", JSON.stringify(newCity))
     }
@@ -66,19 +66,19 @@ const MainPage = () => {
     const selectedCity = setSelectedCityFromLocalStorage()
     if (selectedCity) {
       fetchSitesOfSelectedCity(selectedCity);
-      window.history.replaceState(null, "", `/?city=${selectedCity.label}`)
+      window.history.pushState(null, "", `/?city=${selectedCity.label}`)
     }
   }
 
   const handleInitFromSelectedCity = (selectedCity) => {
     fetchSitesOfSelectedCity(selectedCity);
-    window.history.replaceState(null, "", `/?city=${selectedCity.label}`)
+    window.history.pushState(null, "", `/?city=${selectedCity.label}`)
   }
 
   const handleInitFromSelectedCityAndSiteId = (selectedCity, siteId) => {
     console.log('here')
     fetchSitesOfSelectedCity(selectedCity);
-    window.history.replaceState(null, "", `/?city=${selectedCity.label}&siteId=${siteId}`)
+    window.history.pushState(null, "", `/?city=${selectedCity.label}&siteId=${siteId}`)
   }
   
   useEffect(() => {
@@ -88,15 +88,9 @@ const MainPage = () => {
   }, []);
   
   const handleSelectCity = async (newValue) => {
-    window.history.replaceState(null, "", `?city=${newValue.label}`)
     if (newValue) {
-      localStorage.setItem("selectedCity", JSON.stringify(newValue));
-      fetchSitesOfSelectedCity(newValue)
-      
       const lat = parseFloat(newValue.latitude);
       const lon = parseFloat(newValue.longitude);
-      handleSetSelectedCity(newValue);
-  
       const center = [lat, lon];
       if (center[0] && center[1]) {
         setCenterLocation(center);
@@ -104,6 +98,14 @@ const MainPage = () => {
       else {
         setErrMsg(`${newValue.label} şehrinin koordinatlarında bir sorun var.`)
       }
+
+      // Remove markers first to overcome issues regarding the URL queries. Otherwise, the default
+      // behavior during the removal of the marker results in the URL being not updated
+      sites.forEach((s) => s.markerRef.remove())
+
+      //
+      fetchSitesOfSelectedCity(newValue)
+      handleSetSelectedCity(newValue);
     }
   };
 
