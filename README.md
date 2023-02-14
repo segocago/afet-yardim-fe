@@ -10,3 +10,6 @@ bu merkezlerin şu anki durumlarını da insanlara sunmayı umuyoruz ki yardım 
 yönlenebilsin.
 
 https://www.afetyardimalanlari.org/
+
+# Staging
+Staging branchine mergelenen PR'lar https://staging.d3cv3aeheb9qwq.amplifyapp.com/ adresine deploy olmaktadır. Lütfen PR'ları önce staging branchine açın.

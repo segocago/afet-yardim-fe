@@ -414,7 +414,7 @@ const MainPage = () => {
                   width: LEGEND_IMAGE_DIMENSION
               }}
               src={noNeedOrClosedImaged}
-          /><b>Kapalı/Yardım Gerekmiyor</b>
+          /><b>Yardım Gerekmiyor</b>
         </div>
 
         <div>

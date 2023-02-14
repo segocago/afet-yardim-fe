@@ -66,7 +66,9 @@ const SiteMarker = ({ site }) => {
     const date = new Date(
       new Date(dateString).getTime() + TIME_DIFFERENCE_IN_MILLIS
     );
-    return date.toLocaleString();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',   hour: 'numeric',
+      minute: 'numeric' };
+    return date.toLocaleDateString('tr-TR', options);
   };
 
   const generateGoogleMapsLinkForSite = (site) => {
@@ -179,29 +181,6 @@ const SiteMarker = ({ site }) => {
     }
     return <span style={{color: nameColor}}>{site.name} </span>
   }
-
-  const constructSiteStatuses = () => {
-    const siteStatuses = [];
-
-    siteStatuses.push( {
-      siteStatusType : HUMAN_HELP,
-      siteStatusLevel: humanHelp ? humanHelp : UNKNOWN_LEVEL
-    })
-    siteStatuses.push( {
-      siteStatusType : MATERIAL,
-      siteStatusLevel: material ? material : UNKNOWN_LEVEL
-    })
-    siteStatuses.push( {
-      siteStatusType : FOOD,
-      siteStatusLevel: food ? food : UNKNOWN_LEVEL
-    })
-    siteStatuses.push( {
-      siteStatusType : PACKAGE_STATUS,
-      siteStatusLevel: packageStatus ? packageStatus : UNKNOWN_LEVEL
-    })
-    return siteStatuses;
-  };
-
   return (
     <Marker
       position={[site.location.latitude, site.location.longitude]}
@@ -230,33 +209,25 @@ const SiteMarker = ({ site }) => {
       >
         <div className="popup-container-div">
           <div className="popup-text-form">
-            <p>
-              <b>{getNameLabel(site.type)}:</b> {getSiteNameText(site)}
-            </p>
-            <p>
-              <b>Açık/Kapalı:</b> {getSiteActiveText(site.activeStatus)}
-            </p>
-            <p>
-              <b>Şehir:</b> {site.location.city}
-            </p>
-            <p>
+            <div>
+              <b>{getNameLabel(site.type)}:</b> {getSiteNameText(site)} Aktiflik: {getSiteActiveText(site.activeStatus)}
+            </div>
+            <div>
               <b>İlçe:</b> {site.location.district}
-            </p>
-            <p>
+            </div>
+            <div>
               <b>Adres:</b> {site.location.additionalAddress}
-            </p>
-            <p>
-              <b>{getOrganizerLabel(site.type)}:</b> {site.organizer}
-            </p>
-            <p>
+            </div>
+            <div>
               <b>Açıklama:</b> {site.description}
-            </p>
-            <p>
+            </div>
+            <div>
               <b>İletişim Bilgileri:</b>
               {site.contactInformation == ""
                 ? "Bilinmiyor"
                 : site.contactInformation}
-            </p>
+            </div>
+            <p></p>
             <div className="need-help-cont">
               <div className="need-help-item">
                 <b>İnsan İhtiyacı:</b>
@@ -296,7 +267,7 @@ const SiteMarker = ({ site }) => {
                     <Comment>
                       <Comment.Content>
                         <Comment.Metadata>
-                          <div>{formatDate(update.createDateTime)}</div>
+                          <div><b>{formatDate(update.createDateTime)}</b></div>
                         </Comment.Metadata>
                         <Comment.Text>{update.update}</Comment.Text>
                       </Comment.Content>
