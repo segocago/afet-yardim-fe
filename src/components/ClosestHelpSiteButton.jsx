@@ -2,6 +2,8 @@ import { LoadingButton } from "@mui/lab";
 import { Alert, Snackbar } from "@mui/material";
 import useClosestSite from "../hooks/useClosestSite";
 
+const MAX_ZOOM = 15
+
 const ClosestHelpSiteButton = ({ sites, mapRef, callback, children }) => {
     const { 
         getClosestSite, 
@@ -15,9 +17,11 @@ const ClosestHelpSiteButton = ({ sites, mapRef, callback, children }) => {
         if (mapRef !== null && closestSite !== null && closestSite !== undefined) {
             mapRef.setView(
                 [closestSite.location.latitude, closestSite.location.longitude],
-                16
+                MAX_ZOOM
             );
-            closestSite.markerRef.openPopup();
+            setTimeout(() => {
+                closestSite.markerRef.openPopup();
+            }, 500)
             callback();
             setState("waiting")
         }
@@ -47,7 +51,6 @@ const ClosestHelpSiteButton = ({ sites, mapRef, callback, children }) => {
                 onClose={handleClose}
                 sx={{
                     width: 400,
-                    fontSize: 40,
                 }}
                 
             >
