@@ -1,15 +1,16 @@
+import L from "leaflet";
 import React, { useState } from "react";
 import { Marker, Popup, Tooltip } from "react-leaflet";
 import { Button, Comment, Form, Header, TextArea } from "semantic-ui-react";
-import L from "leaflet";
 import {
   ACTIVE_STATUS,
   FOOD,
-  getStatusLevelForType,
   HUMAN_HELP,
   MATERIAL, NEED_REQUIRED, NO_NEED_REQUIRED,
-  PACKAGE_STATUS, UNKNOWN_LEVEL,
-  URGENT_NEED_REQUIRED
+  PACKAGE_STATUS,
+  UNKNOWN_LEVEL,
+  URGENT_NEED_REQUIRED,
+  getStatusLevelForType,
 } from "./utils/SiteUtils";
 
 const MAX_TOOLTIP_SIZE = 10;
@@ -49,10 +50,7 @@ const UNKNOWN_ICON = new L.icon({
   iconUrl: require("./img/unknown.png"),
 });
 
-const SiteMarker = ({ site, addCommentToSite }) => {
-
-
-
+const SiteMarker = ({ site }) => {
   const [humanHelp, setHumanHelp] = useState(
     getStatusLevelForType(site, HUMAN_HELP)
   );
@@ -209,6 +207,11 @@ const SiteMarker = ({ site, addCommentToSite }) => {
       position={[site.location.latitude, site.location.longitude]}
       ref={(ref) => (site.markerRef = ref)}
       icon={getPinForSite(site)}
+      eventHandlers={{
+        popupopen: (e) => {
+          window.history.pushState(null, "", `/?city=${site.location.city}&siteId=${site.id}`)
+        },
+      }}
     >
       <Tooltip permanent>
         <span>
@@ -218,7 +221,13 @@ const SiteMarker = ({ site, addCommentToSite }) => {
             .concat(site.name.length > MAX_TOOLTIP_SIZE ? "..." : "")}
         </span>
       </Tooltip>
-      <Popup>
+      <Popup
+        eventHandlers={{
+          remove: (e) => {
+            window.history.pushState(null, '', `?city=${site.location.city}`)
+          }
+        }}
+      >
         <div className="popup-container-div">
           <div className="popup-text-form">
             <p>
@@ -266,7 +275,7 @@ const SiteMarker = ({ site, addCommentToSite }) => {
               </div>
             </div>
             <Button>
-              <a href={generateGoogleMapsLinkForSite(site)} target="_blank">
+              <a href={generateGoogleMapsLinkForSite(site)} target="_blank" rel="noreferrer">
                 Bu Alana Yol Tarifi Al
               </a>
             </Button>

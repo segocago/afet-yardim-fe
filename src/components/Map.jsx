@@ -4,9 +4,9 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import SiteMarker from "./SiteMarker";
 
 const Map = ({sites, center, addCommentToSite, whenMapReady}) => {
-
   const [mapRef, setMapRef] = useState(null);
-
+  console.log(sites)
+  
   useEffect(() => {
     if (center && !center.some(value => value === null || value === undefined) && mapRef) {
       mapRef.setView(center)

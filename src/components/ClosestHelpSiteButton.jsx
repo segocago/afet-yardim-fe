@@ -14,7 +14,6 @@ const ClosestHelpSiteButton = ({ sites, mapRef, callback, children }) => {
 
     const handleClick = async() => {
         const closestSite = await getClosestSite()
-        console.log(closestSite)
         if (mapRef !== null && closestSite !== null && closestSite !== undefined) {
             mapRef.setView(
                 [closestSite.location.latitude, closestSite.location.longitude],
