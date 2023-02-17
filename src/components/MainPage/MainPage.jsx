@@ -45,9 +45,9 @@ const MainPage = () => {
 
   const handleSetSelectedCity = (newCity) => {
     if (newCity) {
-      window.history.pushState(null, '', `?city=${newCity.label}`)
       setSelectedCity(newCity)
       localStorage.setItem("selectedCity", JSON.stringify(newCity))
+      window.history.pushState(null, '', `?city=${newCity.label}`)
     }
   }
  
@@ -98,13 +98,15 @@ const MainPage = () => {
       else {
         setErrMsg(`${newValue.label} şehrinin koordinatlarında bir sorun var.`)
       }
-
+      
       // Remove markers first to overcome issues regarding the URL queries. Otherwise, the default
       // behavior during the removal of the marker results in the URL being not updated
+      console.log(`here`)
+      console.log(newValue)
       sites.forEach((s) => s.markerRef.remove())
 
       //
-      fetchSitesOfSelectedCity(newValue)
+      await fetchSitesOfSelectedCity(newValue)
       handleSetSelectedCity(newValue);
     }
   };
@@ -351,7 +353,7 @@ const MainPage = () => {
         handleClose={handleOnboardingDialogClose}
         handleShowMeClosestSite={handleShowMeClosestSite}
         showClosestSiteButton={true}
-        handleSelectCity={handleSetSelectedCity}
+        handleSelectCity={handleSelectCity}
         selectedCity={selectedCity}
       />
       {/*Disabled site creation dialog, only feed the system from spreadsheets*/}

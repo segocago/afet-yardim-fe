@@ -43,6 +43,7 @@ const useClosestSite = (sites) => {
 
     const calculateClosestSite = (pos) => {
         const { latitude, longitude } = pos.coords
+        console.log(sites)
         if (!sites || sites.length === 0) {
             setErrMsg("Yardım toplama noktaları henüz yüklenmedi.")
             setState("error")
