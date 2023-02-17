@@ -1,25 +1,16 @@
-import React from "react";
 import {
   Autocomplete,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle, TextField,
+  DialogTitle, Stack, TextField,
 } from "@mui/material";
-import SendIcon from '@mui/icons-material/Send';
+import { CITIES } from "../../constants/constants";
+import ClosestHelpSiteButton from '../ClosestHelpSiteButton';
 import "./OnboardingDialog.css";
-import {CITIES} from "../../constants/constants";
 
-const OnboardingDialog = ({open, handleClose, showClosestSiteButton, handleSelectCity, selectedCity,handleShowMeClosestSite}) => {
-  const onGetUserLocation = (position) => {
-    handleShowMeClosestSite(position.coords.latitude, position.coords.longitude);
-  }
-
-  const onFailedToGetUserLocation = (error) => {
-    alert("En yakın yardım alanını bulabilmek için uygulamaya konum erişim izni vermeniz gerekiyor.")
-  }
-
+const OnboardingDialog = ({open, handleClose, setOnboardingDialogOpen, showClosestSiteButton, handleSelectCity, selectedCity, sites, mapRef}) => {
   return (
     <Dialog disableEscapeKeyDown={selectedCity != null} open={open} onClose={handleClose}>
       <DialogTitle>
@@ -32,17 +23,21 @@ const OnboardingDialog = ({open, handleClose, showClosestSiteButton, handleSelec
           renderInput={(params) => <TextField {...params} label="Şehir"/>}
           onChange={(event, value) => {
             handleSelectCity(value);
+            console.log("Here")
           }}
           value={selectedCity}
       />}
       <DialogContent>
-          Haritadaki veriler seçilen illerdeki yardım organizasyon gruplarının kullandıkları spreadsheetlerden güncellenmektedir.
-          Bu organizasyonlardaki arkadaşlar ellerinden geldikçe çok güncelleme girmeye çalışsalarda her lokasyon için her zaman güncel veri bulunmayabilir.
-          <b> Gitmeyi planladığınız alanın son güncellenme tarihini kontrol etmeyi unutmayın.</b>
-          <br></br>
-          {showClosestSiteButton && selectedCity &&
-            <Button startIcon={<SendIcon/>} variant="contained" onClick={() => navigator.geolocation.getCurrentPosition(onGetUserLocation, onFailedToGetUserLocation)}
-            > Bana En Yakın Yardım Alanını Göster</Button>}
+      {showClosestSiteButton && selectedCity &&
+        <Stack spacing={2}>
+          <p>
+          Haritadaki veriler seçilen illerdeki yardım organizasyon gruplarının kullandıkları spreadsheetlerden 
+          güncellenmektedir. Bu organizasyonlardaki arkadaşlar ellerinden geldikçe çok güncelleme girmeye çalışsalar da
+           her lokasyon için her zaman güncel veri bulunmayabilir. Gitmeyi planladığınız alanın son güncellenme 
+           tarihini kontrol etmeyi unutmayın.
+          </p>
+        </Stack>
+      }
       </DialogContent>
       <DialogActions>
         <Button disabled={!selectedCity} onClick={() => handleClose()}>{selectedCity && "Kapat"}</Button>
