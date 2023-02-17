@@ -11,7 +11,6 @@ import ClosestHelpSiteButton from '../ClosestHelpSiteButton';
 import "./OnboardingDialog.css";
 
 const OnboardingDialog = ({open, handleClose, setOnboardingDialogOpen, showClosestSiteButton, handleSelectCity, selectedCity, sites, mapRef}) => {
-
   return (
     <Dialog disableEscapeKeyDown={selectedCity != null} open={open} onClose={handleClose}>
       <DialogTitle>
@@ -24,6 +23,7 @@ const OnboardingDialog = ({open, handleClose, setOnboardingDialogOpen, showClose
           renderInput={(params) => <TextField {...params} label="Şehir"/>}
           onChange={(event, value) => {
             handleSelectCity(value);
+            console.log("Here")
           }}
           value={selectedCity}
       />}
@@ -31,18 +31,11 @@ const OnboardingDialog = ({open, handleClose, setOnboardingDialogOpen, showClose
       {showClosestSiteButton && selectedCity &&
         <Stack spacing={2}>
           <p>
-            Şehrinizdeki yardım alanlarıyla ilgili detayları haritada bulabilirsiniz. 
-            Daha detaylı bilgilere ulaşmak için konumların üzerine tıklayabilirsiniz. 
-            Eğer size en yakın yardım merkezini öğrenmek istiyorsanız lütfen aşağıdaki 
-            butonu kullanın.
+          Haritadaki veriler seçilen illerdeki yardım organizasyon gruplarının kullandıkları spreadsheetlerden 
+          güncellenmektedir. Bu organizasyonlardaki arkadaşlar ellerinden geldikçe çok güncelleme girmeye çalışsalar da
+           her lokasyon için her zaman güncel veri bulunmayabilir. Gitmeyi planladığınız alanın son güncellenme 
+           tarihini kontrol etmeyi unutmayın.
           </p>
-          <ClosestHelpSiteButton
-            sites={sites}
-            mapRef={mapRef}
-            callback={() => setOnboardingDialogOpen(false)}
-          >
-           Bana En Yakın Yardım Alanını Göster
-          </ClosestHelpSiteButton>
         </Stack>
       }
       </DialogContent>
